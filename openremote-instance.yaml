@@ -270,8 +270,6 @@ Resources:
             01_start_openremote:
               command: !Sub |
 
-                PUBIP=$([ -ne ${Hostname} ] && echo ${Hostname} || echo $(curl v4.ident.me 2>/dev/null)
-
                 if [ -z ${Hostname} ]; then
                   PUBIP=$(curl v4.ident.me 2>/dev/null)
                 else
