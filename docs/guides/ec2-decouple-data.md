@@ -907,7 +907,7 @@ services:
 
 ````
 
-In this setup, the named `volumes` are now automatically created by Docker with the options I previously specified in the CLI command. I added environment variables so that each container can have its own location for storing data. This approach also eliminates the need for the `PGDATA` variable.
+In this setup, the named `volumes` are now automatically created by Docker with the options I previously specified in the CLI command. I added environment variables so that each container can have its own location for storing data. This approach also eliminates the need for the `PGDATA` variable. <br/>
 If no location is provided, Docker will use the default location on the root device itself.
 
 The start command looks like this

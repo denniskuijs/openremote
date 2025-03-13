@@ -24,7 +24,7 @@ services:
       - "8883:8883"
       - "127.0.0.1:8404:8404" # Localhost metrics access
     volumes:
-      - /or-data:/deployment
+      - ${OR_PROXY_PATH:-proxy-data}:/deployment
     environment:
       LE_EMAIL: ${OR_EMAIL_ADMIN:-}
       DOMAINNAME: ${OR_HOSTNAME:-localhost}
@@ -38,8 +38,8 @@ services:
     image: openremote/postgresql:${POSTGRESQL_VERSION:-latest}
     shm_size: 128mb
     volumes:
-      - /or-data:/var/lib/postgresql/data/
-      - /or-data:-postgresql-data}:/storage
+      - ${OR_POSTGRES_PATH:-postgresql-data}:/var/lib/postgresql/data/
+      - ${OR_MANAGER_PATH:-manager-data}:/storage
     environment:
      PGDATA: /var/lib/postgresql/data/postgres
 
@@ -50,7 +50,7 @@ services:
       postgresql:
         condition: service_healthy
     volumes:
-      - /or-data:/deployment
+      - ${OR_KEYCLOAK_PATH:-./deployment}:/deployment
     environment:
       KEYCLOAK_ADMIN_PASSWORD: ${OR_ADMIN_PASSWORD:-secret}
       KC_HOSTNAME: ${OR_HOSTNAME:-localhost}
@@ -87,4 +87,4 @@ services:
       OR_SETUP_IMPORT_DEMO_AGENT_KNX:
       OR_SETUP_IMPORT_DEMO_AGENT_VELBUS:
     volumes:
-      /or-data:/storage
+      ${OR_MANAGER_PATH:-manager-data}:/storage
