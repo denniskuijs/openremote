@@ -847,6 +847,13 @@ The end result looks like this:
 
 ````
 
+# OpenRemote v3
+#
+# Profile that runs the stack by default on https://localhost using a self-signed SSL certificate,
+# but optionally on https://$OR_HOSTNAME with an auto generated SSL certificate from Letsencrypt.
+#
+# It is configured to use the AWS logging driver.
+#
 volumes:
   proxy-data:
    external: ${OR_EXTERNAL_VOLUME:-false}
@@ -856,7 +863,6 @@ volumes:
    external: ${OR_EXTERNAL_VOLUME:-false}
  
 services:
-
   proxy:
     image: openremote/proxy:${PROXY_VERSION:-latest}
     restart: always
@@ -864,10 +870,10 @@ services:
       manager:
         condition: service_healthy
     ports:
-      - "80:80" # Needed for SSL generation using letsencrypt
-      - "${OR_SSL_PORT:-443}:443"
-      - "8883:8883"
-      - "127.0.0.1:8404:8404" # Localhost metrics access
+      - 80:80 # Needed for SSL generation using letsencrypt
+      - ${OR_SSL_PORT:-443}:443
+      - 8883:8883
+      - 127.0.0.1:8404:8404 # Localhost metrics access
     volumes:
       - proxy-data:/deployment
     environment:
@@ -876,7 +882,7 @@ services:
       DOMAINNAMES: ${OR_ADDITIONAL_HOSTNAMES:-}
       # HAPROXY_DATA_PATH: ${HAPROXY_DATA_PATH:-proxy-data}
       # USE A CUSTOM PROXY CONFIG - COPY FROM https://raw.githubusercontent.com/openremote/proxy/main/haproxy.cfg
-      #HAPROXY_CONFIG: '/data/proxy/haproxy.cfg'
+      # HAPROXY_CONFIG: '/data/proxy/haproxy.cfg'
 
   postgresql:
     restart: always
@@ -901,14 +907,14 @@ services:
 
 
   manager:
-#    privileged: true
+  # privileged: true
     restart: always
     image: openremote/manager:${MANAGER_VERSION:-latest}
     depends_on:
       keycloak:
         condition: service_healthy
     ports:
-      - "127.0.0.1:8405:8405" # Localhost metrics access
+      - 127.0.0.1:8405:8405 # Localhost metrics access
     environment:
       OR_SETUP_TYPE:
       OR_ADMIN_PASSWORD:
