@@ -432,6 +432,13 @@ OpenRemote uses a `Docker Compose` file to define the `containers` and their set
 The default file looks like this:
 
 ``````
+# OpenRemote v3
+#
+# Profile that runs the stack by default on https://localhost using a self-signed SSL certificate,
+# but optionally on https://$OR_HOSTNAME with an auto generated SSL certificate from Letsencrypt.
+#
+# It is configured to use the AWS logging driver.
+#
 volumes:
   proxy-data:
   manager-data:
@@ -595,7 +602,6 @@ This setup ensures that each `container` is restricted to writing only to its de
 I tested this small change, and it resolves the permissions error. To make this approach more modular, I’ve added some `environment` variables. If the environment variables are not provided, `Docker` will uses the default `named` volumes that are declared at the top and stores them on the `root` device.
 
 ```
-
 # OpenRemote v3
 #
 # Profile that runs the stack by default on https://localhost using a self-signed SSL certificate,
@@ -685,7 +691,6 @@ services:
       OR_SETUP_IMPORT_DEMO_AGENT_VELBUS:
     volumes:
       - ${OR_MANAGER_PATH:-manager-data}:/storage
-
 ```
 
 By adding these `variables`, you can define the storage location for each `container` in the startup command. 
@@ -702,10 +707,8 @@ After the first succesful attempt, I continued my investigation by examining the
 These volumes are automatically created by Docker during the execution of the `Docker Compose` file. However, by adding the `external: true` property, `Docker` will not create the volume but instead look for an existing one.
 
 ```
-
   postgresql-data:
    external: true
-
 ```
 
 The volume must exist with the exact name as described before the script runs as `Docker` will not create `external` volumes.
@@ -739,7 +742,6 @@ sudo docker volume list.
 The `Docker Compose` file should now look like this.
 
 ````
-
 # OpenRemote v3
 #
 # Profile that runs the stack by default on https://localhost using a self-signed SSL certificate,
@@ -831,7 +833,6 @@ services:
       OR_SETUP_IMPORT_DEMO_AGENT_VELBUS:
     volumes:
       - or-data:/storage
-
 ````
 
 In this situation, there is a single `named` volume created using the `Docker CLI`. The exact name is attached to the `Docker Compose` file, and the value `external: true` ensures that this volume is not automatically created. instead, the existing one will be used.
@@ -857,7 +858,6 @@ sudo docker volume create -d local -o type=block -o device=/or-data/postgres -o 
 The end result looks like this:
 
 ````
-
 # OpenRemote v3
 #
 # Profile that runs the stack by default on https://localhost using a self-signed SSL certificate,
@@ -948,7 +948,6 @@ services:
       OR_SETUP_IMPORT_DEMO_AGENT_VELBUS:
     volumes:
      - manager-data:/storage
-
 ````
 
 The files are now structered in different subfolders
@@ -981,17 +980,17 @@ volumes:
   proxy-data:
    driver_opts:
     type: block
-    device: ${OR_PROXY_DATA_PATH:-/var/lib/docker/volumes/openremote_proxy-data/_data}
+    device: ${OR_PROXY_PATH:-/var/lib/docker/volumes/openremote_proxy-data/_data}
     o: bind
   manager-data:
    driver_opts:
     type: block
-    device: ${OR_MANAGER_DATA_PATH:-/var/lib/docker/volumes/openremote_manager-data/_data}
+    device: ${OR_MANAGER_PATH:-/var/lib/docker/volumes/openremote_manager-data/_data}
     o: bind
   postgresql-data:
    driver_opts:
     type: block
-    device: ${OR_POSTGRES_DATA_PATH:-/var/lib/docker/volumes/openremote_postgresql-data/_data}
+    device: ${OR_POSTGRES_PATH:-/var/lib/docker/volumes/openremote_postgresql-data/_data}
     o: bind
 
 services:
@@ -1069,7 +1068,6 @@ services:
       OR_SETUP_IMPORT_DEMO_AGENT_VELBUS:
     volumes:
       - manager-data:/storage
-
 ````
 
 In this setup, the named `volumes` are now automatically created by `Docker` with the options I previously specified in the `CLI` command. I added `environment` variables so that each `container` can have its own location for storing data. This approach also eliminates the need for the `PGDATA` variable. <br/>
