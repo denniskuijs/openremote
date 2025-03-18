@@ -23,7 +23,6 @@ volumes:
     o: bind
 
 services:
-
   proxy:
     image: openremote/proxy:${PROXY_VERSION:-latest}
     restart: always
@@ -31,10 +30,10 @@ services:
       manager:
         condition: service_healthy
     ports:
-      - "80:80" # Needed for SSL generation using letsencrypt
-      - "${OR_SSL_PORT:-443}:443"
-      - "8883:8883"
-      - "127.0.0.1:8404:8404" # Localhost metrics access
+      - 80:80 # Needed for SSL generation using letsencrypt
+      - ${OR_SSL_PORT:-443}:443
+      - 8883:8883
+      - 127.0.0.1:8404:8404 # Localhost metrics access
     volumes:
       - proxy-data:/deployment
     environment:
@@ -42,7 +41,7 @@ services:
       DOMAINNAME: ${OR_HOSTNAME:-localhost}
       DOMAINNAMES: ${OR_ADDITIONAL_HOSTNAMES:-}
       # USE A CUSTOM PROXY CONFIG - COPY FROM https://raw.githubusercontent.com/openremote/proxy/main/haproxy.cfg
-      #HAPROXY_CONFIG: '/data/proxy/haproxy.cfg'
+      # HAPROXY_CONFIG: '/data/proxy/haproxy.cfg'
 
   postgresql:
     restart: always
@@ -67,7 +66,7 @@ services:
 
 
   manager:
-#    privileged: true
+  # privileged: true
     restart: always
     image: openremote/manager:${MANAGER_VERSION:-latest}
     depends_on:
