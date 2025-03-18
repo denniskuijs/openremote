@@ -12,7 +12,7 @@ It is difficult to predict when Amazon will take this drastic measure. Sometimes
 Before each update, a `snapshot` (backup) of the `virtual` machine is created. This snapshot contains both the IoT platform data and a copy of the operating system. If an issue occurs during or after the update, the `snapshot` can be quickly restored, resulting in minimal downtime for the customer. In this situation, no data is lost.
 
 Manually updating the `virtual` machines is a time-consuming process. As the number of customers using the 'managed' service increases, more time is spent on these tasks.
-Therefore, OpenRemote is looking for ways to further automate this process. This research focuses on storing the (IoT-) data on a separate `EBS` volume so that backups can be more targeted, reducing the risk of data loss (during updates) by decoupling the data from the `virtual `machine.
+Therefore, OpenRemote is looking for ways to further automate this process. This research focuses on storing the (IoT-) data on a separate `EBS` volume so that backups can be more targeted, reducing the risk of data loss (during updates) by decoupling the data from the `virtual` machine.
 
 ## DOT-Framework
 For this research, the following methods from the [DOT Framework](https://ictresearchmethods.nl/) are used:
@@ -592,18 +592,23 @@ I continued my investigation and attempted to add `subdirectories` for each `con
 ```
 
 This setup ensures that each `container` is restricted to writing only to its designated subdirectory, preventing multiple containers from writing to the same directory, such as `/or-data`, simultaneously. 
-
-I tested this small change, and it resolves the permissions error. To make this approach more modular, I’ve added some `environment` variables.
+I tested this small change, and it resolves the permissions error. To make this approach more modular, I’ve added some `environment` variables. If the environment variables are not provided, `Docker` will uses the default `named` volumes that are declared at the top and stores them on the `root` device.
 
 ```
 
+# OpenRemote v3
+#
+# Profile that runs the stack by default on https://localhost using a self-signed SSL certificate,
+# but optionally on https://$OR_HOSTNAME with an auto generated SSL certificate from Letsencrypt.
+#
+# It is configured to use the AWS logging driver.
+#
 volumes:
   proxy-data:
   manager-data:
   postgresql-data:
  
 services:
-
   proxy:
     image: openremote/proxy:${PROXY_VERSION:-latest}
     restart: always
@@ -611,10 +616,10 @@ services:
       manager:
         condition: service_healthy
     ports:
-      - "80:80" # Needed for SSL generation using letsencrypt
-      - "${OR_SSL_PORT:-443}:443"
-      - "8883:8883"
-      - "127.0.0.1:8404:8404" # Localhost metrics access
+      - 80:80 # Needed for SSL generation using letsencrypt
+      - ${OR_SSL_PORT:-443}:443
+      - 8883:8883
+      - 127.0.0.1:8404:8404 # Localhost metrics access
     volumes:
       - ${OR_PROXY_PATH:-proxy-data}:/deployment
     environment:
@@ -623,7 +628,7 @@ services:
       DOMAINNAMES: ${OR_ADDITIONAL_HOSTNAMES:-}
       # HAPROXY_DATA_PATH: ${HAPROXY_DATA_PATH:-proxy-data}
       # USE A CUSTOM PROXY CONFIG - COPY FROM https://raw.githubusercontent.com/openremote/proxy/main/haproxy.cfg
-      #HAPROXY_CONFIG: '/data/proxy/haproxy.cfg'
+      # HAPROXY_CONFIG: '/data/proxy/haproxy.cfg'
 
   postgresql:
     restart: always
@@ -650,14 +655,14 @@ services:
 
 
   manager:
-#    privileged: true
+  # privileged: true
     restart: always
     image: openremote/manager:${MANAGER_VERSION:-latest}
     depends_on:
       keycloak:
         condition: service_healthy
     ports:
-      - "127.0.0.1:8405:8405" # Localhost metrics access
+      - 127.0.0.1:8405:8405 # Localhost metrics access
     environment:
       OR_SETUP_TYPE:
       OR_ADMIN_PASSWORD:
