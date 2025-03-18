@@ -953,6 +953,13 @@ OR_HOSTNAME=<PUBLIC IP> OR_EXTERNAL_VOLUME=true docker-compose -p openremote up 
 I continued optimizing this approach and after tweaking the `Docker Compose` file a little more, I currently have the following result:
 
 ````
+# OpenRemote v3
+#
+# Profile that runs the stack by default on https://localhost using a self-signed SSL certificate,
+# but optionally on https://$OR_HOSTNAME with an auto generated SSL certificate from Letsencrypt.
+#
+# It is configured to use the AWS logging driver.
+#
 volumes:
   proxy-data:
    driver_opts:
@@ -971,7 +978,6 @@ volumes:
     o: bind
 
 services:
-
   proxy:
     image: openremote/proxy:${PROXY_VERSION:-latest}
     restart: always
@@ -979,10 +985,10 @@ services:
       manager:
         condition: service_healthy
     ports:
-      - "80:80" # Needed for SSL generation using letsencrypt
-      - "${OR_SSL_PORT:-443}:443"
-      - "8883:8883"
-      - "127.0.0.1:8404:8404" # Localhost metrics access
+      - 80:80 # Needed for SSL generation using letsencrypt
+      - ${OR_SSL_PORT:-443}:443
+      - 8883:8883
+      - 127.0.0.1:8404:8404 # Localhost metrics access
     volumes:
       - proxy-data:/deployment
     environment:
@@ -990,7 +996,7 @@ services:
       DOMAINNAME: ${OR_HOSTNAME:-localhost}
       DOMAINNAMES: ${OR_ADDITIONAL_HOSTNAMES:-}
       # USE A CUSTOM PROXY CONFIG - COPY FROM https://raw.githubusercontent.com/openremote/proxy/main/haproxy.cfg
-      #HAPROXY_CONFIG: '/data/proxy/haproxy.cfg'
+      # HAPROXY_CONFIG: '/data/proxy/haproxy.cfg'
 
   postgresql:
     restart: always
@@ -1015,7 +1021,7 @@ services:
 
 
   manager:
-#    privileged: true
+  # privileged: true
     restart: always
     image: openremote/manager:${MANAGER_VERSION:-latest}
     depends_on:
