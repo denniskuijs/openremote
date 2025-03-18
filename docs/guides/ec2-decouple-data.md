@@ -599,7 +599,7 @@ I continued my investigation and attempted to add `subdirectories` for each `con
 ```
 
 This setup ensures that each `container` is restricted to writing only to its designated subdirectory, preventing multiple containers from writing to the same directory, such as `/or-data`, simultaneously. 
-I tested this small change, and it resolves the permissions error. To make this approach more modular, I’ve added some `environment` variables. If the environment variables are not provided, `Docker` will uses the default `named` volumes that are declared at the top and stores them on the `root` device.
+I tested this small change, and it resolves the permissions error. To make this approach more modular, I’ve added some `environment` variables.
 
 ```
 # OpenRemote v3
@@ -696,10 +696,11 @@ services:
 By adding these `variables`, you can define the storage location for each `container` in the startup command. 
 
 ```sh
-OR_HOSTNAME=3.253.25.117 OR_PROXY_PATH=/or-data/proxy OR_MANAGER_PATH=/or-data/manager OR_POSTGRES_PATH=/or-data/postgres OR_KEYCLOAK_PATH=/or-data/keycloak docker-compose -p openremote up -d
+OR_HOSTNAME=<PUBLIC IP> OR_PROXY_PATH=/or-data/proxy OR_MANAGER_PATH=/or-data/manager OR_POSTGRES_PATH=/or-data/postgres OR_KEYCLOAK_PATH=/or-data/keycloak docker-compose -p openremote up -d
 ```
 
-If no value is provided, `Docker` will use the default `named` volume declared at the top. The specified location must already exist on the block device, as the system cannot create directories.
+If no value is provided, `Docker` will use the default `named` volumes declared at the top and stores the information on the `root` device. <br/>
+The specified location must already exist on the block device, as the system cannot create directories.
 
 
 ### 3.3. Approach 2 (Named volumes)
@@ -955,7 +956,6 @@ The files are now structered in different subfolders
 <img src="../assets/img/ec2-ls-folders.png" width="200"><br/>
 
 Lastly, I added an `environment` variable to make this approach more modular and easily configurable. The environment variable `${OR_EXTERNAL_VOLUME:-false}` is included in the volume block at the top of the file. <br/>
-
 If no value is provided, the default value of `false` is applied, meaning the data will be stored on the same root device. If the value is set to `true`, `Docker` will search for the external volume in the list and use that one if it exists.
 
 The user can change the `environment` variable be adding it to the `Docker Compose` start command like so:
@@ -1076,7 +1076,7 @@ If no location is provided, `Docker` will use the default location on the root d
 The start command looks like this.
 
 ```sh
-OR_HOSTNAME=<PUBLIC IP> OR_PROXY_DATA_PATH=/or-data/proxy OR_PROXY_MANAGER_PATH=/or-data/manager OR_POSTGRES_DATA_PATH=/or-data/postgres docker-compose -p openremote up -d
+OR_HOSTNAME=<PUBLIC IP> OR_PROXY_PATH=/or-data/proxy OR_MANAGER_PATH=/or-data/manager OR_POSTGRES_PATH=/or-data/postgres docker-compose -p openremote up -d
 ```
 
 ### 3.6. Tests
