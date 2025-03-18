@@ -9,17 +9,17 @@ volumes:
   proxy-data:
    driver_opts:
     type: block
-    device: ${OR_PROXY_DATA_PATH:-/var/lib/docker/volumes/openremote_proxy-data/_data}
+    device: ${OR_PROXY_PATH:-/var/lib/docker/volumes/openremote_proxy-data/_data}
     o: bind
   manager-data:
    driver_opts:
     type: block
-    device: ${OR_MANAGER_DATA_PATH:-/var/lib/docker/volumes/openremote_manager-data/_data}
+    device: ${OR_MANAGER_PATH:-/var/lib/docker/volumes/openremote_manager-data/_data}
     o: bind
   postgresql-data:
    driver_opts:
     type: block
-    device: ${OR_POSTGRES_DATA_PATH:-/var/lib/docker/volumes/openremote_postgresql-data/_data}
+    device: ${OR_POSTGRES_PATH:-/var/lib/docker/volumes/openremote_postgresql-data/_data}
     o: bind
 
 services:
