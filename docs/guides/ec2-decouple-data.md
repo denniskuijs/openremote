@@ -1144,7 +1144,7 @@ Based on the prototype, I recommend using the first approach, as it is the simpl
 ### 4.2. Feedback from Team Members
 Based on the feedback from various team members, I've received several keypoints for further development
 
-  - Investigate the possibilities to mount the seperate `EBS` volume to the existing `Docker` directory on the root volume instead of creating an new directory
+  - Investigate the possibilities to mount the seperate `EBS` volume to the existing `Docker` directory on the root volume instead of creating an new directory.
   - Re-create the prototype in the existing CI/CD pipeline (`provision host`) including features such as automatic `create/mount volume`, `detach volume script`, `CloudWatch metrics` and `automate the snapshot process`.
   - Investigate the possibilities for `blue/green deployments` and multi-attach `EBS` volumes.
 
