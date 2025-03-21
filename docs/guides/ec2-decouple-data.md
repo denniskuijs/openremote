@@ -1,3 +1,5 @@
+<!-- title: Research: How can we decouple the (IoT-)data from the 'virtual' machine and store them on a separate EBS volume? -->
+
 ## Research: How can we decouple the (IoT-)data from the 'virtual' machine and store them on a separate EBS volume? <!-- omit in toc -->
 
 ## Context
@@ -13,6 +15,8 @@ Before each update, a `snapshot` (backup) of the `virtual` machine is created. T
 
 Manually updating the `virtual` machines is a time-consuming process. As the number of customers using the 'managed' service increases, more time is spent on these tasks.
 Therefore, OpenRemote is looking for ways to further automate this process. This research focuses on storing the (IoT-) data on a separate `EBS` volume so that backups can be more targeted, reducing the risk of data loss (during updates) by decoupling the data from the `virtual` machine.
+
+<div style="page-break-after: always;"></div>
 
 ## DOT-Framework
 For this research, the following methods from the [DOT Framework](https://ictresearchmethods.nl/) are used:
@@ -1187,11 +1191,11 @@ In the coming weeks, I will integrate and test my prototype within the `provisio
 ## 5. Source
 The following sources are used for this research:
 
-- https://docs.aws.amazon.com/ebs/latest/userguide/ebs-volumes.html
-- https://docs.aws.amazon.com/ebs/latest/userguide/ebs-volume-types.html
-- https://docs.aws.amazon.com/ebs/latest/userguide/ebs-volume-lifecycle.html
-- https://docs.aws.amazon.com/ebs/latest/userguide/ebs-using-volumes.html
-- https://docs.aws.amazon.com/ebs/latest/userguide/ebs-snapshots.html
-- https://docs.aws.amazon.com/ebs/latest/userguide/snapshot-lifecycle.html
-- https://aws.amazon.com/ebs/pricing/
+- Amazon EBS volumes - Amazon EBS. (n.d.). https://docs.aws.amazon.com/ebs/latest/userguide/ebs-volumes.html
+- Amazon EBS volume types - Amazon EBS. (n.d.). https://docs.aws.amazon.com/ebs/latest/userguide/ebs-volume-types.html
+- Amazon EBS volume lifecycle - Amazon EBS. (n.d.). https://docs.aws.amazon.com/ebs/latest/userguide/ebs-volume-lifecycle.html
+- Make an Amazon EBS volume available for use - Amazon EBS. (n.d.). https://docs.aws.amazon.com/ebs/latest/userguide/ebs-using-volumes.html
+- Amazon EBS snapshots - Amazon EBS. (n.d.). https://docs.aws.amazon.com/ebs/latest/userguide/ebs-snapshots.html
+- Automate backups with Amazon Data Lifecycle Manager - Amazon EBS. (n.d.). https://docs.aws.amazon.com/ebs/latest/userguide/snapshot-lifecycle.html
+- High-Performance Block Storage– Amazon EBS Pricing – Amazon Web Services. (n.d.). Amazon Web Services, Inc. https://aws.amazon.com/ebs/pricing/
 - Several StackOverflow posts for debugging problems while creating prototypes.
