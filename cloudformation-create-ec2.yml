@@ -112,6 +112,10 @@ Parameters:
       Description: The e-mail address is visible for the receivers. e.g. noreply@example.com.
       Type: String
       Default: ""
+  SnapshotID:
+      Description: SnapshotID
+      Type: String
+      Default: ""
 
 Mappings:
   VolumeSize:
@@ -313,16 +317,18 @@ Resources:
 
         prepare_volume:
           commands:
-            01_add_external_volume:
+            01_mount_volume:
               command: !Sub |
-                sudo mkfs -t xfs /dev/sdf && sudo mount /dev/sdf /var/lib/docker/volumes
-
-                UUID=$(sudo blkid -s UUID -o value /dev/sdb)
-                if [ -n "$UUID" ]; then
+                ([ -n ${SnapshotID} ] && sudo mount /dev/sdf /var/lib/docker/volumes) || (sudo mkfs -t xfs /dev/sdf && sudo mount /dev/sdf /var/lib/docker/volumes)
+            02_configure_fstab:
+              command: !Sub |
+                UUID=$(sudo blkid -o value -s UUID /dev/sdf)
+                if [ -n $UUID ]; then
                    sudo cp /etc/fstab /etc/fstab.orig
-                   echo "UUID=$UUID /or-data xfs defaults,nofail 0 2" | sudo tee -a /etc/fstab > /dev/null
+                   sudo echo "UUID=$UUID /var/lib/docker/volumes xfs defaults,nofail 0 2" >> /etc/fstab
                 else
                   echo "Failed to create /etc/fstab entry. UUID is not found"
+                  exit 1
                 fi
 
         start_openremote:

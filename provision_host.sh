@@ -1,83 +1,117 @@
-STACK_NAME=Volume
-STACK_NAME2=Machine
-TEMPLATE_PATH=file://cloudformation-create-ebs-volume.yml
-TEMPLATE_PATH2=file://cloudformation-create-ec2.yml
-PARAMS="ParameterKey=Hostname,ParameterValue=kuijs.me ParameterKey=AvailabilityZone,ParameterValue=eu-west-1a ParameterKey=SnapshotId,ParameterValue=snap-0d909df4be805491d"
+HOST="kuijs.me"
+SNAPSHOT_ID="snap-0d909df4be805491d"
+AVAILABILTYZONE="eu-west-1a"
+WAIT_FOR_STACK="true"
+awsDir=./
 
-STACK_ID=$(aws cloudformation create-stack --stack-name $STACK_NAME --template-body $TEMPLATE_PATH --parameters $PARAMS --output text)
+STACK_NAME=$(tr '.' '-' <<< "$HOST")
+EBS_STACK_NAME="$STACK_NAME-ebs-volume"
 
-echo "Waiting for stack to be created"
-STATUS=$(aws cloudformation describe-stacks --stack-name $STACK_NAME --query "Stacks[?StackId=='$STACK_ID'].StackStatus" --output text)
-
-while [[ "$STATUS" == "CREATE_IN_PROGRESS" ]]; do
-    echo "Stack creation is still in progress .. Sleeping 30 seconds"
-    sleep 30
-    STATUS=$(aws cloudformation describe-stacks --stack-name $STACK_NAME --query "Stacks[?StackId=='$STACK_ID'].StackStatus" --output text)
-done
-
-if [ "$STATUS" != 'CREATE_COMPLETE' ]; then
-    echo "Stack creation has failed status is '$STATUS'"
-    exit 1;
+if [ -f "${awsDir}cloudformation-create-ec2.yml" ]; then
+  TEMPLATE_PATH="${awsDir}cloudformation-create-ec2.yml"
+elif [ -f ".ci_cd/aws/cloudformation-create-ec2.yml" ]; then
+  TEMPLATE_PATH=".ci_cd/aws/cloudformation-create-ec2.yml"
+elif [ -f "openremote/.ci_cd/aws/cloudformation-create-ec2.yml" ]; then
+  TEMPLATE_PATH="openremote/.ci_cd/aws/cloudformation-create-ec2.yml"
 else
-    echo "Stack creation is complete"
+  echo "Cannot determine location of cloudformation-create-ec2.yml"
+  exit 1
 fi
 
-VOLUME_ID=$(aws ec2 describe-volumes --filters "Name=tag:aws:cloudformation:stack-id,Values='$STACK_ID'" --query "Volumes[].VolumeId" --output text) 
+echo "Provisioning EBS Volume"
+STATUS=$(aws cloudformation describe-stacks --stack-name $EBS_STACK_NAME --query "Stacks[].StackStatus" --output text 2>/dev/null)
 
-PARAMS="ParameterKey=Keypair,ParameterValue=OpenRemote"
-STACK_ID=$(aws cloudformation create-stack --stack-name $STACK_NAME2 --template-body $TEMPLATE_PATH2 --parameters $PARAMS --output text)
+if [ -n "$STATUS" ] && [ "$STATUS" != "DELETE_COMPLETE" ]; then
+    echo "Stack already exists for this host '$HOST' current status is '$STATUS'"
+    STACK_ID=$(aws cloudformation describe-stacks --stack-name $EBS_STACK_NAME --query Stacks[].StackId --output text)
+else
+    if [ -f "${awsDir}cloudformation-create-ebs-volume.yml" ]; then
+    EBS_TEMPLATE_PATH="${awsDir}cloudformation-create-ebs-volume.yml"
+    elif [ -f ".ci_cd/aws/cloudformation-create-ebs-volume.yml" ]; then
+    EBS_TEMPLATE_PATH=".ci_cd/aws/cloudformation-create-ebs-volume.yml"
+    elif [ -f "openremote/.ci_cd/aws/cloudformation-create-ebs-volume.yml" ]; then
+    EBS_TEMPLATE_PATH="openremote/.ci_cd/aws/cloudformation-create-ebs-volume.yml"
+    else
+        echo "Cannot determine location of cloudformation-create-ebs-volume.yml"
+        exit 1
+    fi
 
-echo "Waiting for stack to be created"
-STATUS=$(aws cloudformation describe-stacks --stack-name $STACK_NAME2 --query "Stacks[?StackId=='$STACK_ID'].StackStatus" --output text)
-
-while [[ "$STATUS" == "CREATE_IN_PROGRESS" ]]; do
-    STATE=$(aws ec2 describe-volumes --filters "Name=volume-id,Values='$VOLUME_ID'" --query "Volumes[].State" --output text)
-
-    if [ $STATE != "in-use" ]; then
-        echo "Check if instance is already available"
+    PARAMS="$PARAMS ParameterKey=Hostname,ParameterValue=$HOST"
+    PARAMS="$PARAMS ParameterKey=AvailabilityZone,ParameterValue=$AVAILABILTYZONE"
     
-        INSTANCE_ID=$(aws ec2 describe-instances --filters "Name=tag:aws:cloudformation:stack-id,Values='$STACK_ID'" --query "Reservations[].Instances[].InstanceId" --output text)
-        while [[ -z "$INSTANCE_ID" ]]; do
-            echo "Instance is not created yet.. Sleep for 30 seconds"
+    if [ -n $SNAPSHOT_ID ]; then
+        PARAMS="$PARAMS ParameterKey=SnapshotId,ParameterValue=$SNAPSHOT_ID"
+    fi
+
+    STACK_ID=$(aws cloudformation create-stack --stack-name $EBS_STACK_NAME --template-body file://$EBS_TEMPLATE_PATH --parameters $PARAMS --output text)
+
+    if [ "$WAIT_FOR_STACK" != "false" ]; then
+        echo "Waiting for stack to be created"
+        STATUS=$(aws cloudformation describe-stacks --stack-name $EBS_STACK_NAME --query "Stacks[?StackId=='$STACK_ID'].StackStatus" --output text)
+
+        while [[ "$STATUS" == "CREATE_IN_PROGRESS" ]]; do
+            echo "Stack creation is still in progress .. Sleeping 30 seconds"
             sleep 30
-            INSTANCE_ID=$(aws ec2 describe-instances --filters "Name=tag:aws:cloudformation:stack-id,Values='$STACK_ID'" --query "Reservations[].Instances[].InstanceId" --output text)
+            STATUS=$(aws cloudformation describe-stacks --stack-name $EBS_STACK_NAME --query "Stacks[?StackId=='$STACK_ID'].StackStatus" --output text)
         done
 
-        echo "Instance found with id $INSTANCE_ID, attaching volume"
-        INSTANCE_STATE=$(aws ec2 describe-instances --filters "Name=tag:aws:cloudformation:stack-id,Values='$STACK_ID'" --query "Reservations[].Instances[].State.Name" --output text)
-        
-        while [[ "$INSTANCE_STATE" != "running" ]]; do
-            echo "Instance is not running.. Sleep for 5 seconds $INSTANCE_STATE"
-            sleep 5
-            INSTANCE_STATE=$(aws ec2 describe-instances --filters "Name=tag:aws:cloudformation:stack-id,Values='$STACK_ID'" --query "Reservations[].Instances[].State.Name" --output text)
-        done
-
-        if [ "$INSTANCE_STATE" == "running" ]; then
-            VOLUME=$(aws ec2 attach-volume --device /dev/sdf --instance-id $INSTANCE_ID --volume-id $VOLUME_ID)
-
-            STATE=$(aws ec2 describe-volumes --filters "Name=volume-id,Values='$VOLUME_ID'" --query "Volumes[].State" --output text)
-            while [[ "$STATE" == "attaching" ]]; do
-                echo "Volume still attaching.. Sleep for 5 seconds"
-                sleep 5
-                STATE=$(aws ec2 describe-volumes --filters "Name=volume-id,Values='$VOLUME_ID'" --query "Volumes[].State" --output text)
-            done
-
-            if [ "$STATE" != "in-use" ]; then
-                echo "Volume mounting is failed with status $STATE"
-                exit 1;
-            else
-                echo "Volume mounted!"
-            fi
+        if [ "$STATUS" != 'CREATE_COMPLETE' ]; then
+            echo "Stack creation has failed status is '$STATUS'"
+            exit 1;
+        else
+            echo "Stack creation is complete"
         fi
     fi
-    echo "Stack creation is still in progress.. Sleeping 30 seconds"
-    sleep 30
-    STATUS=$(aws cloudformation describe-stacks --stack-name $STACK_NAME2 --query "Stacks[?StackId=='$STACK_ID'].StackStatus" --output text)
+fi
+
+PARAMS="ParameterKey=Keypair,ParameterValue=OpenRemote"
+STACK_ID=$(aws cloudformation create-stack --stack-name $STACK_NAME --template-body file://$TEMPLATE_PATH --parameters $PARAMS --output text)
+
+INSTANCE_ID=$(aws ec2 describe-instances --filters "Name=tag:aws:cloudformation:stack-id,Values='$STACK_ID'" --query "Reservations[].Instances[].InstanceId" --output text)
+INSTANCE_STATE=$(aws ec2 describe-instances --filters "Name=tag:aws:cloudformation:stack-id,Values='$STACK_ID'" --query "Reservations[].Instances[].State.Name" --output text)
+
+echo "Check if instance is available"
+while [[ -z "$INSTANCE_ID" ]] && [[ "$INSTANCE_STATE" != "running" ]]; do
+    echo "Instance creation is still in progress.. Sleeping 30 seconds"
+    sleep 30 
+    INSTANCE_ID=$(aws ec2 describe-instances --filters "Name=tag:aws:cloudformation:stack-id,Values='$STACK_ID'" --query "Reservations[].Instances[].InstanceId" --output text)
+    INSTANCE_STATE=$(aws ec2 describe-instances --filters "Name=tag:aws:cloudformation:stack-id,Values='$STACK_ID'" --query "Reservations[].Instances[].State.Name" --output text)
 done
 
-if [ "$STATUS" != 'CREATE_COMPLETE' ]; then
-    echo "Stack creation has failed status is '$STATUS'"
+echo "Instance is ready, attaching volume.."
+VOLUME_ID=$(aws ec2 describe-volumes --filters "Name=tag:aws:cloudformation:stack-name,Values='$EBS_STACK_NAME'" --query "Volumes[].VolumeId" --output text)
+
+VOLUME=$(aws ec2 attach-volume --device /dev/sdf --instance-id $INSTANCE_ID --volume-id $VOLUME_ID)
+VOLUME_STATE=$(aws ec2 describe-volumes --filters "Name=tag:aws:cloudformation:stack-name,Values='$EBS_STACK_NAME'" --query "Volumes[].State" --output text)
+
+while [[ "$VOLUME_STATE" == "attaching" ]]; do
+    echo "Volume is still attaching.. Sleeping 30 seconds"
+    sleep 30
+    VOLUME_STATE=$(aws ec2 describe-volumes --filters "Name=tag:aws:cloudformation:stack-name,Values='$EBS_STACK_NAME'" --query "Volumes[].State" --output text)
+done
+
+if [ "$VOLUME_STATE" != "in-use" ]; then
+    echo "Volume attaching failed with status $VOLUME_STATE"
     exit 1;
 else
-    echo "Stack creation is complete"
+    echo "Volume $VOLUME_ID is attached to instance $INSTANCE_ID"
+fi
+
+
+if [ "$WAIT_FOR_STACK" != "false" ]; then
+    echo "Waiting for stack to be created"
+    STATUS=$(aws cloudformation describe-stacks --stack-name $STACK_NAME --query "Stacks[?StackId=='$STACK_ID'].StackStatus" --output text)
+
+    while [[ "$STATUS" == "CREATE_IN_PROGRESS" ]]; do
+        echo "Stack creation is still in progress.. Sleeping 30 seconds"
+        sleep 30
+        STATUS=$(aws cloudformation describe-stacks --stack-name $STACK_NAME --query "Stacks[?StackId=='$STACK_ID'].StackStatus" --output text)
+    done
+
+    if [ "$STATUS" != 'CREATE_COMPLETE' ] && [ "$STATUS" != 'UPDATE_COMPLETE' ]; then
+        echo "Stack creation has failed status is '$STATUS'"
+        exit 1;
+    else
+        echo "Stack creation is complete"
+    fi
 fi
