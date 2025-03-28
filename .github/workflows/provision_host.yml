@@ -1,36 +1,38 @@
 name: Provision Host
 on:
-  pull_request:
-    inputs:
-      HOST:
-        description: 'Hostname to provision'
-        required: true
-      INSTANCE_TYPE:
-        description: 'EC2 Instance Type'
-        default: t4g.medium
-        type: choice
-        options:
-          - t4g.small
-          - t4g.medium
-          - t4g.large
-          - t4g.xlarge
-          - m6g.large
-          - m6g.xlarge
-        required: true
-      ROOT_DISK_SIZE:
-        description: 'Storage to provision for the root device'
-        type: string
-        default: '16'
-        required: false
-      DATA_DISK_SIZE:
-        description: 'Storage to provision for the data device'
-        type: string
-        default: '10'
-        required: false
-      SNAPSHOT_ID:
-        description: 'Snapshot to create volume'
-        type: string
-        required: false
+  push:
+    branches:
+      - '**'
+  inputs:
+    HOST:
+      description: 'Hostname to provision'
+      required: true
+    INSTANCE_TYPE:
+      description: 'EC2 Instance Type'
+      default: t4g.medium
+      type: choice
+      options:
+        - t4g.small
+        - t4g.medium
+        - t4g.large
+        - t4g.xlarge
+        - m6g.large
+        - m6g.xlarge
+      required: true
+    ROOT_DISK_SIZE:
+      description: 'Storage to provision for the root device'
+      type: string
+      default: '16'
+      required: false
+    DATA_DISK_SIZE:
+      description: 'Storage to provision for the data device'
+      type: string
+      default: '10'
+      required: false
+    SNAPSHOT_ID:
+      description: 'Snapshot to create volume'
+      type: string
+      required: false
 jobs:
   provision:
     name: Provision
