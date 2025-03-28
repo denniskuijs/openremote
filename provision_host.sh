@@ -1,8 +1,39 @@
-HOST="kuijs.me"
-SNAPSHOT_ID="snap-0d909df4be805491d"
+HOST=${1,,}
+SNAPSHOT_ID=${5,,}
 AVAILABILTYZONE="eu-west-1a"
 WAIT_FOR_STACK="true"
 awsDir=./
+
+if [ -z "$AWS_REGION" ]; then
+  AWS_REGION=eu-west-1
+fi
+
+if [ -n "$AWS_ACCESS_KEY_ID" ]; then
+  aws configure --profile github set aws_access_key_id $AWS_ACCESS_KEY_ID
+fi
+
+if [ -n "$AWS_SECRET_ACCESS_KEY" ]; then
+  aws configure --profile github set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+fi
+
+if [ -n "$AWS_REGION" ]; then
+  aws configure --profile github set region $AWS_REGION
+  aws configure --profile github-da set region $AWS_REGION
+fi
+
+AWS_PROFILE=github
+export AWS_PROFILE=$AWS_PROFILE
+
+echo "Validating AWS credentials"
+aws sts get-caller-identity
+
+if [ $? -ne 0 ]; then
+  echo "Failed to login to AWS"
+  exit 1
+else
+  echo "Login succeeded"
+  AWS_ENABLED=true
+fi
 
 STACK_NAME=$(tr '.' '-' <<< "$HOST")
 EBS_STACK_NAME="$STACK_NAME-ebs-volume"
@@ -45,22 +76,20 @@ else
 
     STACK_ID=$(aws cloudformation create-stack --stack-name $EBS_STACK_NAME --template-body file://$EBS_TEMPLATE_PATH --parameters $PARAMS --output text)
 
-    if [ "$WAIT_FOR_STACK" != "false" ]; then
-        echo "Waiting for stack to be created"
+    echo "Waiting for stack to be created"
+    STATUS=$(aws cloudformation describe-stacks --stack-name $EBS_STACK_NAME --query "Stacks[?StackId=='$STACK_ID'].StackStatus" --output text)
+
+    while [[ "$STATUS" == "CREATE_IN_PROGRESS" ]]; do
+        echo "Stack creation is still in progress .. Sleeping 30 seconds"
+        sleep 30
         STATUS=$(aws cloudformation describe-stacks --stack-name $EBS_STACK_NAME --query "Stacks[?StackId=='$STACK_ID'].StackStatus" --output text)
+    done
 
-        while [[ "$STATUS" == "CREATE_IN_PROGRESS" ]]; do
-            echo "Stack creation is still in progress .. Sleeping 30 seconds"
-            sleep 30
-            STATUS=$(aws cloudformation describe-stacks --stack-name $EBS_STACK_NAME --query "Stacks[?StackId=='$STACK_ID'].StackStatus" --output text)
-        done
-
-        if [ "$STATUS" != 'CREATE_COMPLETE' ]; then
-            echo "Stack creation has failed status is '$STATUS'"
-            exit 1;
-        else
-            echo "Stack creation is complete"
-        fi
+    if [ "$STATUS" != 'CREATE_COMPLETE' ]; then
+        echo "Stack creation has failed status is '$STATUS'"
+        exit 1;
+    else
+        echo "Stack creation is complete"
     fi
 fi
 
@@ -80,9 +109,7 @@ done
 
 echo "Instance is ready, attaching volume.."
 VOLUME_ID=$(aws ec2 describe-volumes --filters "Name=tag:aws:cloudformation:stack-name,Values='$EBS_STACK_NAME'" --query "Volumes[].VolumeId" --output text)
-
-VOLUME=$(aws ec2 attach-volume --device /dev/sdf --instance-id $INSTANCE_ID --volume-id $VOLUME_ID)
-VOLUME_STATE=$(aws ec2 describe-volumes --filters "Name=tag:aws:cloudformation:stack-name,Values='$EBS_STACK_NAME'" --query "Volumes[].State" --output text)
+VOLUME_STATE=$(aws ec2 attach-volume --device /dev/sdf --instance-id $INSTANCE_ID --volume-id $VOLUME_ID --query "State" --output text)
 
 while [[ "$VOLUME_STATE" == "attaching" ]]; do
     echo "Volume is still attaching.. Sleeping 30 seconds"

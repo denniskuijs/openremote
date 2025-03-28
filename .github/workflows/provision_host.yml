@@ -1,0 +1,54 @@
+name: Provision Host
+on:
+  workflow_dispatch:
+    inputs:
+      HOST:
+        description: 'Hostname to provision'
+        required: true
+      INSTANCE_TYPE:
+        description: 'EC2 Instance Type'
+        default: t4g.medium
+        type: choice
+        options:
+          - t4g.small
+          - t4g.medium
+          - t4g.large
+          - t4g.xlarge
+          - m6g.large
+          - m6g.xlarge
+        required: true
+      ROOT_DISK_SIZE:
+        description: 'Storage to provision for the root device'
+        type: string
+        default: '16'
+        required: false
+      DATA_DISK_SIZE:
+        description: 'Storage to provision for the data device'
+        type: string
+        default: '10'
+        required: false
+      SNAPSHOT_ID:
+        description: 'Snapshot to create volume'
+        type: string
+        required: false
+jobs:
+  provision:
+    name: Provision
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Provision Host
+        run: |
+          chmod +x ./provision_host.sh
+          ./provision_host.sh "$HOST" "INSTANCE_TYPE" "ROOT_DISK_SIZE" "DATA_DISK_SIZE" "SNAPSHOT_ID"
+        env:
+          HOST: ${{ github.event.inputs.HOST }}
+          INSTANCE_TYPE: ${{ github.event.inputs.INSTANCE_TYPE }}
+          ROOT_DISK_SIZE: ${{ github.event.inputs.ROOT_DISK_SIZE }}
+          DATA_DISK_SIZE: ${{ github.event.inputs.DATA_DISK_SIZE }}
+          SNAPSHOT_ID: ${{ github.event.inputs.SNAPSHOT_ID }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
