@@ -1,6 +1,6 @@
 name: Provision Host
 on:
-  workflow_dispatch:
+  pull_request:
     inputs:
       HOST:
         description: 'Hostname to provision'
