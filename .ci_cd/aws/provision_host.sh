@@ -97,6 +97,8 @@ else
         exit 1
     fi
 
+    echo $DATA_DISK_SIZE
+
     # Configure parameters
     PARAMS="ParameterKey=Host,ParameterValue='$HOST'"
     PARAMS="$PARAMS ParameterKey=AvailabilityZone,ParameterValue='$SUBNET_AZ'"
