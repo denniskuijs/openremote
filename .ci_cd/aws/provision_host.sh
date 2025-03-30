@@ -102,7 +102,7 @@ else
     # Configure parameters
     PARAMS="ParameterKey=Host,ParameterValue='$HOST'"
     PARAMS="$PARAMS ParameterKey=AvailabilityZone,ParameterValue='$SUBNET_AZ'"
-    PARAMS="$PARAMS ParameterKey=VolumeSize,ParameterValue=$DATA_DISK_SIZE%,"
+    PARAMS="$PARAMS ParameterKey=VolumeSize,ParameterValue=16"
 
     if [ -n "$SNAPSHOT_ID" ]; then
         PARAMS="$PARAMS ParameterKey=SnapshotId,ParameterValue='$SNAPSHOT_ID'"
