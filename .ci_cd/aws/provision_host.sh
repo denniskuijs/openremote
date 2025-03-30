@@ -36,7 +36,7 @@ AWS_ACCOUNT_NAME=${1,,}
 HOST=${2,,}
 INSTANCE_TYPE=${3,,}
 ROOT_DISK_SIZE=${4,,}
-DATA_DISK_SIZE=${5}
+DATA_DISK_SIZE=${5,,}
 SNAPSHOT_ID=${6,,}
 ELASTIC_IP=${7,,}
 PROVISION_S3_BUCKET=${8,,}
@@ -97,12 +97,12 @@ else
         exit 1
     fi
 
-    echo $DATA_DISK_SIZE
+    echo $DATA_DISK_SIZE%,
 
     # Configure parameters
     PARAMS="ParameterKey=Host,ParameterValue='$HOST'"
     PARAMS="$PARAMS ParameterKey=AvailabilityZone,ParameterValue='$SUBNET_AZ'"
-    PARAMS="$PARAMS ParameterKey=VolumeSize,ParameterValue=$DATA_DISK_SIZE"
+    PARAMS="$PARAMS ParameterKey=VolumeSize,ParameterValue=$DATA_DISK_SIZE%,"
 
     if [ -n "$SNAPSHOT_ID" ]; then
         PARAMS="$PARAMS ParameterKey=SnapshotId,ParameterValue='$SNAPSHOT_ID'"
