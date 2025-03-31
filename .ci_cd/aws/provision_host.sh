@@ -313,8 +313,8 @@ EOF
   fi
 
   # Retrieve Instance ID and state before EBS data volume can be attached.
-  INSTANCE_ID=$(aws ec2 describe-instances --filters "Name=tag:aws:cloudformation:stack-id,Values='$STACK_ID'" --query "Reservations[0].Instances[0].InstanceId" --output text $ACCOUNT_PROFILE 2>/dev/null | grep -v -i 'None')
-  INSTANCE_STATE=$(aws ec2 describe-instances --filters "Name=tag:aws:cloudformation:stack-id,Values='$STACK_ID'" --query "Reservations[0].Instances[0].State.Name" --output text $ACCOUNT_PROFILE 2>/dev/null | grep -v -i 'None')
+  INSTANCE_ID=$(aws ec2 describe-instances --filters "Name=tag:Name,Values='$HOST'" --query "Reservations[0].Instances[?Tags[?Value=='$STACK_NAME']].InstanceId" --output text $ACCOUNT_PROFILE 2>/dev/null)
+  INSTANCE_STATE=$(aws ec2 describe-instances --filters "Name=tag:Name,Values='$HOST'" --query "Reservations[0].Instances[?Tags[?Value=='$STACK_NAME']].State.Name" --output text $ACCOUNT_PROFILE 2>/dev/null)
 
   # Check if instance is created and running
   echo "Check if instance is available"
@@ -322,8 +322,8 @@ EOF
   while [[ -z "$INSTANCE_ID" ]] && [[ "$INSTANCE_STATE" != 'running' ]] && [ $count -lt 30 ]; do
       echo "Instance creation is still in progress .. Sleeping 30 seconds"
       sleep 30 
-      INSTANCE_ID=$(aws ec2 describe-instances --filters "Name=tag:aws:cloudformation:stack-id,Values='$STACK_ID'" --query "Reservations[0].Instances[0].InstanceId" --output text $ACCOUNT_PROFILE 2>/dev/null | grep -v -i 'None')
-      INSTANCE_STATE=$(aws ec2 describe-instances --filters "Name=tag:aws:cloudformation:stack-id,Values='$STACK_ID'" --query "Reservations[0].Instances[0].State.Name" --output text $ACCOUNT_PROFILE 2>/dev/null | grep -v -i 'None')
+      INSTANCE_ID=$(aws ec2 describe-instances --filters "Name=tag:Name,Values='$HOST'" --query "Reservations[0].Instances[?Tags[?Value=='$STACK_NAME']].InstanceId" --output text $ACCOUNT_PROFILE 2>/dev/null)
+      INSTANCE_STATE=$(aws ec2 describe-instances --filters "Name=tag:Name,Values='$HOST'" --query "Reservations[0].Instances[?Tags[?Value=='$STACK_NAME']].State.Name" --output text $ACCOUNT_PROFILE 2>/dev/null)
       count=$((count+1))
   done
 
@@ -334,14 +334,14 @@ EOF
 
   # Retrieve Volume ID and attach volume to Instance.
   echo "Instance is ready, attaching volume.."
-  VOLUME_ID=$(aws ec2 describe-volumes --filters "Name=tag:Name,Values='$HOST/data'" --query "Volumes[0].VolumeId" --output text $ACCOUNT_PROFILE 2>/dev/null)
+  VOLUME_ID=$(aws ec2 describe-volumes --filters "Name=tag:Name,Values='$HOST/data'" --query "Volumes[?Tags[?Value=='$EBS_STACK_NAME']].VolumeId" --output text $ACCOUNT_PROFILE 2>/dev/null)
   STATUS=$(aws ec2 attach-volume --device $DEVICE_NAME --instance-id $INSTANCE_ID --volume-id $VOLUME_ID --query "State" --output text $ACCOUNT_PROFILE 2>/dev/null)
 
   # Check if volume is attached
   while [[ "$STATUS" == 'attaching' ]]; do
       echo "Volume is still attaching .. Sleeping 30 seconds"
       sleep 30
-      STATUS=$(aws ec2 describe-volumes --filters "Name=tag:Name,Values='$HOST/data'" --query "Volumes[0].Attachments[0].State" --output text $ACCOUNT_PROFILE 2>/dev/null)
+      STATUS=$(aws ec2 describe-volumes --filters "Name=tag:Name,Values='$HOST/data'" --query "Volumes[?Tags[?Value=='$EBS_STACK_NAME']].Attachments[].State" --output text $ACCOUNT_PROFILE 2>/dev/null)
   done
 
   if [ "$STATUS" != 'attached' ]; then
