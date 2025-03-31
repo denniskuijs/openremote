@@ -35,7 +35,7 @@ on:
       DATA_DISK_SIZE:
         description: 'Override EC2 data EBS volume size (GB)'
         type: string
-        default: '10'
+        default: '16'
         required: false
       SNAPSHOT_ID:
         description: 'Create EBS data volume based on snapshot'
