@@ -341,7 +341,7 @@ EOF
   while [[ "$STATUS" == 'attaching' ]]; do
       echo "Volume is still attaching .. Sleeping 30 seconds"
       sleep 30
-      STATUS=$(aws ec2 describe-volumes --filters "Name=tag:Name,Values='$HOST/data'" --query "Volumes[0].Attachments[0].Status" --output text $ACCOUNT_PROFILE 2>/dev/null)
+      STATUS=$(aws ec2 describe-volumes --filters "Name=tag:Name,Values='$HOST/data'" --query "Volumes[0].Attachments[0].State" --output text $ACCOUNT_PROFILE 2>/dev/null)
   done
 
   if [ "$STATUS" != 'attached' ]; then
