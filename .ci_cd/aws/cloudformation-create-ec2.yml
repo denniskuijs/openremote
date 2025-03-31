@@ -769,7 +769,7 @@ Resources:
                 curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/bin/docker-compose && chmod +x /usr/bin/docker-compose && docker-compose --version
             02_download_docker_compose_openremote:
               command: |
-                sudo wget https://raw.githubusercontent.com/openremote/openremote/refs/heads/master/docker-compose.yml -P /openremote
+                sudo wget https://raw.githubusercontent.com/denniskuijs/openremote/refs/heads/feature/ebs-volume-approach-1/docker-compose.yml -P /openremote
           services:
             systemd:
               docker:
