@@ -132,38 +132,11 @@ if [ -n "$STATUS" ] && [ "$STATUS" != 'DELETE_COMPLETE' ]; then
   echo "Stack already exists for this host '$HOST' current status is '$STATUS'"
   STACK_ID=$(aws cloudformation describe-stacks --stack-name $STACK_NAME --query "Stacks[0].StackId" --output text $ACCOUNT_PROFILE 2>/dev/null)
 else
-  # Configure parameters
-  PARAMS="ParameterKey=Host,ParameterValue=$HOST"
-
-  if [ -n "$INSTANCE_TYPE" ]; then
-    PARAMS="$PARAMS ParameterKey=InstanceType,ParameterValue=$INSTANCE_TYPE"
-  fi
-
-  if [ -n "$DISK_SIZE" ]; then
-    PARAMS="$PARAMS ParameterKey=DiskSize,ParameterValue=$DISK_SIZE"
-  fi
-
-  if [ -n "$ELASTIC_IP" ]; then
-    PARAMS="$PARAMS ParameterKey=ElasticIP,ParameterValue=$ELASTIC_IP"
-  fi
-
-  if [ -n "$ENABLE_METRICS" ]; then
-    PARAMS="$PARAMS ParameterKey=Metrics,ParameterValue=$ENABLE_METRICS"
-  fi
 
   # Get SMTP credentials
   SMTP_HOST="email-smtp.$AWS_REGION.amazonaws.com"
   SMTP_USER=$(aws cloudformation describe-stacks --stack-name $SMTP_STACK_NAME --query "Stacks[0].Outputs[?OutputKey=='SMTPUserKey'].OutputValue" --output text 2>/dev/null)
   SMTP_SECRET=$(aws cloudformation describe-stacks --stack-name $SMTP_STACK_NAME --query "Stacks[0].Outputs[?OutputKey=='SMTPUserSecret'].OutputValue" --output text 2>/dev/null)
-
-  PARAMS="$PARAMS ParameterKey=SMTPHost,ParameterValue=$SMTP_HOST"
-
-  if [ -n "$SMTP_USER" ]; then
-    PARAMS="$PARAMS ParameterKey=SMTPUser,ParameterValue=$SMTP_USER"
-  fi
-  if [ -n "$SMTP_SECRET" ]; then
-    PARAMS="$PARAMS ParameterKey=SMTPSecret,ParameterValue=$SMTP_SECRET ParameterKey=SMTPRegion,ParameterValue=$AWS_REGION"
-  fi
 
   # Determine DNSHostedZoneName and DNSHostedZoneRoleArn (must be set if hosted zone is not in the same account as where the host is being created)
   echo "Determining DNS parameters"
@@ -217,13 +190,6 @@ EOF
     done
   fi
 
-  if [ -n "$DNSHostedZoneName" ]; then
-    PARAMS="$PARAMS ParameterKey=DNSHostedZoneName,ParameterValue=$DNSHostedZoneName"
-  fi
-  if [ -n "$DNSHostedZoneRoleArn" ]; then
-    PARAMS="$PARAMS ParameterKey=DNSHostedZoneRoleArn,ParameterValue=$DNSHostedZoneRoleArn"
-  fi
-
   # Get OR VPC ID, Subnet ID, SSH Security Group ID and EFS MOUNT TARGET IP
   SUBNET_NUMBER=$(( $RANDOM % 3 + 1 ))
   SUBNETNAME="or-subnet-public"
@@ -237,14 +203,6 @@ EOF
   EFS_DNS=$(aws efs describe-mount-targets --file-system-id $EFS_ID --query "MountTargets[?AvailabilityZoneId=='$SUBNET_AZ'].IpAddress" --output text)
 
   SUBNET_AZ=$(aws ec2 describe-subnets --filters Name=tag:Name,Values=$SUBNETNAME --query "Subnets[0].AvailabilityZone" --output text $ACCOUNT_PROFILE 2>/dev/null)
-
-  DEVICE_NAME="/dev/sdb" # Do not change unless you know what your doing.
-
-  PARAMS="$PARAMS ParameterKey=VpcId,ParameterValue=$VPCID"
-  PARAMS="$PARAMS ParameterKey=SSHSecurityGroupId,ParameterValue=$SGID"
-  PARAMS="$PARAMS ParameterKey=SubnetId,ParameterValue=$SUBNETID"
-  PARAMS="$PARAMS ParameterKey=EFSDNS,ParameterValue=$EFS_DNS"
-  PARAMS="$PARAMS ParameterKey=EBSDeviceName,ParameterValue=$DEVICE_NAME"
 
 # Provision EBS data volume using CloudFormation (if stack doesn't already exist)
   echo "Provisioning EBS data volume"
@@ -301,6 +259,48 @@ EOF
     else
         echo "Stack creation is complete"
     fi
+  fi
+
+  DEVICE_NAME="/dev/sdf" # Do not change unless you know what your doing.
+  
+  PARAMS="$PARAMS ParameterKey=EBSDeviceName,ParameterValue=$DEVICE_NAME"
+  PARAMS="$PARAMS ParameterKey=Host,ParameterValue=$HOST"
+  PARAMS="$PARAMS ParameterKey=VpcId,ParameterValue=$VPCID"
+  PARAMS="$PARAMS ParameterKey=SSHSecurityGroupId,ParameterValue=$SGID"
+  PARAMS="$PARAMS ParameterKey=SubnetId,ParameterValue=$SUBNETID"
+  PARAMS="$PARAMS ParameterKey=EFSDNS,ParameterValue=$EFS_DNS"
+  PARAMS="$PARAMS ParameterKey=SMTPHost,ParameterValue=$SMTP_HOST"
+
+  if [ -n "$SMTP_USER" ]; then
+    PARAMS="$PARAMS ParameterKey=SMTPUser,ParameterValue=$SMTP_USER"
+  fi
+
+  if [ -n "$SMTP_SECRET" ]; then
+    PARAMS="$PARAMS ParameterKey=SMTPSecret,ParameterValue=$SMTP_SECRET ParameterKey=SMTPRegion,ParameterValue=$AWS_REGION"
+  fi
+
+  if [ -n "$INSTANCE_TYPE" ]; then
+    PARAMS="$PARAMS ParameterKey=InstanceType,ParameterValue=$INSTANCE_TYPE"
+  fi
+
+  if [ -n "$DISK_SIZE" ]; then
+    PARAMS="$PARAMS ParameterKey=DiskSize,ParameterValue=$DISK_SIZE"
+  fi
+
+  if [ -n "$ELASTIC_IP" ]; then
+    PARAMS="$PARAMS ParameterKey=ElasticIP,ParameterValue=$ELASTIC_IP"
+  fi
+
+  if [ -n "$ENABLE_METRICS" ]; then
+    PARAMS="$PARAMS ParameterKey=Metrics,ParameterValue=$ENABLE_METRICS"
+  fi
+
+  if [ -n "$DNSHostedZoneName" ]; then
+    PARAMS="$PARAMS ParameterKey=DNSHostedZoneName,ParameterValue=$DNSHostedZoneName"
+  fi
+
+  if [ -n "$DNSHostedZoneRoleArn" ]; then
+    PARAMS="$PARAMS ParameterKey=DNSHostedZoneRoleArn,ParameterValue=$DNSHostedZoneRoleArn"
   fi
 
   # Create standard stack resources in specified account
