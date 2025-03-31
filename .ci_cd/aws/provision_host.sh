@@ -335,17 +335,17 @@ EOF
   # Retrieve Volume ID and attach volume to Instance.
   echo "Instance is ready, attaching volume.."
   VOLUME_ID=$(aws ec2 describe-volumes --filters "Name=tag:Name,Values='$HOST/data'" --query "Volumes[0].VolumeId" --output text $ACCOUNT_PROFILE 2>/dev/null)
-  VOLUME=$(aws ec2 attach-volume --device $DEVICE_NAME --instance-id $INSTANCE_ID --volume-id $VOLUME_ID --query "State" --output text $ACCOUNT_PROFILE 2>/dev/null)
+  STATUS=$(aws ec2 attach-volume --device $DEVICE_NAME --instance-id $INSTANCE_ID --volume-id $VOLUME_ID --query "State" --output text $ACCOUNT_PROFILE 2>/dev/null)
 
   # Check if volume is attached
-  while [[ "$VOLUME" == 'attaching' ]]; do
+  while [[ "$STATUS" == 'attaching' ]]; do
       echo "Volume is still attaching .. Sleeping 30 seconds"
       sleep 30
-      VOLUME=$(aws ec2 describe-volumes --filters "Name=tag:Name,Values='$HOST/data'" --query "Volumes[0].State" --output text $ACCOUNT_PROFILE 2>/dev/null)
+      STATUS=$(aws ec2 describe-volumes --filters "Name=tag:Name,Values='$HOST/data'" --query "Volumes[0].Attachments[0].Status" --output text $ACCOUNT_PROFILE 2>/dev/null)
   done
 
-  if [ "$VOLUME" != 'in-use' ]; then
-      echo "Volume attaching failed with status $VOLUME"
+  if [ "$STATUS" != 'attached' ]; then
+      echo "Volume attaching failed with status $STATUS"
       exit 1
   else
       echo "Volume attaching is complete"
