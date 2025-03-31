@@ -263,7 +263,7 @@ EOF
 
   DEVICE_NAME="/dev/sdf" # Do not change unless you know what your doing.
   
-  PARAMS="$PARAMS ParameterKey=EBSDeviceName,ParameterValue=$DEVICE_NAME"
+  PARAMS="ParameterKey=EBSDeviceName,ParameterValue=$DEVICE_NAME"
   PARAMS="$PARAMS ParameterKey=Host,ParameterValue=$HOST"
   PARAMS="$PARAMS ParameterKey=VpcId,ParameterValue=$VPCID"
   PARAMS="$PARAMS ParameterKey=SSHSecurityGroupId,ParameterValue=$SGID"
