@@ -225,7 +225,7 @@ EOF
     fi
 
     # Configure parameters
-    PARAMS="$PARAMS ParameterKey=Host,ParameterValue=$HOST"
+    PARAMS="ParameterKey=Host,ParameterValue=$HOST"
     PARAMS="$PARAMS ParameterKey=AvailabilityZone,ParameterValue=$SUBNET_AZ"
     PARAMS="$PARAMS ParameterKey=DiskSize,ParameterValue=$DATA_DISK_SIZE"
 
