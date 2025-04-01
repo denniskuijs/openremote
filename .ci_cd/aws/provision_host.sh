@@ -234,7 +234,7 @@ EOF
     fi
 
     # Create standard stack resources in specified account
-    STACK_ID=$(aws cloudformation create-stack --capabilities CAPABILITY_NAMED_IAM --stack-name $EBS_STACK_NAME --template-body file://$EBS_TEMPLATE_PATH --parameters $PARAMS --output text)
+    EBS_STACK_ID=$(aws cloudformation create-stack --capabilities CAPABILITY_NAMED_IAM --stack-name $EBS_STACK_NAME --template-body file://$EBS_TEMPLATE_PATH --parameters $PARAMS --output text)
 
     if [ $? -ne 0 ]; then
       echo "Create stack failed"
@@ -335,14 +335,14 @@ EOF
 
   # Retrieve Volume ID and attach volume to Instance.
   echo "Instance is ready, attaching volume.."
-  VOLUME_ID=$(aws ec2 describe-volumes --filters "Name=tag:Name,Values='$HOST/data'" --query "Volumes[?Tags[?Value=='$EBS_STACK_NAME']].VolumeId" --output text $ACCOUNT_PROFILE 2>/dev/null)
+  VOLUME_ID=$(aws ec2 describe-volumes --filters "Name=tag:Name,Values='$HOST/data'" --query "Volumes[?Tags[?Value=='$EBS_STACK_ID']].VolumeId" --output text $ACCOUNT_PROFILE 2>/dev/null)
   STATUS=$(aws ec2 attach-volume --device $DEVICE_NAME --instance-id $INSTANCE_ID --volume-id $VOLUME_ID --query "State" --output text $ACCOUNT_PROFILE 2>/dev/null)
 
   # Check if volume is attached
   while [[ "$STATUS" == 'attaching' ]]; do
       echo "Volume is still attaching .. Sleeping 30 seconds"
       sleep 30
-      STATUS=$(aws ec2 describe-volumes --filters "Name=tag:Name,Values='$HOST/data'" --query "Volumes[?Tags[?Value=='$EBS_STACK_NAME']].Attachments[].State" --output text $ACCOUNT_PROFILE 2>/dev/null)
+      STATUS=$(aws ec2 describe-volumes --filters "Name=tag:Name,Values='$HOST/data'" --query "Volumes[?Tags[?Value=='$EBS_STACK_ID']].Attachments[].State" --output text $ACCOUNT_PROFILE 2>/dev/null)
   done
 
   if [ "$STATUS" != 'attached' ]; then
