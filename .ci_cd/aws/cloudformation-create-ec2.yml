@@ -279,8 +279,7 @@ Resources:
                             "used_percent"
                           ],
                           "resources": [
-                            "/",
-                            "/var/lib/docker/volumes"
+                            "*",
                           ],
                           "metrics_collection_interval": 900
                         }
