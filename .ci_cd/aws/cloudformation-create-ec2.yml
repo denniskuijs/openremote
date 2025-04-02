@@ -257,14 +257,14 @@ Resources:
             "/opt/aws/amazon-cloudwatch-agent/var/config.json":
               content: !If
                 - MetricsEnabled
-                - !Sub |
+                - |
                   {
                     "agent":{
                       "metrics_collection_interval": 300
                     },
                     "metrics": {
                       "append_dimensions": {
-                        "InstanceId": "${!aws:InstanceId}"
+                        "InstanceId": "${aws:InstanceId}"
                       },
                       "metrics_collected": {
                         "mem": {
@@ -280,7 +280,7 @@ Resources:
                           ],
                           "resources": [
                             "/",
-                            "${EBSDeviceName}"
+                            "/var/lib/docker/volumes"
                           ],
                           "metrics_collection_interval": 900
                         }
