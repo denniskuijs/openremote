@@ -353,6 +353,44 @@ EOF
       echo "Volume attaching is complete"
   fi
 
+  echo "Check if IAM Role for Data Lifecycle Manager exists"
+  ROLE_ARN=$(aws iam get-role --role-name AWSDataLifecycleManagerDefaultRole --query "Role.Arn" --output text $ACCOUNT_PROFILE)
+
+  if [ -z "$ROLE_ARN" ]; then
+    ROLE=$(aws dlm create-default-role --resource-type snapshot)
+    
+    if [ $? -ne 0 ]; then
+      echo "Create IAM Role failed"
+      exit 1
+    else
+      echo "Succesfully created IAM Role"
+    fi
+    
+    ROLE_ARN=$(aws iam get-role --role-name AWSDataLifecycleManagerDefaultRole --query "Role.Arn" --output text $ACCOUNT_PROFILE)
+  fi
+
+  echo "Creating Data Lifecycle policy for automatic snapshot creation"
+
+  if [ -f "${awsDir}policyDetails.json" ]; then
+    POLICY_DETAILS_PATH="${awsDir}policyDetails.json"
+  elif [ -f ".ci_cd/aws/config/policyDetails.json" ]; then
+    POLICY_DETAILS_PATH=".ci_cd/aws/config/policyDetails.json"
+  elif [ -f "openremote/.ci_cd/aws/config/policyDetails.json" ]; then
+    POLICY_DETAILS_PATH="openremote/.ci_cd/aws/config/policyDetails.json"
+  else
+    echo "Cannot determine location of policyDetails.json"
+    exit 1
+  fi
+
+  POLICY_ID=$(aws dlm create-lifecycle-policy --description "$HOST" --state ENABLED --execution-role-arn "$ROLE_ARN" --policy-details file://$POLICY_DETAILS_PATH --output text $ACCOUNT_PROFILE)
+
+  if [ $? -ne 0 ]; then
+      echo "Policy creation failed"
+      exit 1
+  else
+      echo "Succesfully created Lifecycle Policy"
+  fi
+
   if [ "$WAIT_FOR_STACK" != 'false' ]; then
     # Wait for CloudFormation stack status to be CREATE_*
     echo "Waiting for stack to be created"
