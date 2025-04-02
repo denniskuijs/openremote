@@ -382,7 +382,7 @@ EOF
     exit 1
   fi
 
-  POLICY_ID=$(aws dlm create-lifecycle-policy --description "$HOST" --state ENABLED --execution-role-arn "$ROLE_ARN" --policy-details file://$POLICY_DETAILS_PATH --output text $ACCOUNT_PROFILE)
+  POLICY_ID=$(aws dlm create-lifecycle-policy --description test --state ENABLED --execution-role-arn "$ROLE_ARN" --policy-details file://$POLICY_DETAILS_PATH --output text $ACCOUNT_PROFILE)
 
   if [ $? -ne 0 ]; then
       echo "Policy creation failed"
