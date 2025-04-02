@@ -354,7 +354,7 @@ EOF
       echo "Volume attaching is complete"
   fi
 
-  echo "Check if IAM Role for Data Lifecycle Manager exists"
+  echo "Check if IAM role for Data Lifecycle Manager exists"
   ROLE_ARN=$(aws iam get-role --role-name AWSDataLifecycleManagerDefaultRole --query "Role.Arn" --output text $ACCOUNT_PROFILE)
 
   if [ -z "$ROLE_ARN" ]; then
@@ -390,8 +390,7 @@ EOF
     fi
 
     # Configure parameters
-
-    DLM_DESCRIPTION=echo ${HOST%.*}
+    DLM_DESCRIPTION=${HOST%.*}
     PARAMS="ParameterKey=PolicyDescription,ParameterValue='$DLM_DESCRIPTION/data'"
     PARAMS="$PARAMS ParameterKey=DLMExecutionRoleArn,ParameterValue='$ROLE_ARN'"
     PARAMS="$PARAMS ParameterKey=EBSStackId,ParameterValue='$EBS_STACK_ID'"
@@ -404,6 +403,7 @@ EOF
       exit 1
     fi
 
+  if [ "$WAIT_FOR_STACK" != 'false' ]; then
     # Wait for CloudFormation stack status to be CREATE_*
     echo "Waiting for stack to be created"
     STATUS=$(aws cloudformation describe-stacks --stack-name $DLM_STACK_NAME --query "Stacks[?StackId=='$DLM_STACK_ID'].StackStatus" --output text 2>/dev/null)
