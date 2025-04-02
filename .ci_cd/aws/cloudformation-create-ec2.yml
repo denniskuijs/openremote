@@ -257,7 +257,7 @@ Resources:
             "/opt/aws/amazon-cloudwatch-agent/var/config.json":
               content: !If
                 - MetricsEnabled
-                - |
+                - !Sub |
                   {
                     "agent":{
                       "metrics_collection_interval": 300
@@ -279,7 +279,8 @@ Resources:
                             "used_percent"
                           ],
                           "resources": [
-                            "/"
+                            "/",
+                            "${EBSDeviceName}"
                           ],
                           "metrics_collection_interval": 900
                         }
