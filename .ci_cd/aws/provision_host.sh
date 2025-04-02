@@ -390,7 +390,7 @@ EOF
     fi
 
     # Configure parameters
-    DLM_DESCRIPTION="OpenRemote Data from $DLM_DESCRIPTION ${HOST%.*}"
+    DLM_DESCRIPTION="OpenRemote-${HOST%.*}"
     PARAMS="ParameterKey=PolicyDescription,ParameterValue='$DLM_DESCRIPTION'"
     PARAMS="$PARAMS ParameterKey=DLMExecutionRoleArn,ParameterValue='$ROLE_ARN'"
     PARAMS="$PARAMS ParameterKey=EBSStackId,ParameterValue='$EBS_STACK_ID'"
