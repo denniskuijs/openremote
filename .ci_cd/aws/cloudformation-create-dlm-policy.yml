@@ -5,21 +5,24 @@
 # ---------------------------------------------------------------------------------------------------------------------
 
 AWSTemplateFormatVersion: '2010-09-09'
-Description: 'Creates an Lifecycle Policy for creating EBS snapshots'
+Description: 'Creates an Amazon Data Lifecycle Manager policy for creating EBS data volume snapshots'
 
 Parameters:
+  PolicyDescription:
+    Description: Lifecycle Policy Description
+    Type: String
   DLMExecutionRoleArn:
-    Description: Role ARN for executing the DLM operations
+    Description: Role ARN for executing the DLM operations.
     Type: String
   EBSStackId:
-    Description: EBS Stack Id of the volume that need to be targeted by this policy
+    Description: EBS StackId of the volume that need to be targeted by this policy.
     Type: String
 
 Resources:
   EBSPolicy:
     Type: AWS::DLM::LifecyclePolicy
     Properties:
-      Description: Snapshot creation of EBS Volume
+      Description: !Ref PolicyDescription
       ExecutionRoleArn: !Ref DLMExecutionRoleArn
       State: ENABLED
       PolicyDetails:
@@ -28,8 +31,6 @@ Resources:
         TargetTags:
           - Key: aws:cloudformation:stack-id
             Value: !Ref EBSStackId
-        ResourceLocations:
-          - CLOUD
         ResourceTypes: 
           - VOLUME
         Schedules:

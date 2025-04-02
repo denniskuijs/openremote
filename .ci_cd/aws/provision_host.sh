@@ -390,7 +390,10 @@ EOF
     fi
 
     # Configure parameters
-    PARAMS="ParameterKey=DLMExecutionRoleArn,ParameterValue='$ROLE_ARN'"
+
+    DLM_DESCRIPTION=echo ${HOST%.*}
+    PARAMS="ParameterKey=PolicyDescription,ParameterValue='$DLM_DESCRIPTION/data'"
+    PARAMS="$PARAMS ParameterKey=DLMExecutionRoleArn,ParameterValue='$ROLE_ARN'"
     PARAMS="$PARAMS ParameterKey=EBSStackId,ParameterValue='$EBS_STACK_ID'"
 
     # Create standard stack resources in specified account
