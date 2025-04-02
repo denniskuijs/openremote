@@ -421,24 +421,24 @@ EOF
           echo "Stack creation is complete"
       fi
     fi
+  fi
 
-    if [ "$WAIT_FOR_STACK" != 'false' ]; then
-      # Wait for CloudFormation stack status to be CREATE_*
-      echo "Waiting for stack to be created"
+  if [ "$WAIT_FOR_STACK" != 'false' ]; then
+     # Wait for CloudFormation stack status to be CREATE_*
+    echo "Waiting for stack to be created"
+    STATUS=$(aws cloudformation describe-stacks --stack-name $STACK_NAME --query "Stacks[?StackId=='$STACK_ID'].StackStatus" --output text $ACCOUNT_PROFILE 2>/dev/null)
+
+    while [[ "$STATUS" == 'CREATE_IN_PROGRESS' ]]; do
+      echo "Stack creation is still in progress .. Sleeping 30 seconds"
+      sleep 30
       STATUS=$(aws cloudformation describe-stacks --stack-name $STACK_NAME --query "Stacks[?StackId=='$STACK_ID'].StackStatus" --output text $ACCOUNT_PROFILE 2>/dev/null)
+    done
 
-      while [[ "$STATUS" == 'CREATE_IN_PROGRESS' ]]; do
-        echo "Stack creation is still in progress .. Sleeping 30 seconds"
-        sleep 30
-        STATUS=$(aws cloudformation describe-stacks --stack-name $STACK_NAME --query "Stacks[?StackId=='$STACK_ID'].StackStatus" --output text $ACCOUNT_PROFILE 2>/dev/null)
-      done
-
-      if [ "$STATUS" != 'CREATE_COMPLETE' ] && [ "$STATUS" != 'UPDATE_COMPLETE' ]; then
-        echo "Stack creation has failed status is '$STATUS'"
-        exit 1
-      else
-        echo "Stack creation is complete"
-      fi
+    if [ "$STATUS" != 'CREATE_COMPLETE' ] && [ "$STATUS" != 'UPDATE_COMPLETE' ]; then
+      echo "Stack creation has failed status is '$STATUS'"
+      exit 1
+     else
+      echo "Stack creation is complete"
     fi
   fi
 fi
