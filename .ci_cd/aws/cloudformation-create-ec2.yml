@@ -224,10 +224,10 @@ Resources:
           default:
             - setupCfnHup
             - create_swapfile
-            - docker_setup
-            - prepare_volume
             - cloudwatch_config
             - restart_amazon-cloudwatch-agent
+            - docker_setup
+            - prepare_volume
             - cron_setup
             - env_vars
             - dns_updater
@@ -1011,6 +1011,8 @@ Resources:
           Value: !Ref EC2Instance
         - Name: path
           Value: /
+        - Name: path
+          Value: /var/lib/docker/volumes
         - Name: fstype
           Value: xfs
 
