@@ -265,9 +265,6 @@ Resources:
                     "metrics": {
                       "append_dimensions": {
                         "InstanceId": "${aws:InstanceId}",
-                        "VolumeId": "${aws:VolumeId}",
-                        "RootDisk": "/",
-                        "OpenRemoteData": "/var/lib/docker/volumes"
                       },
                       "metrics_collected": {
                         "mem": {
@@ -283,7 +280,6 @@ Resources:
                           ],
                           "resources": [
                             "/",
-                            "/var/lib/docker/volumes"
                           ],
                           "metrics_collection_interval": 900
                         }
@@ -1012,10 +1008,8 @@ Resources:
       Dimensions:
         - Name: InstanceId
           Value: !Ref EC2Instance
-        - Name: RootDisk
+        - Name: path
           Value: /
-        - Name: OpenRemoteData
-          Value: /var/lib/docker/volumes
         - Name: fstype
           Value: xfs
 

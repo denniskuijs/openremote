@@ -42,12 +42,6 @@ Resources:
                   description: The EBS Devicename where this volume is mounted on.
                   default: !Ref EBSDeviceName
             mainSteps:
-              - name: StopOpenRemote
-                action: aws:runShellScript
-                inputs:
-                    runCommand:
-                      - cd /openremote
-                      - docker-compose down
               - name: StopDocker
                 action: aws:runShellScript
                 inputs:
@@ -117,12 +111,6 @@ Resources:
                 inputs:
                     runCommand:
                       - systemctl start docker
-              - name: StartOpenRemote
-                action: aws:runShellScript
-                inputs:
-                    runCommand:
-                      - cd /openremote
-                      - docker-compose down
          DocumentFormat: YAML
          UpdateMethod: Replace
          DocumentType: Command
