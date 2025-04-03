@@ -224,10 +224,10 @@ Resources:
           default:
             - setupCfnHup
             - create_swapfile
-            - cloudwatch_config
-            - restart_amazon-cloudwatch-agent
             - docker_setup
             - prepare_volume
+            - cloudwatch_config
+            - restart_amazon-cloudwatch-agent
             - cron_setup
             - env_vars
             - dns_updater
@@ -279,7 +279,8 @@ Resources:
                             "used_percent"
                           ],
                           "resources": [
-                            "*",
+                            "/",
+                            "/var/lib/docker/volumes"
                           ],
                           "metrics_collection_interval": 900
                         }
