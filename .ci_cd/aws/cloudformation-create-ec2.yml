@@ -1009,9 +1009,9 @@ Resources:
       Dimensions:
         - Name: InstanceId
           Value: !Ref EC2Instance
-        - Name: path
+        - Name: root_disk
           Value: /
-        - Name: path
+        - Name: openremote_data
           Value: /var/lib/docker/volumes
         - Name: fstype
           Value: xfs
