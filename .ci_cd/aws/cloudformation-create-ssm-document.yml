@@ -5,7 +5,7 @@
 # ---------------------------------------------------------------------------------------------------------------------
 
 AWSTemplateFormatVersion: '2010-09-09'
-Description: 'Creates an SSM Document for detaching the EBS data volume'
+Description: 'Creates an SSM Document for attaching/detaching the EBS data volume'
 
 Parameters:
   InstanceId:
@@ -13,7 +13,7 @@ Parameters:
     Type: String
     Default: ""
   VolumeId:
-    Description: The VolumeId that needs to be detached.
+    Description: The VolumeId that needs to be attached/detached.
     Type: String
     Default: ""
   EBSDeviceName:
@@ -27,7 +27,7 @@ Resources:
     Properties:
          Content:
             schemaVersion: '2.2'
-            description: 'Run a script for detaching the EBS data volume'
+            description: 'Script for detaching the EBS data volume'
             parameters:
               InstanceId:
                 type: String
@@ -65,6 +65,7 @@ Resources:
                     - UUID=$(sudo blkid -o value -s UUID {{ EBSDeviceName }})
                     - sed -i '/UUID=$UUID/d' /etc/fstab
          DocumentFormat: YAML
+         TargetType: /AWS::EC2::Instance
          UpdateMethod: Replace
          DocumentType: Command
          Name: OR_Detach_Volume
@@ -74,7 +75,7 @@ Resources:
     Properties:
          Content:
             schemaVersion: '2.2'
-            description: 'Run a script for attaching the EBS data volume'
+            description: 'Script for attaching the EBS data volume'
             parameters:
               InstanceId:
                 type: String
@@ -82,11 +83,11 @@ Resources:
                 default: !Ref InstanceId
               VolumeId:
                 type: String
-                description: The VolumeId that needs to be detached.
+                description: The VolumeId that needs to be attached.
                 default: !Ref VolumeId
               EBSDeviceName:
                   type: String
-                  description: The EBS Devicename where this volume is mounted on.
+                  description: The EBS Device name where this volume needs to be mounted on.
                   default: !Ref EBSDeviceName
             mainSteps:
               - name: AttachVolume
@@ -112,6 +113,7 @@ Resources:
                     runCommand:
                       - systemctl start docker
          DocumentFormat: YAML
+         TargetType: /AWS::EC2::Instance
          UpdateMethod: Replace
          DocumentType: Command
          Name: OR_Attach_Volume
