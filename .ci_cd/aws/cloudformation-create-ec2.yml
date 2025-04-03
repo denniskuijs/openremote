@@ -265,6 +265,7 @@ Resources:
                     "metrics": {
                       "append_dimensions": {
                         "InstanceId": "${aws:InstanceId}",
+                        "VolumeId":"${aws:VolumeId}"
                       },
                       "metrics_collected": {
                         "mem": {
