@@ -1,0 +1,129 @@
+# ---------------------------------------------------------------------------------------------------------------------
+#
+# CloudFormation Template for creating an SSM Document for detaching the EBS Data volume.
+#
+# ---------------------------------------------------------------------------------------------------------------------
+
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Creates an SSM Document for detaching the EBS data volume'
+
+Parameters:
+  InstanceId:
+    Description: The InstanceId where the script needs to be executed.
+    Type: String
+    Default: ""
+  VolumeId:
+    Description: The VolumeId that needs to be detached.
+    Type: String
+    Default: ""
+  EBSDeviceName:
+    Description: The EBS Devicename where this volume is mounted on.
+    Type: String
+    Default: ""
+
+Resources:
+  SSMDetachEBSDocument:
+    Type: AWS::SSM::Document
+    Properties:
+         Content:
+            schemaVersion: '2.2'
+            description: 'Run a script for detaching the EBS data volume'
+            parameters:
+              InstanceId:
+                type: String
+                description: The InstanceId where the script needs to be executed.
+                default: !Ref InstanceId
+              VolumeId:
+                type: String
+                description: The VolumeId that needs to be detached.
+                default: !Ref VolumeId
+              EBSDeviceName:
+                  type: String
+                  description: The EBS Devicename where this volume is mounted on.
+                  default: !Ref EBSDeviceName
+            mainSteps:
+              - name: StopOpenRemote
+                action: aws:runShellScript
+                inputs:
+                    runCommand:
+                      - cd /openremote
+                      - docker-compose down
+              - name: StopDocker
+                action: aws:runShellScript
+                inputs:
+                    runCommand:
+                      - systemctl stop docker
+              - name: UmountVolume
+                action: aws:runShellScript
+                inputs:
+                  runCommand:
+                    - umount {{ EBSDeviceName }}
+              - name: DetachVolume
+                action: aws:runShellScript
+                inputs:
+                  runCommand:
+                    - aws ec2 detach-volume --volume-id {{ VolumeId }}
+              - name: RemoveFstabEntry
+                action: aws:runShellScript
+                inputs:
+                  runCommand:
+                    - sudo cp /etc/fstab /etc/fstab.orig
+                    - UUID=$(sudo blkid -o value -s UUID {{ EBSDeviceName }})
+                    - sed -i '/UUID=$UUID/d' /etc/fstab
+         DocumentFormat: YAML
+         UpdateMethod: Replace
+         DocumentType: Command
+         Name: OR_Detach_Volume
+  
+  SSMAttachEBSDocument:
+    Type: AWS::SSM::Document
+    Properties:
+         Content:
+            schemaVersion: '2.2'
+            description: 'Run a script for attaching the EBS data volume'
+            parameters:
+              InstanceId:
+                type: String
+                description: The InstanceId where the script needs to be executed.
+                default: !Ref InstanceId
+              VolumeId:
+                type: String
+                description: The VolumeId that needs to be detached.
+                default: !Ref VolumeId
+              EBSDeviceName:
+                  type: String
+                  description: The EBS Devicename where this volume is mounted on.
+                  default: !Ref EBSDeviceName
+            mainSteps:
+              - name: AttachVolume
+                action: aws:runShellScript
+                inputs:
+                  runCommand:
+                    - aws ec2 attach-volume --volume-id {{ VolumeId }} --instance-id {{ InstanceId }}
+              - name: MountVolume
+                action: aws:runShellScript
+                inputs:
+                  runCommand:
+                    - mount {{ EBSDeviceName }} /var/lib/docker/volumes
+              - name: AddFstabEntry
+                action: aws:runShellScript
+                inputs:
+                  runCommand:
+                    - sudo cp /etc/fstab /etc/fstab.orig
+                    - UUID=$(sudo blkid -o value -s UUID {{ EBSDeviceName }})
+                    - sudo echo "UUID=$UUID /var/lib/docker/volumes xfs defaults,nofail 0 2" >> /etc/fstab
+              - name: StartDocker
+                action: aws:runShellScript
+                inputs:
+                    runCommand:
+                      - systemctl start docker
+              - name: StartOpenRemote
+                action: aws:runShellScript
+                inputs:
+                    runCommand:
+                      - cd /openremote
+                      - docker-compose down
+         DocumentFormat: YAML
+         UpdateMethod: Replace
+         DocumentType: Command
+         Name: OR_Attach_Volume
