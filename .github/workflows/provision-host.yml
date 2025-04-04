@@ -38,11 +38,11 @@ on:
         default: '16'
         required: false
       VOLUME_ID:
-        description: 'Use existing EBS data volume'
+        description: 'Use existing EBS data volume (Volume ID)'
         type: string
         required: false
       SNAPSHOT_ID:
-        description: 'Create EBS data volume based on snapshot'
+        description: 'Create EBS data volume based on snapshot (Snapshot ID)'
         type: string
         required: false
       ENABLE_METRICS:
