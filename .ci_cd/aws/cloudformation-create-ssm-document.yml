@@ -72,6 +72,7 @@ Resources:
                     - |
                       VOLUME=$(aws ec2 detach-volume --volume-id {{ VolumeId }})
                       STATUS=$(aws ec2 describe-volumes --query "Volumes[?VolumeId=='{{ VolumeId }}'].State" --output text 2>/dev/null)
+                      
                       while [[ "$STATUS" == 'in-use' ]] do
                         echo "Instance is still in-use .. Sleeping 30 seconds"
                         sleep 30
@@ -115,6 +116,7 @@ Resources:
                     -  |
                        VOLUME=$(aws ec2 attach-volume --device {{ EBSDeviceName }} --instance-id {{ InstanceId }} --volume-id {{ VolumeId }})
                        STATUS=$(aws ec2 describe-volumes --query "Volumes[?VolumeId=='{{ VolumeId }}'].Attachments[].State" --output text 2>/dev/null)
+                       
                        while [[ "$STATUS" == 'attaching' ]] do
                           echo "Volume is still attaching .. Sleeping 30 seconds"
                           sleep 30
@@ -141,7 +143,7 @@ Resources:
                        UUID=$(sudo blkid -o value -s UUID {{ EBSDeviceName }})
                        if [ -n "$UUID" ]; then
                           cp /etc/fstab /etc/fstab.orig
-                          echo "UUID='$UUID' /var/lib/docker/volumes xfs defaults,nofail 0 2" >> /etc/fstab
+                          echo "UUID=$UUID /var/lib/docker/volumes xfs defaults,nofail 0 2" >> /etc/fstab
                        else
                           echo "Failed to add /etc/fstab entry. UUID is not found"
                           exit 1
