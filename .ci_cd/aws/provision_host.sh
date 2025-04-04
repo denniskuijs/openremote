@@ -467,7 +467,8 @@ else
   fi
 
   # Configure parameters
-  PARAMS="ParameterKey=InstanceId,ParameterValue='$INSTANCE_ID'"
+  PARAMS="ParameterKey=Host,ParameterValue='$HOST'"
+  PARAMS="$PARAMS ParameterKey=InstanceId,ParameterValue='$INSTANCE_ID'"
   PARAMS="$PARAMS ParameterKey=VolumeId,ParameterValue='$VOLUME_ID'"
   PARAMS="$PARAMS ParameterKey=EBSDeviceName,ParameterValue='$DEVICE_NAME'"
   
