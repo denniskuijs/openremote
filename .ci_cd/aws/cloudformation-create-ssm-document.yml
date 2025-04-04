@@ -9,7 +9,7 @@ Description: 'Creates an SSM Document for attaching/detaching the EBS data volum
 
 Parameters:
   Host:
-    Description: Host
+    Description: FQDN for host
     Type: String
     Default: ""
   InstanceId:
@@ -46,6 +46,13 @@ Resources:
                   description: The EBS Devicename where this volume is mounted on.
                   default: !Ref EBSDeviceName
             mainSteps:
+              - name: RemoveFstabEntry
+                action: aws:runShellScript
+                inputs:
+                  runCommand:
+                    - cp /etc/fstab /etc/fstab.orig
+                    - UUID=$(sudo blkid -o value -s UUID {{ EBSDeviceName }})
+                    - sed -i '/UUID='$UUID'/d' /etc/fstab
               - name: StopDocker
                 action: aws:runShellScript
                 inputs:
@@ -56,13 +63,6 @@ Resources:
                 inputs:
                   runCommand:
                     - umount {{ EBSDeviceName }}
-              - name: RemoveFstabEntry
-                action: aws:runShellScript
-                inputs:
-                  runCommand:
-                    - sudo cp /etc/fstab /etc/fstab.orig
-                    - UUID=$(sudo blkid -o value -s UUID {{ EBSDeviceName }})
-                    - sed -i '/UUID=$UUID/d' /etc/fstab
               - name: DetachVolume
                 action: aws:runShellScript
                 inputs:
