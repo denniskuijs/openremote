@@ -94,7 +94,7 @@ Resources:
                 action: aws:runShellScript
                 inputs:
                   runCommand:
-                    - aws ec2 attach-volume --volume-id {{ VolumeId }} --instance-id {{ InstanceId }}
+                    - aws ec2 attach-volume --device {{ EBSDeviceName }} --instance-id {{ InstanceId }} --volume-id {{ VolumeId }}
               - name: MountVolume
                 action: aws:runShellScript
                 inputs:
