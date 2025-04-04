@@ -8,6 +8,10 @@ AWSTemplateFormatVersion: '2010-09-09'
 Description: 'Creates an SSM Document for attaching/detaching the EBS data volume'
 
 Parameters:
+  Host:
+    Description: Host
+    Type: String
+    Default: ""
   InstanceId:
     Description: The InstanceId where the script needs to be executed.
     Type: String
@@ -52,11 +56,6 @@ Resources:
                 inputs:
                   runCommand:
                     - umount {{ EBSDeviceName }}
-              - name: DetachVolume
-                action: aws:runShellScript
-                inputs:
-                  runCommand:
-                    - aws ec2 detach-volume --volume-id {{ VolumeId }}
               - name: RemoveFstabEntry
                 action: aws:runShellScript
                 inputs:
@@ -64,11 +63,16 @@ Resources:
                     - sudo cp /etc/fstab /etc/fstab.orig
                     - UUID=$(sudo blkid -o value -s UUID {{ EBSDeviceName }})
                     - sed -i '/UUID=$UUID/d' /etc/fstab
+              - name: DetachVolume
+                action: aws:runShellScript
+                inputs:
+                  runCommand:
+                    - aws ec2 detach-volume --volume-id {{ VolumeId }}
          DocumentFormat: YAML
          TargetType: /AWS::EC2::Instance
          UpdateMethod: Replace
          DocumentType: Command
-         Name: OR_Detach_Volume
+         Name: !Sub ${Host}_detach
   
   SSMAttachEBSDocument:
     Type: AWS::SSM::Document
@@ -106,7 +110,7 @@ Resources:
                   runCommand:
                     - sudo cp /etc/fstab /etc/fstab.orig
                     - UUID=$(sudo blkid -o value -s UUID {{ EBSDeviceName }})
-                    - sudo echo "UUID=$UUID /var/lib/docker/volumes xfs defaults,nofail 0 2" >> /etc/fstab
+                    - echo "UUID=$UUID /var/lib/docker/volumes xfs defaults,nofail 0 2" >> /etc/fstab
               - name: StartDocker
                 action: aws:runShellScript
                 inputs:
@@ -116,4 +120,4 @@ Resources:
          TargetType: /AWS::EC2::Instance
          UpdateMethod: Replace
          DocumentType: Command
-         Name: OR_Attach_Volume
+         Name: !Sub ${Host}_attach
