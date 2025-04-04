@@ -5,25 +5,21 @@
 # ---------------------------------------------------------------------------------------------------------------------
 
 AWSTemplateFormatVersion: '2010-09-09'
-Description: 'Creates an SSM Document for attaching/detaching the EBS data volume'
+Description: 'Creates an SSM Document for attaching/detaching the EBS volume'
 
 Parameters:
   Host:
-    Description: FQDN for host
+    Description: FQDN for host.
     Type: String
-    Default: ""
   InstanceId:
-    Description: The InstanceId where the script needs to be executed.
+    Description: InstanceId where the script needs to be executed.
     Type: String
-    Default: ""
   VolumeId:
-    Description: The VolumeId that needs to be attached/detached.
+    Description: VolumeId that needs to be attached/detached.
     Type: String
-    Default: ""
   EBSDeviceName:
-    Description: The EBS Devicename where this volume is mounted on.
+    Description: EBS DeviceName where this volume is mounted on.
     Type: String
-    Default: ""
 
 Resources:
   SSMDetachEBSDocument:
@@ -31,19 +27,19 @@ Resources:
     Properties:
          Content:
             schemaVersion: '2.2'
-            description: 'Script for detaching the EBS data volume'
+            description: 'Script for detaching the EBS volume'
             parameters:
               InstanceId:
                 type: String
-                description: The InstanceId where the script needs to be executed.
+                description: InstanceId where the script needs to be executed.
                 default: !Ref InstanceId
               VolumeId:
                 type: String
-                description: The VolumeId that needs to be detached.
+                description: VolumeId that needs to be detached.
                 default: !Ref VolumeId
               EBSDeviceName:
                   type: String
-                  description: The EBS Devicename where this volume is mounted on.
+                  description: EBS DeviceName where this volume is mounted on.
                   default: !Ref EBSDeviceName
             mainSteps:
               - name: RemoveFstabEntry
@@ -79,19 +75,19 @@ Resources:
     Properties:
          Content:
             schemaVersion: '2.2'
-            description: 'Script for attaching the EBS data volume'
+            description: 'Script for attaching the EBS volume'
             parameters:
               InstanceId:
                 type: String
-                description: The InstanceId where the script needs to be executed.
+                description: InstanceId where the script needs to be executed.
                 default: !Ref InstanceId
               VolumeId:
                 type: String
-                description: The VolumeId that needs to be attached.
+                description: VolumeId that needs to be attached.
                 default: !Ref VolumeId
               EBSDeviceName:
                   type: String
-                  description: The EBS Device name where this volume needs to be mounted on.
+                  description: EBS DeviceName where this volume needs to be mounted on.
                   default: !Ref EBSDeviceName
             mainSteps:
               - name: AttachVolume
@@ -108,9 +104,9 @@ Resources:
                 action: aws:runShellScript
                 inputs:
                   runCommand:
-                    - sudo cp /etc/fstab /etc/fstab.orig
+                    - cp /etc/fstab /etc/fstab.orig
                     - UUID=$(sudo blkid -o value -s UUID {{ EBSDeviceName }})
-                    - echo "UUID=$UUID /var/lib/docker/volumes xfs defaults,nofail 0 2" >> /etc/fstab
+                    - echo "UUID='$UUID' /var/lib/docker/volumes xfs defaults,nofail 0 2" >> /etc/fstab
               - name: StartDocker
                 action: aws:runShellScript
                 inputs:
