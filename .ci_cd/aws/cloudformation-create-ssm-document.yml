@@ -45,10 +45,16 @@ Resources:
               - name: RemoveFstabEntry
                 action: aws:runShellScript
                 inputs:
-                  runCommand:
-                    - cp /etc/fstab /etc/fstab.orig
-                    - UUID=$(sudo blkid -o value -s UUID {{ EBSDeviceName }})
-                    - sed -i '/UUID='$UUID'/d' /etc/fstab
+                  runCommand: 
+                    - |
+                      UUID=$(sudo blkid -o value -s UUID {{ EBSDeviceName }})
+                      if [ -n "$UUID" ]; then
+                        cp /etc/fstab /etc/fstab.orig
+                        sed -i '/UUID='$UUID'/d' /etc/fstab
+                      else
+                        echo "Failed to remove /etc/fstab entry. UUID is not found"
+                        exit 1
+                      fi
               - name: StopDocker
                 action: aws:runShellScript
                 inputs:
@@ -62,8 +68,20 @@ Resources:
               - name: DetachVolume
                 action: aws:runShellScript
                 inputs:
-                  runCommand:
-                    - aws ec2 detach-volume --volume-id {{ VolumeId }}
+                  runCommand: 
+                    - |
+                      VOLUME=$(aws ec2 detach-volume --volume-id {{ VolumeId }})
+                      STATUS=$(aws ec2 describe-volumes --query "Volumes[?VolumeId=='{{ VolumeId }}'].State" --output text 2>/dev/null)
+                      while [[ "$STATUS" == 'in-use' ]] do
+                        echo "Instance is still in-use .. Sleeping 30 seconds"
+                        sleep 30
+                        STATUS=$(aws ec2 describe-volumes --query "Volumes[?VolumeId=='{{ VolumeId }}'].State" --output text 2>/dev/null)
+                      done
+
+                      if [ "$STATUS" != "available" ]; then
+                        echo "Failed to detach volume"
+                        exit 1
+                      fi
          DocumentFormat: YAML
          TargetType: /AWS::EC2::Instance
          UpdateMethod: Replace
@@ -94,7 +112,22 @@ Resources:
                 action: aws:runShellScript
                 inputs:
                   runCommand:
-                    - aws ec2 attach-volume --device {{ EBSDeviceName }} --instance-id {{ InstanceId }} --volume-id {{ VolumeId }}
+                    -  |
+                       VOLUME=$(aws ec2 attach-volume --device {{ EBSDeviceName }} --instance-id {{ InstanceId }} --volume-id {{ VolumeId }})
+                       STATUS=$(aws ec2 describe-volumes --query "Volumes[?VolumeId=='{{ VolumeId }}'].Attachments[].State" --output text 2>/dev/null)
+                       while [[ "$STATUS" == 'attaching' ]] do
+                          echo "Volume is still attaching .. Sleeping 30 seconds"
+                          sleep 30
+                          STATUS=$(aws ec2 describe-volumes --query "Volumes[?VolumeId=='{{ VolumeId }}'].Attachments[].State" --output text 2>/dev/null)
+                       done
+
+                       if [ "$STATUS" != 'attached' ]; then
+                          echo "Volume attaching failed with status $STATUS"
+                          exit 1
+                       else
+                          echo "Volume attaching is complete"
+                       fi
+                      
               - name: MountVolume
                 action: aws:runShellScript
                 inputs:
@@ -104,9 +137,15 @@ Resources:
                 action: aws:runShellScript
                 inputs:
                   runCommand:
-                    - cp /etc/fstab /etc/fstab.orig
-                    - UUID=$(sudo blkid -o value -s UUID {{ EBSDeviceName }})
-                    - echo "UUID='$UUID' /var/lib/docker/volumes xfs defaults,nofail 0 2" >> /etc/fstab
+                    -  |
+                       UUID=$(sudo blkid -o value -s UUID {{ EBSDeviceName }})
+                       if [ -n "$UUID" ]; then
+                          cp /etc/fstab /etc/fstab.orig
+                          echo "UUID='$UUID' /var/lib/docker/volumes xfs defaults,nofail 0 2" >> /etc/fstab
+                       else
+                          echo "Failed to add /etc/fstab entry. UUID is not found"
+                          exit 1
+                       fi
               - name: StartDocker
                 action: aws:runShellScript
                 inputs:
