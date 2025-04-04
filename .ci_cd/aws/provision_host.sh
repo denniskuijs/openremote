@@ -208,9 +208,9 @@ EOF
   SUBNET_AZ=$(aws ec2 describe-subnets --filters Name=tag:Name,Values=$SUBNETNAME --query "Subnets[0].AvailabilityZone" --output text $ACCOUNT_PROFILE 2>/dev/null)
 
 # Provision EBS data volume using CloudFormation (if stack doesn't already exist)
-  echo $VOLUME_ID;
+  echo "VOLUME $VOLUME_ID"
   if [ -z "$VOLUME_ID" ]; then
-    echo $VOLUME_ID
+    echo "VOLUME $VOLUME_ID"
     echo "Provisioning EBS data volume"
     STATUS=$(aws cloudformation describe-stacks --stack-name $EBS_STACK_NAME --query "Stacks[0].StackStatus" --output text 2>/dev/null)
 
