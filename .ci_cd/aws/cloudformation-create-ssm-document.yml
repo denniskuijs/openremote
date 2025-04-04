@@ -115,6 +115,14 @@ Resources:
                   runCommand:
                     -  |
                        VOLUME=$(aws ec2 attach-volume --device {{ EBSDeviceName }} --instance-id {{ InstanceId }} --volume-id {{ VolumeId }})
+
+                       if [ $? -ne 0 ]; then
+                         echo "Attaching volume failed"
+                         exit 1
+                       else
+                         echo "Attaching volume in progress"
+                       fi
+
                        STATUS=$(aws ec2 describe-volumes --query "Volumes[?VolumeId=='{{ VolumeId }}'].Attachments[].State" --output text 2>/dev/null)
                        
                        while [[ "$STATUS" == 'attaching' ]] do

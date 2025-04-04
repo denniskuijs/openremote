@@ -37,11 +37,12 @@ HOST=${2,,}
 INSTANCE_TYPE=${3,,}
 ROOT_DISK_SIZE=${4,,}
 DATA_DISK_SIZE=${5,,}
-SNAPSHOT_ID=${6,,}
-ELASTIC_IP=${7,,}
-PROVISION_S3_BUCKET=${8,,}
-ENABLE_METRICS=${9,,}
-WAIT_FOR_STACK=${10,,}
+VOLUME_ID=${6,,}
+SNAPSHOT_ID=${7,,}
+ELASTIC_IP=${8,,}
+PROVISION_S3_BUCKET=${9,,}
+ENABLE_METRICS=${10,,}
+WAIT_FOR_STACK=${11,,}
 
 if [ -z "$HOST" ]; then
   echo "Host must be set"
@@ -207,59 +208,61 @@ EOF
   SUBNET_AZ=$(aws ec2 describe-subnets --filters Name=tag:Name,Values=$SUBNETNAME --query "Subnets[0].AvailabilityZone" --output text $ACCOUNT_PROFILE 2>/dev/null)
 
 # Provision EBS data volume using CloudFormation (if stack doesn't already exist)
-  echo "Provisioning EBS data volume"
-  STATUS=$(aws cloudformation describe-stacks --stack-name $EBS_STACK_NAME --query "Stacks[0].StackStatus" --output text 2>/dev/null)
+  if [ -z "$VOLUME_ID" ]; then
+    echo "Provisioning EBS data volume"
+    STATUS=$(aws cloudformation describe-stacks --stack-name $EBS_STACK_NAME --query "Stacks[0].StackStatus" --output text 2>/dev/null)
 
-  if [ -n "$STATUS" ] && [ "$STATUS" != 'DELETE_COMPLETE' ]; then
-      echo "Stack already exists for this host '$HOST' current status is '$STATUS'"
-      STACK_ID=$(aws cloudformation describe-stacks --stack-name $EBS_STACK_NAME --query Stacks[0].StackId --output text 2>/dev/null)
-  else
-
-    if [ -f "${awsDir}cloudformation-create-ebs-volume.yml" ]; then
-    EBS_TEMPLATE_PATH="${awsDir}cloudformation-create-ebs-volume.yml"
-    elif [ -f ".ci_cd/aws/cloudformation-create-ebs-volume.yml" ]; then
-    EBS_TEMPLATE_PATH=".ci_cd/aws/cloudformation-create-ebs-volume.yml"
-    elif [ -f "openremote/.ci_cd/aws/cloudformation-create-ebs-volume.yml" ]; then
-    EBS_TEMPLATE_PATH="openremote/.ci_cd/aws/cloudformation-create-ebs-volume.yml"
+    if [ -n "$STATUS" ] && [ "$STATUS" != 'DELETE_COMPLETE' ]; then
+        echo "Stack already exists for this host '$HOST' current status is '$STATUS'"
+        STACK_ID=$(aws cloudformation describe-stacks --stack-name $EBS_STACK_NAME --query Stacks[0].StackId --output text 2>/dev/null)
     else
-        echo "Cannot determine location of cloudformation-create-ebs-volume.yml"
+
+      if [ -f "${awsDir}cloudformation-create-ebs-volume.yml" ]; then
+      EBS_TEMPLATE_PATH="${awsDir}cloudformation-create-ebs-volume.yml"
+      elif [ -f ".ci_cd/aws/cloudformation-create-ebs-volume.yml" ]; then
+      EBS_TEMPLATE_PATH=".ci_cd/aws/cloudformation-create-ebs-volume.yml"
+      elif [ -f "openremote/.ci_cd/aws/cloudformation-create-ebs-volume.yml" ]; then
+      EBS_TEMPLATE_PATH="openremote/.ci_cd/aws/cloudformation-create-ebs-volume.yml"
+      else
+          echo "Cannot determine location of cloudformation-create-ebs-volume.yml"
+          exit 1
+      fi
+
+      # Configure parameters
+      PARAMS="ParameterKey=Host,ParameterValue=$HOST"
+      PARAMS="$PARAMS ParameterKey=AvailabilityZone,ParameterValue=$SUBNET_AZ"
+      PARAMS="$PARAMS ParameterKey=DiskSize,ParameterValue=$DATA_DISK_SIZE"
+
+      if [ -n "$SNAPSHOT_ID" ]; then
+          PARAMS="$PARAMS ParameterKey=SnapshotId,ParameterValue='$SNAPSHOT_ID'"
+      fi
+
+      # Create standard stack resources in specified account
+      EBS_STACK_ID=$(aws cloudformation create-stack --capabilities CAPABILITY_NAMED_IAM --stack-name $EBS_STACK_NAME --template-body file://$EBS_TEMPLATE_PATH --parameters $PARAMS --output text)
+
+      if [ $? -ne 0 ]; then
+        echo "Create stack failed"
         exit 1
-    fi
+      else
+        echo "Create stack in progress"
+      fi
 
-    # Configure parameters
-    PARAMS="ParameterKey=Host,ParameterValue=$HOST"
-    PARAMS="$PARAMS ParameterKey=AvailabilityZone,ParameterValue=$SUBNET_AZ"
-    PARAMS="$PARAMS ParameterKey=DiskSize,ParameterValue=$DATA_DISK_SIZE"
+      # Wait for CloudFormation stack status to be CREATE_*
+      echo "Waiting for stack to be created"
+      STATUS=$(aws cloudformation describe-stacks --stack-name $EBS_STACK_NAME --query "Stacks[?StackId=='$EBS_STACK_ID'].StackStatus" --output text 2>/dev/null)
 
-    if [ -n "$SNAPSHOT_ID" ]; then
-        PARAMS="$PARAMS ParameterKey=SnapshotId,ParameterValue='$SNAPSHOT_ID'"
-    fi
+      while [[ "$STATUS" == 'CREATE_IN_PROGRESS' ]]; do
+          echo "Stack creation is still in progress .. Sleeping 30 seconds"
+          sleep 30
+          STATUS=$(aws cloudformation describe-stacks --stack-name $EBS_STACK_NAME --query "Stacks[?StackId=='$EBS_STACK_ID'].StackStatus" --output text 2>/dev/null)
+      done
 
-    # Create standard stack resources in specified account
-    EBS_STACK_ID=$(aws cloudformation create-stack --capabilities CAPABILITY_NAMED_IAM --stack-name $EBS_STACK_NAME --template-body file://$EBS_TEMPLATE_PATH --parameters $PARAMS --output text)
-
-    if [ $? -ne 0 ]; then
-      echo "Create stack failed"
-      exit 1
-    else
-      echo "Create stack in progress"
-    fi
-
-    # Wait for CloudFormation stack status to be CREATE_*
-    echo "Waiting for stack to be created"
-    STATUS=$(aws cloudformation describe-stacks --stack-name $EBS_STACK_NAME --query "Stacks[?StackId=='$EBS_STACK_ID'].StackStatus" --output text 2>/dev/null)
-
-    while [[ "$STATUS" == 'CREATE_IN_PROGRESS' ]]; do
-        echo "Stack creation is still in progress .. Sleeping 30 seconds"
-        sleep 30
-        STATUS=$(aws cloudformation describe-stacks --stack-name $EBS_STACK_NAME --query "Stacks[?StackId=='$EBS_STACK_ID'].StackStatus" --output text 2>/dev/null)
-    done
-
-    if [ "$STATUS" != 'CREATE_COMPLETE' ]; then
-        echo "Stack creation has failed status is '$STATUS'"
-        exit 1
-    else
-        echo "Stack creation is complete"
+      if [ "$STATUS" != 'CREATE_COMPLETE' ]; then
+          echo "Stack creation has failed status is '$STATUS'"
+          exit 1
+      else
+          echo "Stack creation is complete"
+      fi
     fi
   fi
 
@@ -337,7 +340,9 @@ EOF
 
   # Retrieve Volume ID and attach volume to Instance.
   echo "Instance is ready, attaching volume.."
-  VOLUME_ID=$(aws ec2 describe-volumes --filters "Name=tag:Name,Values='$HOST/data'" --query "Volumes[?Tags[?Value=='$EBS_STACK_ID']].VolumeId" --output text $ACCOUNT_PROFILE 2>/dev/null)
+  if [ -z "$VOLUME_ID" ]; then
+    VOLUME_ID=$(aws ec2 describe-volumes --filters "Name=tag:Name,Values='$HOST/data'" --query "Volumes[?Tags[?Value=='$EBS_STACK_ID']].VolumeId" --output text $ACCOUNT_PROFILE 2>/dev/null)
+  fi
   VOLUME=$(aws ec2 attach-volume --device $DEVICE_NAME --instance-id $INSTANCE_ID --volume-id $VOLUME_ID --output text $ACCOUNT_PROFILE 2>/dev/null)
   STATUS=$(aws ec2 describe-volumes --filters "Name=tag:Name,Values='$HOST/data'" --query "Volumes[?Tags[?Value=='$EBS_STACK_ID']].Attachments[].State" --output text $ACCOUNT_PROFILE 2>/dev/null)
 

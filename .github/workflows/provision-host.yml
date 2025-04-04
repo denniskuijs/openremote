@@ -37,6 +37,10 @@ on:
         type: string
         default: '16'
         required: false
+      VOLUME_ID:
+        description: 'Use existing EBS data volume'
+        type: string
+        required: false
       SNAPSHOT_ID:
         description: 'Create EBS data volume based on snapshot'
         type: string
