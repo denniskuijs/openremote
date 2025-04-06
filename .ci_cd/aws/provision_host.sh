@@ -172,6 +172,7 @@ EOF
         if [ "$name" == "$HOSTED_ZONE." ]; then
           echo "Found hosted zone for this host '$HOSTED_ZONE'"
           DNSHostedZoneName=$HOSTED_ZONE
+          DNSHostedZoneRoleArn="arn:aws:iam::412381755961:role/Hosted-Zone-Access-Role-Arn"
           if [ "$callerAccount" == 'true' ]; then
             # Get Role ARN that can be assumed to allow DNS record update for this host from the host's account
             DNSHostedZoneRoleArn=$(aws ssm get-parameter --name Hosted-Zone-Access-Role-Arn --query "Parameter.Value" --output text $ACCOUNT_PROFILE)
