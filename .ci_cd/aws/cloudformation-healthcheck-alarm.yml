@@ -32,7 +32,7 @@ Resources:
   EmailSubscription:
     Type: AWS::SNS::Subscription
     Properties:
-      Endpoint: info@kuijs.it
+      Endpoint: Dennis@denniskuijs.nl
       Protocol: email
       TopicArn: !Ref SnsTopic
 

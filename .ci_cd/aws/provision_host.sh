@@ -175,6 +175,7 @@ EOF
           if [ "$callerAccount" == 'true' ]; then
             # Get Role ARN that can be assumed to allow DNS record update for this host from the host's account
             DNSHostedZoneRoleArn=$(aws ssm get-parameter --name Hosted-Zone-Access-Role-Arn --query "Parameter.Value" --output text $ACCOUNT_PROFILE)
+            echo $DNSHostedZoneRoleArn
             if [ -z "$DNSHostedZoneRoleArn" ]; then
               echo "Failed to get 'Hosted-Zone-Access-Role-Arn' from parameter store this must be set for cross account DNS support"
               exit 1
