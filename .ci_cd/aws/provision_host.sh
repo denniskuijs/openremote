@@ -194,7 +194,7 @@ EOF
 
   # Get OR VPC ID, Subnet ID, SSH Security Group ID and EFS MOUNT TARGET IP
   SUBNET_NUMBER=$(( $RANDOM % 3 + 1 ))
-  SUBNETNAME="or-subnet-public"
+  SUBNETNAME="or-subnet-public-$SUBNET_NUMBER"
   VPCID=$(aws ec2 describe-vpcs --filters Name=tag:Name,Values=or-vpc --query "Vpcs[0].VpcId" --output text $ACCOUNT_PROFILE 2>/dev/null)
   SUBNETID=$(aws ec2 describe-subnets --filters Name=tag:Name,Values=$SUBNETNAME --query "Subnets[0].SubnetId" --output text $ACCOUNT_PROFILE 2>/dev/null)
   SUBNET_AZ=$(aws ec2 describe-subnets --filters Name=tag:Name,Values=$SUBNETNAME --query "Subnets[0].AvailabilityZoneId" --output text $ACCOUNT_PROFILE 2>/dev/null)

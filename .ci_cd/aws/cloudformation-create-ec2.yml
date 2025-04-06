@@ -869,7 +869,7 @@ Resources:
 
     Properties:
       InstanceType: !Ref InstanceType
-      KeyName: "OpenRemote"
+      KeyName: "developers"
       ImageId: !If [UseAMIID, !Ref ImageAMI, !Ref ImageId]
       SubnetId: !Ref SubnetId
       SecurityGroupIds:
