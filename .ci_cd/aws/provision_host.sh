@@ -166,7 +166,9 @@ EOF
       for zone in $HOSTED_ZONES; do
         IFS=$' \t'
         zoneArr=( $zone )
+        echo "zone $zoneArr"
         name=${zoneArr[0]}
+        echo "name $name" 
         callerAccount=${zoneArr[1]}
 
         if [ "$name" == "$HOSTED_ZONE." ]; then
