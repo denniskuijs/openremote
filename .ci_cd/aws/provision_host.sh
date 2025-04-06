@@ -167,13 +167,10 @@ EOF
         IFS=$' \t'
         zoneArr=( $zone )
         name=${zoneArr[0]}
-        callerAccount=${zoneArr[1]}
-
-        echo "zoneArr1 ${zoneArr[1]}"
+        callerAccount=${zoneArr[0]}
 
         if [ "$name" == "$HOSTED_ZONE." ]; then
           echo "Found hosted zone for this host '$HOSTED_ZONE'"
-          echo "caller $callerAccount"
           DNSHostedZoneName=$HOSTED_ZONE
           if [ "$callerAccount" == 'true' ]; then
             # Get Role ARN that can be assumed to allow DNS record update for this host from the host's account
