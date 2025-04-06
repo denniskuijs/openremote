@@ -166,10 +166,10 @@ EOF
       for zone in $HOSTED_ZONES; do
         IFS=$' \t'
         zoneArr=( $zone )
-        echo "zone $zoneArr"
         name=${zoneArr[0]}
-        echo "name $name" 
         callerAccount=${zoneArr[1]}
+
+        echo "zoneArr1 ${zoneArr[1]}"
 
         if [ "$name" == "$HOSTED_ZONE." ]; then
           echo "Found hosted zone for this host '$HOSTED_ZONE'"
