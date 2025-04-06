@@ -168,6 +168,7 @@ EOF
         zoneArr=( $zone )
         name=${zoneArr[0]}
         callerAccount=${zoneArr[1]}
+        echo $callerAccount
 
         if [ "$name" == "$HOSTED_ZONE." ]; then
           echo "Found hosted zone for this host '$HOSTED_ZONE'"
