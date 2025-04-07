@@ -826,14 +826,14 @@ Resources:
               command: !Sub |
                 
                 # If no hostname is provided, use the IPv4 address of the virtual machine, otherwise use the hostname.
-                [ -ne ${Host} ] && HOST=$(curl v4.ident.me 2>/dev/null) || HOST=${Host}
+                [ -z ${Host} ] && HOST=$(curl v4.ident.me 2>/dev/null) || HOST=${Host}
 
                 # Set Environment variables and start OpenRemote with the Docker-Compose file.
                 OR_HOSTNAME=$HOST \
                 OR_EMAIL_HOST=${SMTPHost} \
                 OR_EMAIL_USER=${SMTPUser} \
                 OR_EMAIL_PASSWORD=${SMTPPassword} \
-                docker-compose -f /openremote/docker-compose.yml -p openremote up -d
+                docker-compose -f /openremote/docker-compose-5.yml -p openremote up -d
 
         setupCfnHup:
           files:
