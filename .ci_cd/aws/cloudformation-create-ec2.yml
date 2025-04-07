@@ -774,10 +774,10 @@ Resources:
                 curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/bin/docker-compose && chmod +x /usr/bin/docker-compose && docker-compose --version
             02_download_docker_compose_openremote:
               command: |
-                sudo wget https://raw.githubusercontent.com/denniskuijs/openremote/refs/heads/master/docker-compose-5.yml -P /openremote
+                sudo wget https://raw.githubusercontent.com/denniskuijs/openremote/refs/heads/master/docker-compose.yml -P /openremote
           services:
             systemd:
-              docker:
+              docker: 
                 enabled: "true"
                 ensureRunning: "true"
         
@@ -833,7 +833,7 @@ Resources:
                 OR_EMAIL_HOST=${SMTPHost} \
                 OR_EMAIL_USER=${SMTPUser} \
                 OR_EMAIL_PASSWORD=${SMTPPassword} \
-                docker-compose -f /openremote/docker-compose-5.yml -p openremote up -d
+                docker-compose -f /openremote/docker-compose.yml -p openremote up -d
 
         setupCfnHup:
           files:
