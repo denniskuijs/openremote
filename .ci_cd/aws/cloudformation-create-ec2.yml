@@ -81,6 +81,10 @@ Parameters:
     Description: Snapshot ID to create the EBS volume based of an existing Snapshot.
     Type: String
     Default: ""
+  EBSDeviceName:
+    Description: Device name where data volume needs to be mounted.
+    Type: String
+    Default: ""
   ElasticIP:
     Description: Assign elastic IP address
     Type: String
@@ -220,10 +224,10 @@ Resources:
           default:
             - setupCfnHup
             - create_swapfile
-            - cloudwatch_config
-            - restart_amazon-cloudwatch-agent
             - docker_setup
             - prepare_volume
+            - cloudwatch_config
+            - restart_amazon-cloudwatch-agent
             - cron_setup
             - env_vars
             - dns_updater
@@ -275,7 +279,8 @@ Resources:
                             "used_percent"
                           ],
                           "resources": [
-                            "/"
+                            "/",
+                            "/var/lib/docker/volumes"
                           ],
                           "metrics_collection_interval": 900
                         }
@@ -769,7 +774,7 @@ Resources:
                 curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/bin/docker-compose && chmod +x /usr/bin/docker-compose && docker-compose --version
             02_download_docker_compose_openremote:
               command: |
-                sudo wget https://raw.githubusercontent.com/openremote/openremote/refs/heads/master/docker-compose.yml -P /openremote
+                sudo wget https://raw.githubusercontent.com/denniskuijs/openremote/refs/heads/feature/ebs-volume-approach-1/docker-compose.yml -P /openremote
           services:
             systemd:
               docker:
@@ -781,14 +786,14 @@ Resources:
             01_mount_volume:
               command: !Sub |
                 if [ -n "${SnapshotId}" ]; then
-                  sudo mount /dev/sdb /var/lib/docker/volumes
+                  sudo mount "${EBSDeviceName}" /var/lib/docker/volumes
                 else
-                  sudo mkfs -t xfs /dev/sdb
-                  sudo mount /dev/sdb /var/lib/docker/volumes
+                  sudo mkfs -t xfs "${EBSDeviceName}"
+                  sudo mount "${EBSDeviceName}" /var/lib/docker/volumes
                 fi
             02_configure_fstab:
               command: !Sub |
-                UUID=$(sudo blkid -o value -s UUID /dev/sdb)
+                UUID=$(sudo blkid -o value -s UUID "${EBSDeviceName}")
                 if [ -n $UUID ]; then
                    sudo cp /etc/fstab /etc/fstab.orig
                    sudo echo "UUID=$UUID /var/lib/docker/volumes xfs defaults,nofail 0 2" >> /etc/fstab
@@ -864,7 +869,7 @@ Resources:
 
     Properties:
       InstanceType: !Ref InstanceType
-      KeyName: "OpenRemote"
+      KeyName: "developers"
       ImageId: !If [UseAMIID, !Ref ImageAMI, !Ref ImageId]
       SubnetId: !Ref SubnetId
       SecurityGroupIds:
@@ -917,7 +922,7 @@ Resources:
     Condition: CreateHealthChecks
     Type: AWS::SNS::Subscription
     Properties:
-      Endpoint: info@kuijs.it
+      Endpoint: Dennis@denniskuijs.nl
       Protocol: email
       TopicArn: !Ref SnsTopic
 
@@ -986,7 +991,7 @@ Resources:
         - Name: InstanceId
           Value: !Ref EC2Instance
 
-  DiskUtilizationAlarm:
+  RootDiskUtilizationAlarm:
     Type: AWS::CloudWatch::Alarm
     Condition: MetricsEnabled
     Properties:
@@ -1006,6 +1011,29 @@ Resources:
           Value: !Ref EC2Instance
         - Name: path
           Value: /
+        - Name: fstype
+          Value: xfs
+
+  DataDiskUtilizationAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Condition: MetricsEnabled
+    Properties:
+      Namespace: CWAgent
+      MetricName: disk_used_percent
+      Statistic: Average
+      Period: 3600
+      EvaluationPeriods: 1
+      ComparisonOperator: GreaterThanThreshold
+      Threshold: 90
+      AlarmActions:
+        - !Ref SnsTopic
+      OKActions:
+        - !Ref SnsTopic
+      Dimensions:
+        - Name: InstanceId
+          Value: !Ref EC2Instance
+        - Name: path
+          Value: /var/lib/docker/volumes
         - Name: fstype
           Value: xfs
 
