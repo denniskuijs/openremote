@@ -63,11 +63,11 @@ fi
 source "${awsDir}login.sh"
 
 ACCOUNT_PROFILE=
-# if [ -n "$AWS_ACCOUNT_NAME" ]; then
-#   # Update github-da profile with ARN for AWS_ACCOUNT_ID
-#   source "${awsDir}set_github-da_account_arn.sh"
-#   ACCOUNT_PROFILE="--profile github-da"
-# fi
+if [ -n "$AWS_ACCOUNT_NAME" ]; then
+  # Update github-da profile with ARN for AWS_ACCOUNT_ID
+  source "${awsDir}set_github-da_account_arn.sh"
+  ACCOUNT_PROFILE="--profile github-da"
+fi
 
 STACK_NAME=$(tr '.' '-' <<< "$HOST")
 SMTP_STACK_NAME="$STACK_NAME-smtp"
