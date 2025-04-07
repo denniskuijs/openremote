@@ -1,0 +1,1071 @@
+# ---------------------------------------------------------------------------------------------------------------------
+# Standard OpenRemote CloudFormation template for provisioning an EC2 instance with docker support for running the
+# OpenRemote stack. SMTP credentials are optionally read from the parameter store and added to the /etc/environment
+# file to essentially preconfigure standard OpenRemote SMTP environment variables.
+# DNS parameters allow for DNS A record for the created EC2 instance to be dynamically updated between restarts and a
+# standard access security group is also created for the standard OpenRemote stack services.
+#
+# Optionally assign an Elastic IP address by setting the ElasticIP parameter to true.
+#
+# Environment variables are optionally output to /etc/environment for:
+# - EFS_DNS for an EFS that can then be mounted from docker services without having to put IP address in docker-compose
+# - SMTP Credentials for use within docker services to simplify SMTP configuration
+#
+# Systemd services are also created to:
+#
+# - Perform daily backup of /deployment.local/backup if an S3 bucket with the same name as the FQDN for this host exists
+#   (periods replaced with hyphen e.g. demo.openremote.app -> demo-openremote-app)
+# - Update DNS A record on restart
+#
+# Cron jobs are also created to:
+#
+# - [DAILY] - Cleanup journalctl logs
+#
+# ---------------------------------------------------------------------------------------------------------------------
+
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'AWS Linux 2, docker compose, nfs support, cron support, cloud watch logging, route53 updating'
+Parameters:
+  Host:
+    Description: FQDN for host
+    Type: String
+    #AllowedPattern: "^((?!-))(xn--)?[a-z0-9][a-z0-9-_]{0,61}[a-z0-9]{0,1}\.(xn--)?([a-z0-9\-]{1,61}|[a-z0-9-]{1,30}\.[a-z]{2,})$"
+    Default: ""
+  VpcId:
+    Description: VPC ID in which to create instance
+    Type: String
+  SubnetId:
+    Description: Subnet ID in which to create instance
+    Type: String
+  SSHSecurityGroupId:
+    Description: SSH Security Group ID
+    Type: String
+  EFSDNS:
+    Description: EFS DNS entry (for maps - IP address of EFS mount target in the same AZ ID)
+    Type: String
+  ImageId:
+    Description: AMI ID
+    Type: String
+    Default: ""
+  ImageAMI:
+    Description: AMI ID
+    Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
+    Default: '/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-arm64'
+  InstanceType:
+    Description: EC2 instance type (don't change it unless you know what you are doing)
+    Type: String
+    # AWS Compute Optimizer reports that this instance type is under-provisioned and advise
+    # more than double the price instance. As the requirements vary massively depending on the actual project
+    # then we need to be flexible here and bear in mind use case and acceptable cost.
+    Default: t4g.medium
+    AllowedValues:
+      - t4g.micro
+      - t4g.small
+      - t4g.medium
+      - t4g.large
+      - t4g.xlarge
+      - m6g.large
+      - m6g.xlarge
+    ConstraintDescription: must be a valid EC2 instance type.
+  DNSHostedZoneName:
+    Description: Name of hosted domain zone to insert host A record into
+    Type: String
+    #AllowedPattern: "^((?!-))(xn--)?[a-z0-9][a-z0-9-_]{0,61}[a-z0-9]{0,1}\.(xn--)?([a-z0-9\-]{1,61}|[a-z0-9-]{1,30}\.[a-z]{2,})$"
+    ConstraintDescription: Must be a valid FQDN
+    Default: ""
+  DNSHostedZoneRoleArn:
+    Description: Role ARN that can be assumed for updating DNS A record (if Hosted Zone in another account)
+    Type: String
+    Default: ""
+  SnapshotId:
+    Description: Snapshot ID to create the EBS volume based of an existing Snapshot.
+    Type: String
+    Default: ""
+  ElasticIP:
+    Description: Assign elastic IP address
+    Type: String
+    AllowedValues:
+      - true
+      - false
+    Default: false
+  Metrics:
+    Description: Enable metrics collection
+    Type: String
+    AllowedValues:
+      - true
+      - false
+    Default: false
+  DiskSize:
+    Description: Root EBS volume size GB
+    Type: Number
+    Default: 30
+  HealthChecks:
+    Description: Create health checks
+    Type: String
+    AllowedValues:
+      - true
+      - false
+    Default: true
+  SMTPHost:
+    Type: String
+    Default: ""
+  SMTPUser:
+    Type: String
+    Default: ""
+  SMTPPassword:
+    Type: String
+    Default: ""
+  SMTPSecret:
+    Type: String
+    Description: SMTP CLI user secret (used to generate an SMTP password from)
+    Default: ""
+  SMTPRegion:
+    Type: String
+    Description: SMTP CLI user region (used to generate an SMTP password from)
+    Default: ""
+  SMTPORArn:
+    Description: SES Verified identity trust policy ARN for SMTP X-Headers
+    Type: String
+    Default: ""
+
+Conditions:
+  AssignElasticIP: !Equals [!Ref ElasticIP, "true"]
+  MetricsEnabled: !Equals [!Ref Metrics, "true"]
+  CreateHealthChecks: !Equals [!Ref HealthChecks, "true"]
+  UseAMIID: !Equals [!Ref ImageId, ""]
+
+Resources:
+  InstanceRoleProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: "/"
+      Roles:
+        - !Join ["-", ["ec2-access", !Ref "AWS::Region"]]
+
+  CloudFormationLogs:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Ref Host
+      RetentionInDays: 7
+
+  StandardSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: "Access OpenRemote stack services"
+      VpcId: !Ref VpcId
+      Tags:
+        - Key: Name
+          Value: !Ref Host
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: '80'
+          ToPort: '80'
+          CidrIp: 0.0.0.0/0
+          Description: HTTP
+        - IpProtocol: tcp
+          FromPort: '443'
+          ToPort: '443'
+          CidrIp: 0.0.0.0/0
+          Description: HTTPS
+        - IpProtocol: tcp
+          FromPort: '80'
+          ToPort: '80'
+          CidrIpv6: ::/0
+          Description: HTTP
+        - IpProtocol: tcp
+          FromPort: '443'
+          ToPort: '443'
+          CidrIpv6: ::/0
+          Description: HTTPS
+        - IpProtocol: tcp
+          FromPort: '8883'
+          ToPort: '8883'
+          CidrIp: 0.0.0.0/0
+          Description: MQTT
+        - IpProtocol: tcp
+          FromPort: '8883'
+          ToPort: '8883'
+          CidrIpv6: ::/0
+          Description: MQTT
+        - IpProtocol: udp
+          FromPort: '161'
+          ToPort: '162'
+          CidrIp: 0.0.0.0/0
+          Description: SNMP
+        - IpProtocol: udp
+          FromPort: '161'
+          ToPort: '162'
+          CidrIpv6: ::/0
+          Description: SNMP
+        - IpProtocol: icmp
+          FromPort: '8'
+          ToPort: '-1'
+          CidrIp: 0.0.0.0/0
+          Description: Ping
+        - IpProtocol: icmpv6
+          FromPort: '-1'
+          ToPort: '-1'
+          CidrIpv6: ::/0
+          Description: Ping
+
+  EC2Instance:
+    Type: AWS::EC2::Instance
+    CreationPolicy:
+      ResourceSignal:
+        Count: 1
+        Timeout: PT20M
+    Metadata:
+      AWS::CloudFormation::Init:
+        configSets:
+          default:
+            - setupCfnHup
+            - create_swapfile
+            - cloudwatch_config
+            - restart_amazon-cloudwatch-agent
+            - docker_setup
+            - prepare_volume
+            - cron_setup
+            - env_vars
+            - dns_updater
+            - s3_backup_service
+            - deployment_local_dir
+            - daily_cleanup
+            - start_openremote
+
+        create_swapfile:
+          commands:
+            01_swapfile:
+              command: |
+                if [ -f "/swapfile" ]; then
+                  echo "Swapfile already exists"
+                  exit 0
+                fi
+                
+                dd if=/dev/zero of=/swapfile bs=128M count=16
+                chmod 600 /swapfile
+                mkswap /swapfile
+                swapon /swapfile
+                echo "/swapfile swap swap defaults 0 0" >> /etc/fstab
+
+
+        cloudwatch_config:
+          files:
+            "/opt/aws/amazon-cloudwatch-agent/var/config.json":
+              content: !If
+                - MetricsEnabled
+                - |
+                  {
+                    "agent":{
+                      "metrics_collection_interval": 300
+                    },
+                    "metrics": {
+                      "append_dimensions": {
+                        "InstanceId": "${aws:InstanceId}"
+                      },
+                      "metrics_collected": {
+                        "mem": {
+                          "measurement": [
+                            "mem_used_percent"
+                          ],
+                          "metrics_collection_interval": 900
+                        },
+                        "disk": {
+                          "drop_device": true,
+                          "measurement": [
+                            "used_percent"
+                          ],
+                          "resources": [
+                            "/"
+                          ],
+                          "metrics_collection_interval": 900
+                        }
+                      }
+                    },
+                    "logs": {
+                      "metrics_collected": {
+                        "prometheus": {
+                          "log_group_name": "Prometheus",
+                          "prometheus_config_path": "/opt/aws/amazon-cloudwatch-agent/var/prometheus.yaml",
+                          "emf_processor": {
+                            "metric_declaration_dedup": true,
+                            "metric_namespace": "CWAgent-Prometheus",
+                            "metric_unit": {
+                              "artemis_message_count": "Count",
+                              "artemis_messages_added": "Count",
+                              "or_rules_seconds_max": "Seconds",
+                              "or_rules_seconds_sum": "Seconds",
+                              "or_rules_seconds_count": "Count",
+                              "or_attributes_seconds_max": "Seconds",
+                              "or_attributes_seconds_sum": "Seconds",
+                              "or_attributes_seconds_count": "Count",
+                              "or_attributes_total": "Count",
+                              "or_provisioning_seconds_max": "Seconds",
+                              "or_provisioning_seconds_sum": "Seconds",
+                              "or_provisioning_seconds_count": "Count",
+                              "executor_pool_size_threads": "Count",
+                              "executor_pool_core_threads": "Count",
+                              "executor_pool_max_threads": "Count",
+                              "executor_seconds_count": "Count",
+                              "executor_seconds_sum": "Seconds",
+                              "haproxy_server_current_sessions": "Count",
+                              "haproxy_server_bytes_in_total": "Bytes",
+                              "haproxy_server_bytes_out_total": "Bytes",
+                              "haproxy_server_status": "Count",
+                              "haproxy_server_http_responses_total": "Count",
+                              "haproxy_server_max_session_rate": "Count/Second",
+                              "haproxy_server_total_time_average_seconds": "Seconds"
+                            },
+                            "metric_declaration": [
+                              {
+                                "source_labels": [ "job" ],
+                                "label_matcher": "^manager$",
+                                "dimensions": [
+                                  [ "InstanceName" ]
+                                ],
+                                "metric_selectors": [
+                                  "^or_rules_seconds_count$",
+                                  "^or_rules_seconds_sum$",
+                                  "^or_rules_seconds_max$",
+                                  "^or_attributes_seconds_count$",
+                                  "^or_attributes_seconds_sum$",
+                                  "^or_attributes_seconds_max$",
+                                  "^or_provisioning_seconds_count$",
+                                  "^or_provisioning_seconds_sum$",
+                                  "^or_provisioning_seconds_max$"
+                                ]
+                              },
+                              {
+                                "source_labels": [ "job", "source" ],
+                                "label_matcher": "manager;(RulesEngine|AgentService|DefaultMQTTHandler|AssetResource|WebsocketClient)",
+                                "dimensions": [
+                                  [ "InstanceName", "source" ]
+                                ],
+                                "metric_selectors": [
+                                  "^or_attributes_total$"
+                                ]
+                              },
+                              {
+                                "source_labels": [ "job", "name" ],
+                                "label_matcher": "^manager;ContainerExecutor$",
+                                "dimensions": [
+                                  [ "InstanceName","name" ]
+                                ],
+                                "metric_selectors": [
+                                  "^executor_pool_",
+                                  "^executor_seconds_count$",
+                                  "^executor_seconds_sum$"
+                                ]
+                              },
+                              {
+                                "source_labels": [ "job" ],
+                                "label_matcher": "^manager$",
+                                "dimensions": [
+                                  [ "InstanceName","queue" ]
+                                ],
+                                "metric_selectors": [
+                                  "^artemis_message_count$",
+                                  "^artemis_messages_added$"
+                                ]
+                              },
+                              {
+                                "source_labels": [ "job" ],
+                                "label_matcher": "^proxy$",
+                                "dimensions": [
+                                  [ "InstanceName", "proxy", "server" ]
+                                ],
+                                "metric_selectors": [
+                                  "^haproxy_server_total_time_average_seconds$",
+                                  "^haproxy_server_max_session_rate$",
+                                  "^haproxy_server_bytes",
+                                  "^haproxy_server_current_sessions$"
+                                ]
+                              },
+                              {
+                                "source_labels": [ "job" ],
+                                "label_matcher": "^proxy$",
+                                "dimensions": [
+                                  [ "InstanceName", "proxy", "server", "code" ]
+                                ],
+                                "metric_selectors": [
+                                  "^haproxy_server_http_responses_total$"
+                                ]
+                              },
+                              {
+                                "source_labels": [ "job" ],
+                                "label_matcher": "^proxy$",
+                                "dimensions": [
+                                  [ "InstanceName", "proxy", "server", "state" ]
+                                ],
+                                "metric_selectors": [
+                                  "^haproxy_server_status$"
+                                ]
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                - '{}'
+            "/opt/aws/amazon-cloudwatch-agent/var/prometheus.yaml":
+              content: !If
+                - MetricsEnabled
+                - !Sub |
+                  # Prometheus scrape config file
+                  global:
+                    scrape_interval: 100s
+                    scrape_timeout: 10s
+                  scrape_configs:
+                    - job_name: proxy
+                      sample_limit: 10000
+                      static_configs:
+                        - targets:
+                            - localhost:8404
+                        - labels:
+                            InstanceName: '${Host}' # DOESN'T WORK https://github.com/aws/amazon-cloudwatch-agent/issues/751
+                      metric_relabel_configs:
+                        - action: keep
+                          source_labels: [__name__,state,code]
+                          regex: '(haproxy_server_current_sessions;;|haproxy_server_bytes_in_total;;|haproxy_server_bytes_out_total;;|haproxy_server_status;UP;|haproxy_server_http_responses_total;;5xx|haproxy_server_max_session_rate;;|haproxy_server_total_time_average_seconds;;)'
+                        - action: replace # THIS IS A WORKAROUND FOR BROKEN LABELS ABOVE
+                          source_labels: [ InstanceName ]
+                          regex: '(.*)'
+                          replacement: '${Host}'
+                          target_label: InstanceName
+                  
+                    - job_name: manager
+                      sample_limit: 10000
+                      static_configs:
+                        - targets:
+                            - localhost:8405
+                        - labels:
+                            InstanceName: '${Host}' # DOESN'T WORK https://github.com/aws/amazon-cloudwatch-agent/issues/751
+                      metric_relabel_configs:
+                        - action: keep
+                          source_labels: [__name__,name]
+                          regex: '(or_rules_.*|or_attributes.*|or.provisioning.*|executor_pool_(core|size).*;ContainerExecutor|executor_seconds_count;ContainerExecutor|executor_seconds_sum;ContainerExecutor|artemis_message_count.*|artemis_messages_added.*)'
+                        - action: replace # THIS IS A WORKAROUND FOR BROKEN LABELS ABOVE
+                          source_labels: [ InstanceName ]
+                          regex: '(.*)'
+                          replacement: '${Host}'
+                          target_label: InstanceName
+                - "# Prometheus scrape config file"
+        daily_cleanup:
+          files:
+            "/usr/local/bin/daily-cleanup":
+              content: !Sub |
+                #!/bin/bash
+                journalctl --vacuum-time=7d
+            "/etc/cron.d/cleanup":
+              content: |
+                #!/bin/bash
+                0 3 * * * root /usr/local/bin/daily-cleanup
+          commands:
+            01_chmod:
+              command: |
+                chmod +x /usr/local/bin/daily-cleanup
+
+        deployment_local_dir:
+          commands:
+            01_create_dir:
+              command: |
+                mkdir /deployment.local
+                chown ec2-user:ec2-user /deployment.local
+
+        s3_backup_service:
+          files:
+            "/usr/local/bin/s3-backup":
+              content: !Sub |
+                #!/bin/bash
+                
+                # ------------------------------------------------------------------------------------------------------
+                #
+                # Script for synchronising files in /deployment.local/backup with S3 bucket with same name as this host
+                #
+                # ------------------------------------------------------------------------------------------------------
+
+                BUCKET=$(aws s3api list-buckets --query "Buckets[?Name=='${Host}'].Name" --output text)
+                
+                if [ -z "$BUCKET" ] || [ ! -d "/deployment.local/backup" ]; then
+                  exit 0
+                fi
+                
+                aws s3 sync /deployment.local/backup s3://${Host}/backup
+
+            "/lib/systemd/system/s3-backup.service":
+              content: |
+                [Unit]
+                Description=Daily S3 backup service
+                Wants=s3-backup.timer
+
+                [Service]
+                Type=oneshot
+                RandomizedDelaySec=1800
+                ExecStart=/usr/local/bin/s3-backup
+
+                [Install]
+                WantedBy=multi-user.target
+            "/lib/systemd/system/s3-backup.timer":
+              content: |
+                [Unit]
+                Description=Daily S3 backup timer
+                Requires=s3-backup.service
+                
+                [Timer]
+                Unit=s3-backup.service
+                OnCalendar=*-*-* 05:00:00
+                
+                [Install]
+                WantedBy=timers.target
+
+          commands:
+            01_init_service:
+              command: |
+                chmod +x /usr/local/bin/s3-backup
+                mkdir -p /deployment.local/backup
+                chown ec2-user:ec2-user /deployment.local/backup
+                systemctl daemon-reload
+                systemctl start s3-backup.service
+                systemctl enable s3-backup.timer
+
+        dns_updater:
+          packages:
+            yum:
+              jq: []
+          files:
+            "/usr/local/bin/dns-updater":
+              content: !Sub |
+                #!/bin/bash
+                
+                # -------------------------------------------------------------------------------------------
+                #
+                # Script for updating the A record for this host on restarts
+                #
+                # -------------------------------------------------------------------------------------------
+                
+                if [ -z "${DNSHostedZoneName}" ]; then
+                  echo "No DNS Hosted Zone provided so not updating DNS A record"
+                  exit 0
+                fi
+                
+                echo "Running DNS record update"
+                PUBLIC_IPV4=$(curl v4.ident.me 2>/dev/null)
+                PUBLIC_IPV6=$(curl v6.ident.me 2>/dev/null)
+                
+                if [ -n "${DNSHostedZoneRoleArn}" ]; then
+                  echo "Assuming role '${DNSHostedZoneRoleArn}' for DNS A record update"
+                  # Assume DNS role in TLD account 
+                  CREDENTIALS=$(aws sts assume-role --role-arn ${DNSHostedZoneRoleArn} --role-session-name ${Host}-dns)
+                  if [ $? -ne 0 ]; then
+                    echo "Failed to get assume role credentials"
+                    exit 1
+                  fi
+                
+                  export AWS_ACCESS_KEY_ID=`echo $CREDENTIALS | jq -r '.Credentials.AccessKeyId'`
+                  export AWS_SECRET_ACCESS_KEY=`echo $CREDENTIALS | jq -r '.Credentials.SecretAccessKey'`
+                  export AWS_SESSION_TOKEN=`echo $CREDENTIALS | jq -r '.Credentials.SessionToken'`
+                fi
+
+                # Find hosted zone ID
+                HOSTED_ZONE_ID=$(aws route53 list-hosted-zones --query "HostedZones[?Name=='${DNSHostedZoneName}.'].Id" --output text)
+                
+                if [ $? -ne 0 ] || [ -z "$HOSTED_ZONE_ID" ]; then
+                  echo "Failed to get hosted zone ID for '${DNSHostedZoneName}'"
+                  exit 1
+                fi
+
+                read -r -d '' RECORDSET << EOF
+                {
+                  "Comment": "Creating NS record(s) for '${Host}' subdomain",
+                  "Changes": [
+                EOF
+
+                if [ -n "$PUBLIC_IPV4" ]; then
+                
+                read -r -d '' RECORDSET << EOF
+                $RECORDSET
+                    {
+                      "Action": "UPSERT",
+                      "ResourceRecordSet": {
+                          "Name": "${Host}.",
+                          "Type": "A",
+                          "TTL": 300,
+                        "ResourceRecords": [{ "Value": "$PUBLIC_IPV4"}]
+                      }
+                    }
+                EOF
+
+                fi
+                
+                
+                if [ -n "$PUBLIC_IPV6" ]; then
+                
+                  if [ -n "$PUBLIC_IPV4" ]; then
+                    RECORDSET="$RECORDSET,"
+                  fi
+                
+                read -r -d '' RECORDSET << EOF
+                $RECORDSET
+                    {
+                      "Action": "UPSERT",
+                      "ResourceRecordSet": {
+                          "Name": "${Host}.",
+                          "Type": "AAAA",
+                          "TTL": 300,
+                        "ResourceRecords": [{ "Value": "$PUBLIC_IPV6"}]
+                      }
+                    }
+                EOF
+                fi
+                
+                read -r -d '' RECORDSET << EOF
+                $RECORDSET
+                  ]
+                }
+                EOF
+                
+                echo "$RECORDSET"
+                aws route53 change-resource-record-sets --hosted-zone-id $HOSTED_ZONE_ID --change-batch "$RECORDSET"
+
+            "/lib/systemd/system/dns-updater.service":
+              content: |
+                [Unit]
+                Description=Route 53 DNS A record updater
+                After=network-online.target firewalld.service
+                Wants=network-online.target
+                
+                [Service]
+                ExecStart=/usr/local/bin/dns-updater
+
+                [Install]
+                WantedBy=multi-user.target
+          commands:
+            01_init_service:
+              command: |
+                chmod +x /usr/local/bin/dns-updater
+                systemctl daemon-reload
+                systemctl enable dns-updater.service
+                systemctl start dns-updater.service
+
+        env_vars:
+          files:
+            "/home/ec2-user/smtp_credentials_generate.py":
+              content: |
+                #!/usr/bin/env python3
+
+                import hmac
+                import hashlib
+                import base64
+                import argparse
+
+                SMTP_REGIONS = [
+                    'us-east-2',       # US East (Ohio)
+                    'us-east-1',       # US East (N. Virginia)
+                    'us-west-2',       # US West (Oregon)
+                    'ap-south-1',      # Asia Pacific (Mumbai)
+                    'ap-northeast-2',  # Asia Pacific (Seoul)
+                    'ap-southeast-1',  # Asia Pacific (Singapore)
+                    'ap-southeast-2',  # Asia Pacific (Sydney)
+                    'ap-northeast-1',  # Asia Pacific (Tokyo)
+                    'ca-central-1',    # Canada (Central)
+                    'eu-central-1',    # Europe (Frankfurt)
+                    'eu-west-1',       # Europe (Ireland)
+                    'eu-west-2',       # Europe (London)
+                    'sa-east-1',       # South America (Sao Paulo)
+                    'us-gov-west-1',   # AWS GovCloud (US)
+                ]
+
+                # These values are required to calculate the signature. Do not change them.
+                DATE = "11111111"
+                SERVICE = "ses"
+                MESSAGE = "SendRawEmail"
+                TERMINAL = "aws4_request"
+                VERSION = 0x04
+
+
+                def sign(key, msg):
+                    return hmac.new(key, msg.encode('utf-8'), hashlib.sha256).digest()
+
+
+                def calculate_key(secret_access_key, region):
+                    if region not in SMTP_REGIONS:
+                        raise ValueError(f"The {region} Region doesn't have an SMTP endpoint.")
+
+                    signature = sign(("AWS4" + secret_access_key).encode('utf-8'), DATE)
+                    signature = sign(signature, region)
+                    signature = sign(signature, SERVICE)
+                    signature = sign(signature, TERMINAL)
+                    signature = sign(signature, MESSAGE)
+                    signature_and_version = bytes([VERSION]) + signature
+                    smtp_password = base64.b64encode(signature_and_version)
+                    return smtp_password.decode('utf-8')
+
+
+                def main():
+                    parser = argparse.ArgumentParser(
+                        description='Convert a Secret Access Key for an IAM user to an SMTP password.')
+                    parser.add_argument(
+                        'secret', help='The Secret Access Key to convert.')
+                    parser.add_argument(
+                        'region',
+                        help='The AWS Region where the SMTP password will be used.',
+                        choices=SMTP_REGIONS)
+                    args = parser.parse_args()
+                    print(calculate_key(args.secret, args.region))
+                
+                
+                if __name__ == '__main__':
+                    main()
+              owner: ec2-user
+              group: ec2-user
+          commands:
+            01_output_smtp_credentials:
+              command: !Sub |
+                echo "AWS_REGION=${AWS::Region}" > /etc/environment
+                if [ -n "${SMTPHost}" ]; then
+                  echo "OR_EMAIL_HOST=${SMTPHost}" >> /etc/environment
+                fi
+                if [ -n "${SMTPUser}" ]; then
+                  echo "OR_EMAIL_USER=${SMTPUser}" >> /etc/environment
+                fi
+                if [ -n "${SMTPPassword}" ]; then
+                  echo "OR_EMAIL_PASSWORD=${SMTPPassword}" >> /etc/environment
+                elif [ -n "${SMTPSecret}" ] && [ -n "${SMTPRegion}" ]; then
+                  PASS=$(python3 /home/ec2-user/smtp_credentials_generate.py ${SMTPSecret} ${SMTPRegion})
+                  echo "OR_EMAIL_PASSWORD=$PASS" >> /etc/environment
+                fi
+                if [ -n "${SMTPORArn}" ]; then
+                  echo 'OR_EMAIL_X_HEADERS="X-SES-SOURCE-ARN: ${SMTPORArn}"' >> /etc/environment
+                fi
+            02_efs_dns:
+              command: !Sub |
+                # Output EFS_DNS to /etc/environment               
+                if [ -n "${EFSDNS}" ]; then
+                  echo "EFS Filesystem DNS: ${EFSDNS}"
+                  echo "EFS_DNS=${EFSDNS}" >> /etc/environment
+                fi
+            03_route53_role:
+              command: !Sub |
+                # Output Route53 role to /etc/environment for use by proxy container
+                if [ -n "${DNSHostedZoneRoleArn}" ]; then
+                  echo "AWS_ROUTE53_ROLE=${DNSHostedZoneRoleArn}" >> /etc/environment
+                fi
+            04_metrics:
+              command: !Sub |
+                # Output OR_METRICS_ENABLED to /etc/environment for use by manager container
+                if [ -n "${Metrics}" ]; then
+                  echo "OR_METRICS_ENABLED=${Metrics}" >> /etc/environment
+                fi
+
+        docker_setup:
+          packages:
+            yum:
+              docker: []
+          commands:
+            01_configure:
+              command: |
+                usermod -a -G docker ec2-user
+                chkconfig docker on
+                curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/bin/docker-compose && chmod +x /usr/bin/docker-compose && docker-compose --version
+            02_download_docker_compose_openremote:
+              command: |
+                sudo wget https://raw.githubusercontent.com/openremote/openremote/refs/heads/master/docker-compose.yml -P /openremote
+          services:
+            systemd:
+              docker:
+                enabled: "true"
+                ensureRunning: "true"
+        
+        prepare_volume:
+          commands:
+            01_mount_volume:
+              command: !Sub |
+                if [ -n "${SnapshotId}" ]; then
+                  sudo mount /dev/sdb /var/lib/docker/volumes
+                else
+                  sudo mkfs -t xfs /dev/sdb
+                  sudo mount /dev/sdb /var/lib/docker/volumes
+                fi
+            02_configure_fstab:
+              command: !Sub |
+                UUID=$(sudo blkid -o value -s UUID /dev/sdb)
+                if [ -n $UUID ]; then
+                   sudo cp /etc/fstab /etc/fstab.orig
+                   sudo echo "UUID=$UUID /var/lib/docker/volumes xfs defaults,nofail 0 2" >> /etc/fstab
+                else
+                  echo "Failed to create /etc/fstab entry. UUID is not found"
+                  exit 1
+                fi
+
+        cron_setup:
+          packages:
+            yum:
+              cronie: []
+          services:
+            systemd:
+              crond:
+                enabled: "true"
+                ensureRunning: "true"
+
+        restart_amazon-cloudwatch-agent:
+          commands:
+            01_stop_service:
+              command: /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a stop
+            02_start_service:
+              command: |
+                /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:/opt/aws/amazon-cloudwatch-agent/var/config.json
+      
+        start_openremote:
+          commands:
+            01_start_openremote:
+              command: !Sub |
+                
+                # If no hostname is provided, use the IPv4 address of the virtual machine, otherwise use the hostname.
+                [ -ne ${Host} ] && HOST=$(curl v4.ident.me 2>/dev/null) || HOST=${Host}
+
+                # Set Environment variables and start OpenRemote with the Docker-Compose file.
+                OR_HOSTNAME=$HOST \
+                OR_EMAIL_HOST=${SMTPHost} \
+                OR_EMAIL_USER=${SMTPUser} \
+                OR_EMAIL_PASSWORD=${SMTPPassword} \
+                docker-compose -f /openremote/docker-compose.yml -p openremote up -d
+
+        setupCfnHup:
+          files:
+            '/etc/cfn/cfn-hup.conf':
+              content: !Sub |
+                [main]
+                stack=${AWS::StackId}
+                region=${AWS::Region}
+                interval=10
+              mode: 000400
+              owner: root
+              group: root
+
+            '/etc/cfn/hooks.d/amazon-cloudwatch-agent-auto-reloader.conf':
+              content: !Sub |
+                [cfn-auto-reloader-hook]
+                triggers=post.update
+                path=Resources.EC2Instance.Metadata.AWS::CloudFormation::Init
+                action=/opt/aws/bin/cfn-init -v --stack ${AWS::StackId} --resource EC2Instance --region ${AWS::Region} --configsets default
+                runas=root
+              mode: '000400'
+              owner: root
+              group: root
+
+          services:
+            systemd:
+              cfn-hup:
+                enabled: true
+                ensureRunning: true
+                files:
+                  - /etc/cfn/cfn-hup.conf
+                  - /etc/cfn/hooks.d/amazon-cloudwatch-agent-auto-reloader.conf
+
+    Properties:
+      InstanceType: !Ref InstanceType
+      KeyName: "OpenRemote"
+      ImageId: !If [UseAMIID, !Ref ImageAMI, !Ref ImageId]
+      SubnetId: !Ref SubnetId
+      SecurityGroupIds:
+        - Ref: SSHSecurityGroupId
+        - Ref: StandardSecurityGroup
+      BlockDeviceMappings:
+        - DeviceName: /dev/xvda
+          Ebs:
+            VolumeSize: !Ref DiskSize
+            VolumeType: gp3
+            DeleteOnTermination: true
+      Ipv6AddressCount: 1
+      Tags:
+        - Key: Name
+          Value: !Ref Host
+      IamInstanceProfile: !Ref 'InstanceRoleProfile'
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          # Install latest cfn scripts
+          yum -y install aws-cfn-bootstrap
+          
+          # Install cloudwatch agent
+          yum -y install amazon-cloudwatch-agent
+          
+          # Execute required config set
+          /opt/aws/bin/cfn-init -v --stack ${AWS::StackName} --resource EC2Instance --configsets default --region ${AWS::Region}
+          
+          # All done so signal result
+          /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackId} --resource EC2Instance --region ${AWS::Region}
+
+  IPAddress:
+    Type: AWS::EC2::EIP
+    Condition: AssignElasticIP
+    Properties:
+      Tags:
+        - Key: Name
+          Value: !Ref Host
+
+  IPAssoc:
+    Type: AWS::EC2::EIPAssociation
+    Condition: AssignElasticIP
+    Properties:
+      InstanceId: !Ref EC2Instance
+      EIP: !Ref IPAddress
+
+  # Telemetry and Alarms
+
+  EmailSubscription:
+    Condition: CreateHealthChecks
+    Type: AWS::SNS::Subscription
+    Properties:
+      Endpoint: info@kuijs.it
+      Protocol: email
+      TopicArn: !Ref SnsTopic
+
+  SnsTopic:
+    Condition: CreateHealthChecks
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName: !Sub ${Host}.${EC2Instance}
+
+  SystemStatusAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Condition: CreateHealthChecks
+    Properties:
+      Namespace: AWS/EC2
+      MetricName: StatusCheckFailed_System
+      Statistic: Minimum
+      Period: 60
+      EvaluationPeriods: 2
+      ComparisonOperator: GreaterThanThreshold
+      Threshold: 0
+      AlarmActions:
+        - !Sub "arn:aws:automate:${AWS::Region}:ec2:recover"
+        - !Ref SnsTopic
+      OKActions:
+        - !Ref SnsTopic
+      Dimensions:
+        - Name: InstanceId
+          Value: !Ref EC2Instance
+
+  InstanceStatusAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Condition: CreateHealthChecks
+    Properties:
+      Namespace: AWS/EC2
+      MetricName: StatusCheckFailed_Instance
+      Statistic: Minimum
+      Period: 60
+      EvaluationPeriods: 5
+      ComparisonOperator: GreaterThanThreshold
+      Threshold: 0
+      AlarmActions:
+        - !Sub "arn:aws:automate:${AWS::Region}:ec2:reboot"
+        - !Ref SnsTopic
+      OKActions:
+        - !Ref SnsTopic
+      Dimensions:
+        - Name: InstanceId
+          Value: !Ref EC2Instance
+
+  CPUUtilizationAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Condition: MetricsEnabled
+    Properties:
+      Namespace: AWS/EC2
+      MetricName: CPUUtilization
+      Statistic: Average
+      Period: 60
+      EvaluationPeriods: 4
+      ComparisonOperator: GreaterThanThreshold
+      Threshold: 90
+      AlarmActions:
+        - !Ref SnsTopic
+      OKActions:
+        - !Ref SnsTopic
+      Dimensions:
+        - Name: InstanceId
+          Value: !Ref EC2Instance
+
+  DiskUtilizationAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Condition: MetricsEnabled
+    Properties:
+      Namespace: CWAgent
+      MetricName: disk_used_percent
+      Statistic: Average
+      Period: 3600
+      EvaluationPeriods: 1
+      ComparisonOperator: GreaterThanThreshold
+      Threshold: 90
+      AlarmActions:
+        - !Ref SnsTopic
+      OKActions:
+        - !Ref SnsTopic
+      Dimensions:
+        - Name: InstanceId
+          Value: !Ref EC2Instance
+        - Name: path
+          Value: /
+        - Name: fstype
+          Value: xfs
+
+  MemoryUtilizationAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Condition: MetricsEnabled
+    Properties:
+      Namespace: CWAgent
+      MetricName: mem_used_percent
+      Statistic: Average
+      Period: 600
+      EvaluationPeriods: 3
+      ComparisonOperator: GreaterThanThreshold
+      Threshold: 90
+      AlarmActions:
+        - !Ref SnsTopic
+      OKActions:
+        - !Ref SnsTopic
+      Dimensions:
+        - Name: InstanceId
+          Value: !Ref EC2Instance
+
+  ThreadPoolAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Condition: MetricsEnabled
+    Properties:
+      Metrics:
+        - Expression: m1-m2
+          Id: e1
+          ReturnData: true
+        - Id: m1
+          MetricStat:
+            Metric:
+              MetricName: executor_pool_size_threads
+              Namespace: CWAgent-Prometheus
+              Dimensions:
+                - Name: InstanceName
+                  Value: !Ref Host
+                - Name: name
+                  Value: ContainerExecutor
+            Period: 300
+            Stat: Average
+          ReturnData: false
+        - Id: m2
+          MetricStat:
+            Metric:
+              MetricName: executor_pool_core_threads
+              Namespace: CWAgent-Prometheus
+              Dimensions:
+                - Name: InstanceName
+                  Value: !Ref Host
+                - Name: name
+                  Value: ContainerExecutor
+            Period: 300
+            Stat: Average
+          ReturnData: false
+      EvaluationPeriods: 3
+      ComparisonOperator: GreaterThanThreshold
+      Threshold: 0
+      AlarmActions:
+        - !Ref SnsTopic
+      OKActions:
+        - !Ref SnsTopic
