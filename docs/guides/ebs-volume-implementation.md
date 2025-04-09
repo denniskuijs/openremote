@@ -3,7 +3,7 @@
 ## Implementation: Separate EBS Volume  <!-- omit in toc -->
 
 ## Context
-This document provides a detailed explanation of how I implemented the creation and mounting of the separate EBS volume within the CI/CD pipeline. It also outlines the decisions I made and the challenges I encountered during development.
+This document provides a detailed overview of how I implemented the creation and mounting of the separate EBS volume within the CI/CD pipeline. It also outlines the key decisions I made and the challenges encountered throughout the development process.
 
 ## Contents <!-- omit in toc -->
 
@@ -29,42 +29,44 @@ This document provides a detailed explanation of how I implemented the creation 
   - [2.3. Adding support for automatic snapshot creation of the EBS data volume](#23-adding-support-for-automatic-snapshot-creation-of-the-ebs-data-volume)
     - [2.3.1. Provision Host Script](#231-provision-host-script)
     - [2.3.2. CloudFormation Template](#232-cloudformation-template)
+  - [2.4. Adding support for automatic attaching/detaching the EBS data volume](#24-adding-support-for-automatic-attachingdetaching-the-ebs-data-volume)
+    - [2.4.1. Provision Host Script](#241-provision-host-script)
 
 </div>
 
 ## 1. Research based on feedback
-After completing my initial research, I discussed my findings with several team members. Based on their feedback, I continued my research on this topic before starting the implementation of my prototype in the CI/CD pipeline.
+After completing my initial research, I shared my findings with several team members. Following their feedback, I continued my research on this topic before proceeding with the implementation of my prototype in the CI/CD pipeline.
 
 ### 1.1. Mount EBS volume on the Docker volumes directory
-One of the team members suggested mounting the default Docker volumes directory (`/var/lib/docker/volumes`) to the newly created EBS volume, instead of creating/mounting an custom directory. \
-I start investigating this option by mounting the separate EBS volume to this directory with the following command:
+One of the team members suggested mounting the default Docker volumes directory (`/var/lib/docker/volumes`) to the newly created EBS volume, rather than creating and mounting a custom directory.
+I began investigating this option by mounting the separate EBS volume to this directory using the following command:
 
 ```sh
 sudo mount /dev/sdf /var/lib/docker/volumes
 ```
 
-This works without any issues, when I check the volume mountpoints with the command.
+This works without any issues, when I checked the volume mount points using the following command.
 
 ```sh
 sudo lsblk -f
 ```
 
-It shows that the volume is mounted on the default volume location from `Docker` (`/var/lib/docker/volumes`)
+It shows that the volume is mounted on `Docker's` default volume location (`/var/lib/docker/volumes`)
 
 <img src="../assets/image/ec2-docker-volume-default-location.png" width="800">
 
-After starting OpenRemote with the default `Docker Compose` file everything is booting up properly without any issues whatsoever.
+After starting OpenRemote with the default `Docker Compose` file, everything booted up properly without any issues.
 
 <img src="../assets/image/ec2-openremote-healthy.png" width="800">
 
-However, after attaching the EBS volume to another `EC2` instance running OpenRemote, I encountered permission errors again with the `PostgresSQL` Container.
+However, after attaching the EBS volume to another `EC2` instance running OpenRemote, I encountered permission errors with the `PostgresSQL` container once again.
 
 <img src="../assets/image/ec2-docker-volume-permission-error-postgres.png" width="800">
 
-Based on the knowledge of my initial research, I knew that this issue could be resolved by setting the `PGDATA` environment variable in the `Docker Compose` file. \
+Based on the insights of my initial research, I knew that this issue could be resolved by setting the `PGDATA` environment variable in the `Docker Compose` file.
 Since the `EBS` volume is an external block device, this step is nessecary for `Docker` to properly access the data. It's not possible to `chown` the directory to both the `postgres` and `root` users simultaneously, which makes specifying the `PGDATA` variable essential.
 
-After adding the `PGDATA` variable the `Docker Compose` file looks like this
+After adding the `PGDATA` variable the `Docker Compose` file looks like this.
 
 ```
 
@@ -165,7 +167,7 @@ With this setup, the `EBS` volume can now easily be attached to other `EC2` inst
 Additionally, the `Docker Compose` file becomes much simpeler, only the `PGDATA` variable needs to be configured, eliminating the need to define different volume paths for each individual container.
 
 ## 2. Implementation in the CI/CD pipeline
-In this section I will explain how I have implemented my prototype in the existing CI/CD pipeline on `Github Actions`. It will be devided into the following topics.
+In this section, I will explain how I implemented my prototype into the existing CI/CD pipeline on `Github Actions`. It will be devided into the following topics.
   
   - Creating/Mounting the EBS data volume
   - Adding CloudWatch metrics/alarms for the EBS data volume
@@ -175,15 +177,15 @@ In this section I will explain how I have implemented my prototype in the existi
 ### 2.1. Creating/Mounting the EBS data volume
 
 #### 2.1.1. GitHub Actions Workflow
-I started my implementation in the GitHub Actions workflow. In this file the steps for executing the CI/CD pipeline are described.
-The workflow will run on `workflow dispatch` which means on-demand without the need for opening a pull-request or pushing code.
+I began my implementation in the GitHub Actions workflow file. In this file the steps for executing the CI/CD pipeline are defined.
+The workflow is triggered on `workflow dispatch`, meaning it runs on-demand without the need for a pull-request or code push.
 
 ```
 on:
   workflow_dispatch:
 ```
 
-I've added two additional input variables to this file: `DATA_DISK_SIZE` and `SNAPSHOT_ID`.
+I added two additional input variables to this file: `DATA_DISK_SIZE` and `SNAPSHOT_ID`.
 
 The `DATA_DISK_SIZE` variable allows you to specify the desired size of the data `EBS` volume. By default, it is set to 16, matching the size of the `root` device.
 ```
@@ -194,7 +196,7 @@ DATA_DISK_SIZE:
     required: false
 ```
 
-The `SNAPSHOT_ID` variable allows you to specify an `Snapshot` that will be used for creating the `EBS` data volume, allowing you to create an volume based of existing data. \
+The `SNAPSHOT_ID` variable allows you to specify a `Snapshot` to create the `EBS` data volume, enabling you to create a volume based on existing data.
 When this variable is specified the `DATA_DISK_SIZE` parameter is ignored. Instead, the volume will be provisioned with the same amount of storage that was assigned before snapshot creation.
 
 ```
@@ -204,7 +206,7 @@ SNAPSHOT_ID:
   required: false
 ```
 
-Next, I added the input variables to the `.env` section in the `provision host` step. This ensures that the variable values can be accessed by referencing the input section at the top, like this:
+Next, I added the input variables to the `.env` section in the `provision host` step. This ensures that the variable values can be accessed by referencing the input section at the top, as show below:
 
 ```
   env:
@@ -230,7 +232,7 @@ Finally, I passed the newly created variables to the `provision_host.sh` script.
 ```
 
 #### 2.1.2. Provision Host Script
-In the `provision host` script, I started modifying the order of the variables that are passed from the `workflow` to the script. In bash, you can reference each variable based on the order in which they are passed.
+In the `provision host` script, I modified the order of the variables passed from the `workflow` to the script. In Bash, you can reference each variable based on the order in which they are passed.
 
 ```
 
@@ -247,11 +249,11 @@ WAIT_FOR_STACK=${10,,}
 
 ```
 
-After that, I created the `EBS_STACK_NAME` variable, which generates a unique name for the CloudFormation stack by combining the `STACK_NAME` with a predefined text string. The `STACK_NAME` itself is created from the `HOST` variable, where all dots in the `hostname` are replaced with a separator. With this apparoach, the `CloudFormation` stack names are unique for every `host`.
+Next, I created the `EBS_STACK_NAME` variable, which generates a unique name for the CloudFormation stack by combining the `STACK_NAME` with a predefined text string. The `STACK_NAME` itself is created from the `HOST` variable, where all dots in the `hostname` are replaced with a separator. With this apparoach, the `CloudFormation` stack names are unique for every `host`.
 
-It is important that the `EBS` volume will be created in the same `Availabilty Zone` as the `EC2` instance, otherwise it is not possible to attach the volume to the instance. To achieve this, I first investigated how the `EC2` instance is assigned to a specific `Availabilty Zone`.
+It is crucial that the `EBS` volume is created in the same `Availabilty Zone` as the `EC2` instance, as the volume cannot be attached to the instance otherwise. To ensure this, I first investigated how the `EC2` instance is assigned to a specific `Availabilty Zone`.
 
-First, the `SUBNET_NUMBER` variable is set using an random integer between 1 and 3. There are 3 different `public subnets` and this apparoach randomly selects one of them. Each subnet resides in a different `Availabilty Zone`, 1a, 1b or 1c. The subnet name is generated using the `SUBNET_NUMBER` variable and a predefined text string.
+First, the `SUBNET_NUMBER` variable is set to a random integer between 1 and 3. There are 3 different `public subnets` and this apparoach randomly selects one of them. Each subnet is located in a different `Availabilty Zone` (1a, 1b or 1c). The subnet name is then generated using the `SUBNET_NUMBER` variable and a predefined text string.
 
 ```
 
@@ -266,10 +268,10 @@ I still needed the exact `Availabilty Zone` name that the `EC2` instance will us
 SUBNET_AZ=$(aws ec2 describe-subnets --filters Name=tag:Name,Values=$SUBNETNAME --query "Subnets[0].AvailabilityZone" --output text $ACCOUNT_PROFILE 2>/dev/null)
 ```
 
-After setting the `Availabilty Zone` name in the `SUBNET_AZ` variable I can start creating the `EBS` volume. 
-The volume creation is handeled by a seperate `CloudFormation` template to ensure that the `EBS` volume will not be affected by template updates at the `EC2` machine. 
+After setting the `Availabilty Zone` name in the `SUBNET_AZ` variable I can begin creating the `EBS` volume. 
+The volume creation is handeled by a seperate `CloudFormation` template to ensure that the `EBS` volume will not be affected by updates to the `EC2` instance template. 
 
-Before the `EBS` volume is created I first check if the stack not already exists
+Before creating the `EBS` volume, I first check if the stack not already exists.
 
 ```
 
@@ -282,8 +284,8 @@ else
 
 ```
 
-If the stack exists the `EBS_STACK_ID` variable will be set with the Stack ID for future reference. Otherwise the `EBS` volume will be created.
-When creating the volume I first check if the `CloudFormation` template exists in one of the specified directories. If this is not the case, the script will exit and throw an error since the template cannot be found.
+If the stack exists, the `EBS_STACK_ID` variable will be set with the Stack ID for future reference. Otherwise, the `EBS` volume is created.
+Before creating the volume, I first check if the `CloudFormation` template exists in one of the specified directories. If the template is not found, the script will exit and throw an error.
 
 ```
 
@@ -300,7 +302,7 @@ fi
 
 ```
 
-After that I will set the `HOST`, `AvailabilityZone` and `DiskSize` parameters that are specified in the `CloudFormation` template and required for creating the volume. The values are coming from the `workflow` inputs or are generated earlier in the script.
+Next, I set the `HOST`, `AvailabilityZone` and `DiskSize` parameters that are specified in the `CloudFormation` template to create the volume. These values are either provided by the `workflow` inputs or generated earlier in the script.
 
 ```
 
@@ -320,16 +322,16 @@ fi
 
 ```
 
-After configuring the parameters the `CloudFormation` stack will be created with the following command. 
-In this command I specify the stack name that was generated at the beginning of the script and also pass the configured parameters.
+After configuring the parameters, the `CloudFormation` stack will be created with the following command. 
+In this command I specify the stack name that was generated at the beginning of the script and pass the configured parameters.
 
 ```
 
 EBS_STACK_ID=$(aws cloudformation create-stack --capabilities CAPABILITY_NAMED_IAM --stack-name $EBS_STACK_NAME --template-body file://$EBS_TEMPLATE_PATH --parameters $PARAMS --output text)
 
 ```
-When the stack is successfully created it will return the Stack ID, which will then be stored in the `EBS_STACK_ID` variable. 
-The code below checks if the previous command, the creation of the `CloudFormation` Stack succeeds, if not, the script will throw an exit code and stops.
+When the stack is successfully created, it returns the Stack ID, which is then be stored in the `EBS_STACK_ID` variable. 
+The code below checks whether the stack creation command succeeded. If not, the script will trhow an exit code and stop execution.
 
 ```
 
@@ -342,7 +344,7 @@ fi
 
 ```
 
-After the stack is successfully created, we need to check whether the creation was succesfull or failed with an error. The code below retrieves the status from the `CloudFormation` stack based of the Stack ID that was stored in the previous step. As long as the status returns `CREATE_IN_PROGRESS` the stack will still be created. The script retrieves the stack status every 30 seconds and will stop when the status either returns `CREATE_COMPLETE` (stack creation succesfull) or when the status is not `CREATE_IN_PROGRESS` and also not `CREATE_COMPLETED` (stack creation failed).
+After the stack is successfully created, we need to check whether the creation was succesfull or failed with an error. The code below retrieves the status from the `CloudFormation` stack based of the Stack ID  stored in the previous step. As long as the status returns `CREATE_IN_PROGRESS` the stack is still being created. The script checks the stack status every 30 seconds and stops when the status either returns `CREATE_COMPLETE` (indicating successful stack creation) or when the status is neither `CREATE_IN_PROGRESS` nor `CREATE_COMPLETE` (indicating stack creation failure).
 
 ```
 
@@ -364,11 +366,11 @@ After the stack is successfully created, we need to check whether the creation w
 
 ```
 
-When the `EBS` volume is created succesfully it can be attached to the `EC2` instance. To attach the volume to a instance you must specify an `Device Name` such as `/dev/sda`, `/dev/sdb` etc. It is not possible to automatically assign an `device name` upon attaching, you must specify an specific `device name` upfront that needs to be used. To achieve this, I have configured a variable with the name `EBS_DEVICE_NAME` and set it to the `/dev/sdf` `device name`.
+When the `EBS` volume is succesfully created, it can be attached to the `EC2` instance. To attach the volume to the instance, you must specify a `Device Name` such as `/dev/sda`, `/dev/sdb` etc. It is not possible to automatically assign a `device name` when attaching the volume. You must specify a specific `device name` upfront. To achieve this, I configured a variable named `EBS_DEVICE_NAME` and set it to `/dev/sdf` as the designated `device name`.
 
 <img src="../assets/image/ebs-volume-virtualization.png" width="800">
 
-As visible in the picture above, for `EC2` instances that are using `HVM` as virtualization method it is recommended to choose a `device name` between `/dev/sd[b]` and `/dev/sd[z]`.
+As shown in the image above, for `EC2` instances that are using `HVM` as the virtualization method, it is recommended to choose a `device name` between `/dev/sd[b]` and `/dev/sd[z]`.
 
 Attaching the volume to the EC2 instance is a technical process that involves several logical steps. 
 First, before the `EBS` volume can be mounted there must of course be a running `EC2` instance. To check this I retrieve the Instance ID and state from the `CloudFormation` stack that creates the `EC2` instance.
@@ -380,8 +382,8 @@ INSTANCE_STATE=$(aws ec2 describe-instances --filters "Name=tag:Name,Values='$HO
 
 ```
 
-The script will check for an `EC2` instance that belongs to the `CloudFormation` template by quering on the specifc `Stack ID` that was returned when this stack was successfully created. To make sure we always target the correct instance, an filter will be applied to get the instance with the name that is provided in the `CloudFormation` template.
-The script will also retrieve the status from the machine as it is only possible to attach volumes to a `running` instance.
+The script checks for an `EC2` instance associated to the `CloudFormation` template by querying the specifc `Stack ID` that was returned when this stack was successfully created. To ensure that we always target the correct instance, a filter is applied to retrieve the instance with the name provided in the `CloudFormation` template.
+The script also retrieves the instance's status, as volume can only be attached to an instance that is in the `running` state.
 
 ```
 
@@ -397,7 +399,7 @@ done
 
 ```
 
-If the Instance ID is not found or the instance status is not `running`, the script waits for 30 seconds before retrying. Each attempt increments a counter, and the script continues checking as long as the counter remains below 30. This counter acts as a safeguard, in case the instance fails to launch successfully. Otherwise the script keeps running forever.
+If the Instance ID is not found or the instance status is not `running`, the script waits for 30 seconds before retrying. Each attempt increments a counter, and the script continues checking as long as the counter remains below 30. This counter acts as a safeguard, in case the instance fails to launch successfully. If the counter exceeds 30, the script will stop prevent running indefinitely.
 
 ```
 
@@ -408,7 +410,7 @@ fi
 
 ```
 
-If the `Instance ID` cannot be retrieved or the `instance state` is not running after 30 retry attempts, the script will exit with an error status code.
+If the `Instance ID` cannot be retrieved or the instance state is not `running` after 30 retry attempts, the script will exit with an error status code.
 
 Once the `Instance ID` is found and the instance is in a running state, the script attempts to attach the `EBS` volume to the `EC2` instance. It's crucial that this step happens immediately after the instance becomes available, as several `cfn-scripts` begin running right after instance creation. One of these scripts automatically creates a filesystem on the volume and mounts it to the `/var/lib/docker/volumes` directory. If the volume isn’t attached in time, this step will fail, which then fails instance creation and therefore automatic rollbacks the `CloudFormation` stack.
 
@@ -425,7 +427,7 @@ The command includes the configured `device name` from the previous step, the `I
 VOLUME=$(aws ec2 attach-volume --device $DEVICE_NAME --instance-id $INSTANCE_ID --volume-id $VOLUME_ID --output text $ACCOUNT_PROFILE 2>/dev/null)
 ```
 
-Rightafter, the status of the volume will be retrieved to check if the volume is attached successfully. When this is not the case, the script waits for 30 seconds before retrying.
+Immediately after, the status of the volume is retrieved to check if it has been successfully attached. If the volume is not attached, the script waits for 30 seconds before retrying.
 
 ```
 
@@ -437,7 +439,7 @@ done
 
 ```
 
-When the status of the volume is `ATTACHED` the volume is attached succesfully to the instance. Otherwise attaching the volume failed and the script will exit with an error status code.
+When the status of the volume is `ATTACHED` the volume is attached succesfully to the instance. If the status is anything else, the attachment failed, and the script will exit with an error status code.
 
 ```
 
@@ -517,15 +519,15 @@ Resources:
   
 ```
 
-The script will create a `EBS` volume based on the parameters that are passed from the `provision host` script. To recognise every volume easily there will be a tag added with the name of the host.
-If the condition `IsSnapshotProvided` is true, when there is a value passed, the `Snapshot ID` will be configured otherwise this parameter remains empty.
+The script will create aan `EBS` volume based on the parameters that are passed from the `provision host` script. To easily identify each volume, a tag will be added with the host's name.
+If the condition `IsSnapshotProvided` is true, the `Snapshot ID` will be configured. Otherwise the parameter will remain empty.
 
 ### 2.2. Adding CloudWatch metrics/alarms for the EBS data volume
 
 #### 2.2.1. CloudFormation Template
 To monitor the performance and health of the `EBS` volume, I added `CloudWatch` metrics and alarms for this device. 
 
-As part of the `cfn-scripts` the `Cloudwatch Agent` will be configured to retrieve several metrics from the `EC2` machine such as the CPU utilization, amount of memory that is used, disk usage etc. The script looks like this:
+As part of the `cfn-scripts` the `Cloudwatch Agent` will be configured to collect various metrics from the `EC2` machine such as CPU utilization, memory usage, disk usage and more. The script looks like this:
 
 ```
                   {
@@ -684,8 +686,8 @@ As part of the `cfn-scripts` the `Cloudwatch Agent` will be configured to retrie
 
 ```
 
-To add metrics for the amount of disk usage that is currently in use, I added the mountpoint for the new `EBS` volume to the `resources` block. 
-This ensures that metrics for this mountpoint are retrieved by the `Cloudwatch Agent`
+To monitor disk usage, I added the mount point for the new `EBS` volume to the `resources` block. 
+This ensures that the `CloudWatch Agent` retrieves metrics for this specific mount point.
 
 ```
 
@@ -700,8 +702,8 @@ This ensures that metrics for this mountpoint are retrieved by the `Cloudwatch A
 
 ```
 
-After that, I added a new `CloudWatch Alarm` to the same `CloudFormation` template. This alarm is configured to trigger if disk usage exceeds 90% within a one-hour period. When the alarm is triggered, Amazon sends a notification to the configured `SNS` topic, which in turn sends an email alert to the topic's subscribers.
-To connect the newly added metric to this alarm, I have configured the `Dimensions` block with the required details such as the `Instance ID`, the path that is referring to the mountpoint within the metrics and the `Volume Type`.
+Next, I added a new `CloudWatch Alarm` to the same `CloudFormation` template. This alarm is set to trigger if disk usage exceeds 90% within a one-hour period. When the alarm is triggered, Amazon sends a notification to the configured `SNS` topic, which in turn sends an email alert to the topic's subscribers.
+To connect the newly added metric to this alarm, I configured the `Dimensions` block with the required details, including the `Instance ID`, the path that is referring to the mount point in the metrics and the `Volume Type`.
 
 ```
 
@@ -736,13 +738,13 @@ To connect the newly added metric to this alarm, I have configured the `Dimensio
 To ensure that the data on the `EBS` volume is securely backed up, the `provision host` script creates an `Amazon Data Lifecycle Manager (DLM)` policy for automatic snapshot creation. This policy ensures that snapshots of the `EBS` volume are created automatically at regular intervals.
 To maintain consistency throughout the script, I implemented this feature in the same way as the `EBS` volume creation.
 
-I started by setting the `DLM_STACK_NAME` variable to generate an unique `CloudFormation` stack name for this feature.
+I began by setting the `DLM_STACK_NAME` variable to generate an unique `CloudFormation` stack name for this feature.
 
 ```
 DLM_STACK_NAME="$STACK_NAME-dlm-ebs-snapshot-policy"
 ```
 
-After that, the script will check if the `CloudFormation` stack for the `DLM` policy already exists, if some, the `STACK_ID` variable will be set for future reference and the script will continue with the next steps.
+Next, the script checks if the `CloudFormation` stack for the `DLM` policy already exists, if it does, the `STACK_ID` variable is set for future reference and the script will continue with the next steps.
 
 ```
 
@@ -753,8 +755,7 @@ else
 
 ```
 
-When the `CloudFormation` stack is not created for this feature, the script will trying to create them by first searching for the `CloudFormation` template within the specified directories.
-If the `CloudFormation` template cannot be found, the system wil exit with an error status code, Otherwise the stack creation process will continue.
+If the `CloudFormation` stack for this feature does not exists, the script will attempt to create it by first searching for the `CloudFormation` template within the specified directories. If the `CloudFormation` template cannot be found, the system wil exit with an error status code, Otherwise the stack creation process will proceed.
 
 ```
 
@@ -771,8 +772,8 @@ If the `CloudFormation` template cannot be found, the system wil exit with an er
 
 ```
 
-Before the stack can be created the script first checks if the required `IAM` role is already created in the AWS account. The `IAM` role is required for the `DLM` policy to execute the snapshot creation tasks on behalf of the `IAM` user.
-If the role doesn't exists yet, the system will create the default role and sets the `ROLE_ARN` variable with the `Amazon Resource Name`. This variable will be passed to the `CloudFormation` template in the next step.
+Before the stack can be created, the script first checks if the required `IAM` role is already created in the AWS account. This role is necessary for the `DLM` policy to perform snapshot creation tasks on behalf of the `IAM` user.
+If the role doesn't exists, the system will create the default role and set the `ROLE_ARN` variable with the `Amazon Resource Name` (ARN). This variable will then be passed to the `CloudFormation` template in the next step.
 
 ```
 
@@ -795,7 +796,7 @@ fi
 
 ```
 
-After configuring the `ROLE_ARN` variable, the script sets the necessary variables for the `CloudFormation` script. The `DLM_DESCRIPTION` variable is created by combining the `$HOST` value while removing any periods, as they are not allowed in the description. Additionally, the `ROLE_ARN` retrieved in the previous step is set, along with the `EBS_STACK_ID`, which identifies the volume that the policy should target.
+After configuring the `ROLE_ARN` variable, the script sets the necessary variables for the `CloudFormation` template. The `DLM_DESCRIPTION` variable is constructed by combining the `HOST` variable and removing any periods, as they are not allowed in the description. Additionally, the `ROLE_ARN` retrieved in the previous step is set, along with the `EBS_STACK_ID`, which identifies the volume that the policy should target.
 
 ```
 
@@ -806,7 +807,7 @@ PARAMS="$PARAMS ParameterKey=EBSStackId,ParameterValue='$EBS_STACK_ID'"
 
 ```
 
-Once the parameters are configured, the script attempts to create the `CloudFormation` stack. If the stack creation fails, the script exits with an error code and stops execution.
+Once the parameters are configured, the script attempts to create the `CloudFormation` stack. If the stack creation fails, the script will exit with an error code and stops execution.
 
 ```
 STACK_ID=$(aws cloudformation create-stack --capabilities CAPABILITY_NAMED_IAM --stack-name $DLM_STACK_NAME --template-body file://$DLM_TEMPLATE_PATH --parameters $PARAMS --output text)
@@ -889,3 +890,8 @@ Resources:
 The script creates a `lifecycle policy` with a single schedule that triggers a new snapshot every 24 hours at 5 AM. The `RetainRule` is configured to keep the most recent 5 snapshots, automatically deleting older ones beyond that limit. 
 The policy is enabled immediately upon creation.
 To ensure that snapshots are only created for the correct volume, the `TargetTags` parameter uses the `EBS_STACK_ID` value to identify the appropriate volume.
+
+### 2.4. Adding support for automatic attaching/detaching the EBS data volume
+
+#### 2.4.1. Provision Host Script
+The last step in the process is to create two scripts for automatic attaching and detaching the `EBS` volume. This scripts are stored within `Amazon Systems Manager` and can either run manually via the management console or via the AWS `CLI`. 
