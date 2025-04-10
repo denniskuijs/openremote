@@ -94,6 +94,7 @@ Parameters:
   EBSStackId:
     Description: EBS StackId of the volume that need to be targeted by this policy.
     Type: String
+    Default: ""
   ElasticIP:
     Description: Assign elastic IP address
     Type: String

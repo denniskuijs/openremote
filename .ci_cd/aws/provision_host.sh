@@ -236,6 +236,7 @@ EOF
   PARAMS="$PARAMS ParameterKey=SMTPHost,ParameterValue=$SMTP_HOST"
   PARAMS="$PARAMS ParameterKey=DLMExecutionRoleArn,ParameterValue=$ROLE_ARN"
   PARAMS="$PARAMS ParameterKey=DLMPolicyDescription,ParameterValue=$DLM_POLICY_DESCRIPTION"
+  PARAMS="$PARAMS ParameterKey=AvailabilityZone,ParameterValue=$SUBNET_AZ"
 
   if [ -n "$SMTP_USER" ]; then
     PARAMS="$PARAMS ParameterKey=SMTPUser,ParameterValue=$SMTP_USER"
