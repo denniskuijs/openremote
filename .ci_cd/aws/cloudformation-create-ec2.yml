@@ -233,7 +233,7 @@ Resources:
             - setupCfnHup
             - create_swapfile
             - docker_setup
-            - prepare_volume
+           # - prepare_volume
             - cloudwatch_config
             - restart_amazon-cloudwatch-agent
             - cron_setup
@@ -242,7 +242,7 @@ Resources:
             - s3_backup_service
             - deployment_local_dir
             - daily_cleanup
-            - start_openremote
+           # - start_openremote
 
         create_swapfile:
           commands:
@@ -780,9 +780,9 @@ Resources:
                 usermod -a -G docker ec2-user
                 chkconfig docker on
                 curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/bin/docker-compose && chmod +x /usr/bin/docker-compose && docker-compose --version
-            02_download_docker_compose_openremote:
-              command: |
-                sudo wget https://raw.githubusercontent.com/denniskuijs/openremote/refs/heads/master/docker-compose.yml -P /openremote
+            # 02_download_docker_compose_openremote:
+            #   command: |
+            #     sudo wget https://raw.githubusercontent.com/denniskuijs/openremote/refs/heads/master/docker-compose.yml -P /openremote
           services:
             systemd:
               docker: 
