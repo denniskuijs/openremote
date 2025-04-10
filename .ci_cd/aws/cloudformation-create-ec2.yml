@@ -156,6 +156,11 @@ Conditions:
   SnapshotProvided: !Not [!Equals [!Ref SnapshotId, ""]]
   UseAMIID: !Equals [!Ref ImageId, ""]
 
+Outputs:
+  EBSDataVolume:
+    Description: Outputs Stack ID for targeting the volume in the DLM policy
+    Value: !Sub "${AWS::StackId}"
+
 Resources:
   InstanceRoleProfile:
     Type: AWS::IAM::InstanceProfile
