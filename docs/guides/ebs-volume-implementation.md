@@ -166,6 +166,7 @@ services:
 With this setup, the `EBS` volume can now easily be attached to other `EC2` instances as long as the `PGDATA` variable is configured on both the original and target machine.
 Additionally, the `Docker Compose` file becomes much simpeler, only the `PGDATA` variable needs to be configured, eliminating the need to define different volume paths for each individual container.
 
+
 ## 2. Implementation in the CI/CD pipeline
 In this section, I will explain how I implemented my prototype into the existing CI/CD pipeline on `Github Actions`. It will be devided into the following topics.
   
