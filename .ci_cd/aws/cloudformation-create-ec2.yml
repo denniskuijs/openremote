@@ -77,6 +77,9 @@ Parameters:
     Description: Role ARN that can be assumed for updating DNS A record (if Hosted Zone in another account)
     Type: String
     Default: ""
+  DLMExecutionRoleArn:
+    Description: Role ARN for executing the DLM operations.
+    Type: String
   SnapshotId:
     Description: Snapshot ID to create the EBS volume based of an existing Snapshot.
     Type: String
@@ -85,6 +88,9 @@ Parameters:
     Description: Device name where data volume needs to be mounted.
     Type: String
     Default: ""
+  EBSStackId:
+    Description: EBS StackId of the volume that need to be targeted by this policy.
+    Type: String
   ElasticIP:
     Description: Assign elastic IP address
     Type: String
@@ -1097,3 +1103,30 @@ Resources:
         - !Ref SnsTopic
       OKActions:
         - !Ref SnsTopic
+
+  # DLM Policy for automatic snapshot creation
+
+  DLMPolicy:
+    Type: AWS::DLM::LifecyclePolicy
+    Properties:
+      Description: !Sub ${Host}%.*
+      ExecutionRoleArn: !Ref DLMExecutionRoleArn
+      State: ENABLED
+      PolicyDetails:
+        PolicyLanguage: STANDARD
+        PolicyType: EBS_SNAPSHOT_MANAGEMENT
+        TargetTags:
+          - Key: aws:cloudformation:stack-id
+            Value: !Ref EBSStackId
+        ResourceTypes: 
+          - VOLUME
+        Schedules:
+          - Name: Daily Backup
+            CreateRule:
+              Interval: 24
+              IntervalUnit: HOURS
+              Times:
+              - '05:00'
+            RetainRule:
+              Count: 5
+
