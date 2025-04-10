@@ -205,8 +205,6 @@ EOF
   EFS_ID=$(aws efs describe-file-systems --query "FileSystems[?Name=='or-map-efs'].FileSystemId" --output text)
   EFS_DNS=$(aws efs describe-mount-targets --file-system-id $EFS_ID --query "MountTargets[?AvailabilityZoneId=='$SUBNET_AZ'].IpAddress" --output text)
 
-  SUBNET_AZ=$(aws ec2 describe-subnets --filters Name=tag:Name,Values=$SUBNETNAME --query "Subnets[0].AvailabilityZone" --output text $ACCOUNT_PROFILE 2>/dev/null)
-
   # Check for DLM IAM Role
   echo "Check if IAM Role exists"
   ROLE_ARN=$(aws iam get-role --role-name AWSDataLifecycleManagerDefaultRole --query "Role.Arn" --output text $ACCOUNT_PROFILE)
@@ -234,7 +232,6 @@ EOF
   PARAMS="$PARAMS ParameterKey=EFSDNS,ParameterValue=$EFS_DNS"
   PARAMS="$PARAMS ParameterKey=SMTPHost,ParameterValue=$SMTP_HOST"
   PARAMS="$PARAMS ParameterKey=DLMExecutionRoleArn,ParameterValue=$ROLE_ARN"
-  PARAMS="$PARAMS ParameterKey=AvailabilityZone,ParameterValue=$SUBNET_AZ"
 
   if [ -n "$SMTP_USER" ]; then
     PARAMS="$PARAMS ParameterKey=SMTPUser,ParameterValue=$SMTP_USER"
