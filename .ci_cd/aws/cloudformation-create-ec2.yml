@@ -1130,7 +1130,7 @@ Resources:
     Type: AWS::DLM::LifecyclePolicy
     Properties:
       ExecutionRoleArn: !Ref DLMExecutionRoleArn
-      Description: ''
+      Description: 'Snapshot for OpenRemote Data'
       State: ENABLED
       PolicyDetails:
         PolicyLanguage: STANDARD
