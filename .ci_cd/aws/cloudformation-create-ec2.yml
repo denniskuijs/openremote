@@ -1152,4 +1152,7 @@ Resources:
               - '05:00'
             RetainRule:
               Count: 5
+        Tag:
+          - Key: Name
+            Value: !Ref Host
 
