@@ -1130,6 +1130,7 @@ Resources:
     Type: AWS::DLM::LifecyclePolicy
     Properties:
       ExecutionRoleArn: !Ref DLMExecutionRoleArn
+      Description: ''
       State: ENABLED
       PolicyDetails:
         PolicyLanguage: STANDARD
