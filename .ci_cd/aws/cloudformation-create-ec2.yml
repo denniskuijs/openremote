@@ -1136,15 +1136,13 @@ Resources:
       ExecutionRoleArn: !Ref DLMExecutionRoleArn
       State: ENABLED
       PolicyDetails:
-        Parameters:
-          ExcludeBootVolume: true
         PolicyLanguage: STANDARD
         PolicyType: EBS_SNAPSHOT_MANAGEMENT
         TargetTags:
           - Key: aws:cloudformation:stack-id
             Value: !Sub ${AWS::StackId}
         ResourceTypes: 
-          - INSTANCE
+          - VOLUME
         Schedules:
           - Name: Daily Backup
             CreateRule:
