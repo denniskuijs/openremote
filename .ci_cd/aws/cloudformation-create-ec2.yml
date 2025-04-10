@@ -1141,8 +1141,8 @@ Resources:
         PolicyLanguage: STANDARD
         PolicyType: EBS_SNAPSHOT_MANAGEMENT
         TargetTags:
-          - Key: aws:cloudformation:stack-name
-            Value: !Sub ${AWS::StackName}
+          - Key: aws:cloudformation:stack-id
+            Value: !Sub ${AWS::StackId}
         ResourceTypes: 
           - INSTANCE
         Schedules:
