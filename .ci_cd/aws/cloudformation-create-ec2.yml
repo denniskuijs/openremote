@@ -1136,13 +1136,11 @@ Resources:
       ExecutionRoleArn: !Ref DLMExecutionRoleArn
       State: ENABLED
       PolicyDetails:
-        Parameters:
-          ExcludeBootVolume: true
         PolicyLanguage: STANDARD
         PolicyType: EBS_SNAPSHOT_MANAGEMENT
         TargetTags:
-          - Key: Name
-            Value: test
+          - Key: aws:cloudformation:stack-name
+            Value: !Sub ${AWS::StackName}
         ResourceTypes: 
           - VOLUME
         Schedules:
