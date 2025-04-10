@@ -933,7 +933,7 @@ Resources:
       InstanceId: !Ref EC2Instance
       EIP: !Ref IPAddress
   
-  DataVolume:
+  EBSDataVolume:
     Type: AWS::EC2::Volume
     Properties:
       AvailabilityZone: !Ref AvailabilityZone
@@ -1138,8 +1138,8 @@ Resources:
         PolicyLanguage: STANDARD
         PolicyType: EBS_SNAPSHOT_MANAGEMENT
         TargetTags:
-          - Key: aws:cloudformation:stack-id
-            Value: !Ref EBSStackId
+          - Key: Name
+            Value: !Ref EBSDataVolume
         ResourceTypes: 
           - VOLUME
         Schedules:
