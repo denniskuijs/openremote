@@ -177,8 +177,6 @@ In this section, I will explain how I implemented my prototype into the existing
 ### 2.1. Creating/Mounting the EBS data volume
 
 #### 2.1.1. GitHub Actions Workflow
-
-
 I began my implementation in the GitHub Actions workflow file. In this file the steps for executing the CI/CD pipeline are defined.
 The workflow is triggered on `workflow dispatch`, meaning it runs on-demand without the need for a pull-request or code push.
 
@@ -188,8 +186,6 @@ on:
 ```
 
 I added two additional input variables to this file: `DATA_DISK_SIZE` and `SNAPSHOT_ID`.
-
-
 
 The `DATA_DISK_SIZE` variable allows you to specify the desired size of the data `EBS` volume. By default, it is set to 16, matching the size of the `root` device.
 ```
