@@ -166,7 +166,6 @@ services:
 With this setup, the `EBS` volume can now easily be attached to other `EC2` instances as long as the `PGDATA` variable is configured on both the original and target machine.
 Additionally, the `Docker Compose` file becomes much simpeler, only the `PGDATA` variable needs to be configured, eliminating the need to define different volume paths for each individual container.
 
-
 ## 2. Implementation in the CI/CD pipeline
 In this section, I will explain how I implemented my prototype into the existing CI/CD pipeline on `Github Actions`. It will be devided into the following topics.
   
@@ -178,6 +177,8 @@ In this section, I will explain how I implemented my prototype into the existing
 ### 2.1. Creating/Mounting the EBS data volume
 
 #### 2.1.1. GitHub Actions Workflow
+
+
 I began my implementation in the GitHub Actions workflow file. In this file the steps for executing the CI/CD pipeline are defined.
 The workflow is triggered on `workflow dispatch`, meaning it runs on-demand without the need for a pull-request or code push.
 
@@ -187,6 +188,8 @@ on:
 ```
 
 I added two additional input variables to this file: `DATA_DISK_SIZE` and `SNAPSHOT_ID`.
+
+
 
 The `DATA_DISK_SIZE` variable allows you to specify the desired size of the data `EBS` volume. By default, it is set to 16, matching the size of the `root` device.
 ```
