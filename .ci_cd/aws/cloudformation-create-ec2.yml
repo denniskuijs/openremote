@@ -1135,6 +1135,8 @@ Resources:
       Description: !Ref DLMPolicyDescription
       ExecutionRoleArn: !Ref DLMExecutionRoleArn
       State: ENABLED
+      Parameters:
+        ExcludeBootVolume: true
       PolicyDetails:
         PolicyLanguage: STANDARD
         PolicyType: EBS_SNAPSHOT_MANAGEMENT
