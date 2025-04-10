@@ -1142,7 +1142,7 @@ Resources:
           - Key: aws:cloudformation:stack-name
             Value: !Sub ${AWS::StackName}
         Parameters:
-          ExcludeBootVolume: true
+             ExcludeBootVolume: true
         ResourceTypes: 
           - VOLUME
         Schedules:
