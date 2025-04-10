@@ -222,10 +222,7 @@ EOF
     ROLE_ARN=$(aws iam get-role --role-name AWSDataLifecycleManagerDefaultRole --query "Role.Arn" --output text $ACCOUNT_PROFILE)
   fi
 
-  DEVICE_NAME="/dev/sdf" # Do not change unless you know what your doing.
-  
-  PARAMS="ParameterKey=EBSDeviceName,ParameterValue=$DEVICE_NAME"
-  PARAMS="$PARAMS ParameterKey=Host,ParameterValue=$HOST"
+  PARAMS="ParameterKey=Host,ParameterValue=$HOST"
   PARAMS="$PARAMS ParameterKey=VpcId,ParameterValue=$VPCID"
   PARAMS="$PARAMS ParameterKey=SSHSecurityGroupId,ParameterValue=$SGID"
   PARAMS="$PARAMS ParameterKey=SubnetId,ParameterValue=$SUBNETID"

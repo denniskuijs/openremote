@@ -789,26 +789,26 @@ Resources:
                 enabled: "true"
                 ensureRunning: "true"
         
-        prepare_volume:
-          commands:
-            01_mount_volume:
-              command: !Sub |
-                if [ -n "${SnapshotId}" ]; then
-                  sudo mount "${EBSDeviceName}" /var/lib/docker/volumes
-                else
-                  sudo mkfs -t xfs "${EBSDeviceName}"
-                  sudo mount "${EBSDeviceName}" /var/lib/docker/volumes
-                fi
-            02_configure_fstab:
-              command: !Sub |
-                UUID=$(sudo blkid -o value -s UUID "${EBSDeviceName}")
-                if [ -n $UUID ]; then
-                   sudo cp /etc/fstab /etc/fstab.orig
-                   sudo echo "UUID=$UUID /var/lib/docker/volumes xfs defaults,nofail 0 2" >> /etc/fstab
-                else
-                  echo "Failed to create /etc/fstab entry. UUID is not found"
-                  exit 1
-                fi
+        # prepare_volume:
+        #   commands:
+        #     01_mount_volume:
+        #       command: !Sub |
+        #         if [ -n "${SnapshotId}" ]; then
+        #           sudo mount "${EBSDeviceName}" /var/lib/docker/volumes
+        #         else
+        #           sudo mkfs -t xfs "${EBSDeviceName}"
+        #           sudo mount "${EBSDeviceName}" /var/lib/docker/volumes
+        #         fi
+        #     02_configure_fstab:
+        #       command: !Sub |
+        #         UUID=$(sudo blkid -o value -s UUID "${EBSDeviceName}")
+        #         if [ -n $UUID ]; then
+        #            sudo cp /etc/fstab /etc/fstab.orig
+        #            sudo echo "UUID=$UUID /var/lib/docker/volumes xfs defaults,nofail 0 2" >> /etc/fstab
+        #         else
+        #           echo "Failed to create /etc/fstab entry. UUID is not found"
+        #           exit 1
+        #         fi
 
         cron_setup:
           packages:
@@ -828,20 +828,20 @@ Resources:
               command: |
                 /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:/opt/aws/amazon-cloudwatch-agent/var/config.json
       
-        start_openremote:
-          commands:
-            01_start_openremote:
-              command: !Sub |
+        # start_openremote:
+        #   commands:
+        #     01_start_openremote:
+        #       command: !Sub |
                 
-                # If no hostname is provided, use the IPv4 address of the virtual machine, otherwise use the hostname.
-                [ -z ${Host} ] && HOST=$(curl v4.ident.me 2>/dev/null) || HOST=${Host}
+        #         # If no hostname is provided, use the IPv4 address of the virtual machine, otherwise use the hostname.
+        #         [ -z ${Host} ] && HOST=$(curl v4.ident.me 2>/dev/null) || HOST=${Host}
 
-                # Set Environment variables and start OpenRemote with the Docker-Compose file.
-                OR_HOSTNAME=$HOST \
-                OR_EMAIL_HOST=${SMTPHost} \
-                OR_EMAIL_USER=${SMTPUser} \
-                OR_EMAIL_PASSWORD=${SMTPPassword} \
-                docker-compose -f /openremote/docker-compose.yml -p openremote up -d
+        #         # Set Environment variables and start OpenRemote with the Docker-Compose file.
+        #         OR_HOSTNAME=$HOST \
+        #         OR_EMAIL_HOST=${SMTPHost} \
+        #         OR_EMAIL_USER=${SMTPUser} \
+        #         OR_EMAIL_PASSWORD=${SMTPPassword} \
+        #         docker-compose -f /openremote/docker-compose.yml -p openremote up -d
 
         setupCfnHup:
           files:
@@ -934,6 +934,14 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub ${Host}/data
+  
+  EBSDataVolumeAttachment:
+    Type: AWS::EC2::VolumeAttachment
+    Properties:
+      Device: /dev/sdf
+      InstanceId: !Ref EC2Instance
+      VolumeId: !Ref EBSDataVolume
+
 
   # Telemetry and Alarms
 
