@@ -31,6 +31,7 @@ This document provides a detailed overview of how I implemented the creation and
     - [2.3.2. CloudFormation Template](#232-cloudformation-template)
   - [2.4. Adding support for automatic attaching/detaching the EBS data volume](#24-adding-support-for-automatic-attachingdetaching-the-ebs-data-volume)
     - [2.4.1. Provision Host Script](#241-provision-host-script)
+    - [2.4.2. CloudFormation Template](#242-cloudformation-template)
 
 </div>
 
@@ -894,4 +895,260 @@ To ensure that snapshots are only created for the correct volume, the `TargetTag
 ### 2.4. Adding support for automatic attaching/detaching the EBS data volume
 
 #### 2.4.1. Provision Host Script
-The last step in the process is to create two scripts for automatic attaching and detaching the `EBS` volume. This scripts are stored within `Amazon Systems Manager` and can either run manually via the management console or via the AWS `CLI`. 
+The final step in the process is to create two scripts for automatically attaching and detaching the `EBS` volume. These scripts are stored in `Amazon Systems Manager` and can be executed either manually through the AWS Management Console or via the AWS `CLI`.
+To provision the `SSM` scripts, I reused the same logic applied when provisioning the `EBS` volume and `DLM` policy in the `provision host` script.
+
+First, I added a new variable at the beginning of the script to generate the `CloudFormation` stack name.
+
+```
+SSM_STACK_NAME="$STACK_NAME-ssm-attach-detach-documents"
+```
+
+Next, the script checks if the `CloudFormation` stack for generating the `SSM` documents already exists.
+
+```
+
+echo "Provisioning SSM Documents for attaching/detaching EBS Data volume"
+STATUS=$(aws cloudformation describe-stacks --stack-name $SSM_STACK_NAME --query "Stacks[0].StackStatus" --output text 2>/dev/null)
+
+if [ -n "$STATUS" ] && [ "$STATUS" != 'DELETE_COMPLETE' ]; then
+  echo "Stack already exists for this host '$HOST' current status is '$STATUS'"
+  STACK_ID=$(aws cloudformation describe-stacks --stack-name $SSM_STACK_NAME --query "Stacks[0].StackId" --output text 2>/dev/null)
+else
+
+```
+
+If the stack already exists, the `STACK_ID` variable will be set with the Stack ID for furture reference. Otherwise, the script continues with the stack creation process.
+The first step in this process is to verify whether the `CloudFormation` template for creating the `SSM` documents exists within the specified directories.
+
+```
+
+if [ -f "${awsDir}cloudformation-create-ssm-document" ]; then
+  SSM_TEMPLATE_PATH="${awsDir}cloudformation-create-ssm-document.yml"
+elif [ -f ".ci_cd/aws/cloudformation-create-ssm-document.yml" ]; then
+  SSM_TEMPLATE_PATH=".ci_cd/aws/cloudformation-create-ssm-document.yml"
+elif [ -f "openremote/.ci_cd/aws/cloudformation-create-ssm-document.yml" ]; then
+  SSM_TEMPLATE_PATH="openremote/.ci_cd/aws/cloudformation-create-ssm-document.yml"
+else
+  echo "Cannot determine location of cloudformation-create-ssm-document.yml"
+  exit 1
+fi
+
+```
+
+If the template is not found, the script exits with an error code and stops execution. Otherwise, it proceeds to configure the required parameters for provisioning the `SSM` documents.
+The `CloudFormation` template required several values such as the `INSTANCE_ID`, `VOLUME_ID` `DEVICE_NAME` and `HOST`, which are used within the scripts to handle the attachment and detachment of the `EBS` volume.
+
+```
+
+PARAMS="ParameterKey=Host,ParameterValue='$HOST'"
+PARAMS="$PARAMS ParameterKey=InstanceId,ParameterValue='$INSTANCE_ID'"
+PARAMS="$PARAMS ParameterKey=VolumeId,ParameterValue='$VOLUME_ID'"
+PARAMS="$PARAMS ParameterKey=EBSDeviceName,ParameterValue='$DEVICE_NAME'"
+
+```
+
+After setting the parameters, the script attempts to create the `CloudFormation` stack.
+
+```
+STACK_ID=$(aws cloudformation create-stack --capabilities CAPABILITY_NAMED_IAM --stack-name $SSM_STACK_NAME --template-body file://$SSM_TEMPLATE_PATH --parameters $PARAMS --output text)
+```
+
+If stack creation fails, the system will throw an error code and stops execution.
+
+```
+if [ $? -ne 0 ]; then
+  echo "Create stack failed"
+  exit 1
+fi
+```
+
+After the stack is successfully created, the script waits for the stack creation process to complete if the `WAIT_FOR_STACK` variable is set to true. During this time, it checks the stack status every 30 seconds and returns a success once the status changes to `CREATE_COMPLETE`. If the status is neither `CREATE_IN_PROGESS` nor `CREATE_COMPLETE`, it indicates that the stack creation has failed. In that case, the script exits with an error code and stops execution.
+
+```
+
+if [ "$WAIT_FOR_STACK" != 'false' ]; then
+  # Wait for CloudFormation stack status to be CREATE_*
+  echo "Waiting for stack to be created"
+  STATUS=$(aws cloudformation describe-stacks --stack-name $SSM_STACK_NAME --query "Stacks[?StackId=='$STACK_ID'].StackStatus" --output text 2>/dev/null)
+
+  while [[ "$STATUS" == 'CREATE_IN_PROGRESS' ]]; do
+      echo "Stack creation is still in progress .. Sleeping 30 seconds"
+      sleep 30
+      STATUS=$(aws cloudformation describe-stacks --stack-name $SSM_STACK_NAME --query "Stacks[?StackId=='$STACK_ID'].StackStatus" --output text 2>/dev/null)
+  done
+
+  if [ "$STATUS" != 'CREATE_COMPLETE' ]; then
+      echo "Stack creation has failed status is '$STATUS'"
+      exit 1
+  else
+      echo "Stack creation is complete"
+  fi
+fi
+
+```
+
+#### 2.4.2. CloudFormation Template
+The `CloudFormation` template for provisioning the `SSM` documents looks like this:
+
+```
+
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Creates an SSM Document for attaching/detaching the EBS volume'
+
+Parameters:
+  Host:
+    Description: FQDN for host.
+    Type: String
+  InstanceId:
+    Description: InstanceId where the script needs to be executed.
+    Type: String
+  VolumeId:
+    Description: VolumeId that needs to be attached/detached.
+    Type: String
+  EBSDeviceName:
+    Description: EBS DeviceName where this volume is mounted on.
+    Type: String
+
+Resources:
+  SSMDetachEBSDocument:
+    Type: AWS::SSM::Document
+    Properties:
+         Content:
+            schemaVersion: '2.2'
+            description: 'Script for detaching the EBS volume'
+            parameters:
+              InstanceId:
+                type: String
+                description: InstanceId where the script needs to be executed.
+                default: !Ref InstanceId
+              VolumeId:
+                type: String
+                description: VolumeId that needs to be detached.
+                default: !Ref VolumeId
+              EBSDeviceName:
+                  type: String
+                  description: EBS DeviceName where this volume is mounted on.
+                  default: !Ref EBSDeviceName
+            mainSteps:
+              - name: RemoveFstabEntry
+                action: aws:runShellScript
+                inputs:
+                  runCommand: 
+                    - |
+                      UUID=$(sudo blkid -o value -s UUID {{ EBSDeviceName }})
+                      if [ -n "$UUID" ]; then
+                        cp /etc/fstab /etc/fstab.orig
+                        sed -i '/UUID='$UUID'/d' /etc/fstab
+                      else
+                        echo "Failed to remove /etc/fstab entry. UUID is not found"
+                        exit 1
+                      fi
+              - name: StopDocker
+                action: aws:runShellScript
+                inputs:
+                    runCommand:
+                      - systemctl stop docker
+              - name: UmountVolume
+                action: aws:runShellScript
+                inputs:
+                  runCommand:
+                    - umount {{ EBSDeviceName }}
+              - name: DetachVolume
+                action: aws:runShellScript
+                inputs:
+                  runCommand: 
+                    - |
+                      VOLUME=$(aws ec2 detach-volume --volume-id {{ VolumeId }})
+                      STATUS=$(aws ec2 describe-volumes --query "Volumes[?VolumeId=='{{ VolumeId }}'].State" --output text 2>/dev/null)
+                      
+                      while [[ "$STATUS" == 'in-use' ]] do
+                        echo "Instance is still in-use .. Sleeping 30 seconds"
+                        sleep 30
+                        STATUS=$(aws ec2 describe-volumes --query "Volumes[?VolumeId=='{{ VolumeId }}'].State" --output text 2>/dev/null)
+                      done
+
+                      if [ "$STATUS" != "available" ]; then
+                        echo "Failed to detach volume"
+                        exit 1
+                      fi
+         DocumentFormat: YAML
+         TargetType: /AWS::EC2::Instance
+         UpdateMethod: Replace
+         DocumentType: Command
+         Name: !Sub ${Host}_detach
+  
+  SSMAttachEBSDocument:
+    Type: AWS::SSM::Document
+    Properties:
+         Content:
+            schemaVersion: '2.2'
+            description: 'Script for attaching the EBS volume'
+            parameters:
+              InstanceId:
+                type: String
+                description: InstanceId where the script needs to be executed.
+                default: !Ref InstanceId
+              VolumeId:
+                type: String
+                description: VolumeId that needs to be attached.
+                default: !Ref VolumeId
+              EBSDeviceName:
+                  type: String
+                  description: EBS DeviceName where this volume needs to be mounted on.
+                  default: !Ref EBSDeviceName
+            mainSteps:
+              - name: AttachVolume
+                action: aws:runShellScript
+                inputs:
+                  runCommand:
+                    -  |
+                       VOLUME=$(aws ec2 attach-volume --device {{ EBSDeviceName }} --instance-id {{ InstanceId }} --volume-id {{ VolumeId }})
+                       STATUS=$(aws ec2 describe-volumes --query "Volumes[?VolumeId=='{{ VolumeId }}'].Attachments[].State" --output text 2>/dev/null)
+                       
+                       while [[ "$STATUS" == 'attaching' ]] do
+                          echo "Volume is still attaching .. Sleeping 30 seconds"
+                          sleep 30
+                          STATUS=$(aws ec2 describe-volumes --query "Volumes[?VolumeId=='{{ VolumeId }}'].Attachments[].State" --output text 2>/dev/null)
+                       done
+
+                       if [ "$STATUS" != 'attached' ]; then
+                          echo "Volume attaching failed with status $STATUS"
+                          exit 1
+                       else
+                          echo "Volume attaching is complete"
+                       fi
+                      
+              - name: MountVolume
+                action: aws:runShellScript
+                inputs:
+                  runCommand:
+                    - mount {{ EBSDeviceName }} /var/lib/docker/volumes
+              - name: AddFstabEntry
+                action: aws:runShellScript
+                inputs:
+                  runCommand:
+                    -  |
+                       UUID=$(sudo blkid -o value -s UUID {{ EBSDeviceName }})
+                       if [ -n "$UUID" ]; then
+                          cp /etc/fstab /etc/fstab.orig
+                          echo "UUID=$UUID /var/lib/docker/volumes xfs defaults,nofail 0 2" >> /etc/fstab
+                       else
+                          echo "Failed to add /etc/fstab entry. UUID is not found"
+                          exit 1
+                       fi
+              - name: StartDocker
+                action: aws:runShellScript
+                inputs:
+                    runCommand:
+                      - systemctl start docker
+         DocumentFormat: YAML
+         TargetType: /AWS::EC2::Instance
+         UpdateMethod: Replace
+         DocumentType: Command
+         Name: !Sub ${Host}_attach
+
+```
+
+It creates two seperate documents, one for attaching and another for detaching the `EBS` volume. 
+When these documents are executed, `SSM` runs the commands defined in the `runCommand` block on the targeted `EC2` instance.
