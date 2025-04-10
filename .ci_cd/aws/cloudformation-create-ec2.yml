@@ -1109,7 +1109,7 @@ Resources:
   DLMPolicy:
     Type: AWS::DLM::LifecyclePolicy
     Properties:
-      Description: !Sub ${Host}%.*
+      Description: test
       ExecutionRoleArn: !Ref DLMExecutionRoleArn
       State: ENABLED
       PolicyDetails:
