@@ -145,9 +145,6 @@ Parameters:
     Description: SES Verified identity trust policy ARN for SMTP X-Headers
     Type: String
     Default: ""
-  DLMPolicyDescription:
-    Description: Lifecycle Policy Description
-    Type: String
 
 Conditions:
   AssignElasticIP: !Equals [!Ref ElasticIP, "true"]
@@ -1132,7 +1129,6 @@ Resources:
   DLMPolicy:
     Type: AWS::DLM::LifecyclePolicy
     Properties:
-      Description: !Ref DLMPolicyDescription
       ExecutionRoleArn: !Ref DLMExecutionRoleArn
       State: ENABLED
       PolicyDetails:

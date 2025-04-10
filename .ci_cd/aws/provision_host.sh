@@ -225,7 +225,6 @@ EOF
   fi
 
   DEVICE_NAME="/dev/sdf" # Do not change unless you know what your doing.
-  DLM_POLICY_DESCRIPTION=${HOST%.*}
   
   PARAMS="ParameterKey=EBSDeviceName,ParameterValue=$DEVICE_NAME"
   PARAMS="$PARAMS ParameterKey=Host,ParameterValue=$HOST"
@@ -235,7 +234,6 @@ EOF
   PARAMS="$PARAMS ParameterKey=EFSDNS,ParameterValue=$EFS_DNS"
   PARAMS="$PARAMS ParameterKey=SMTPHost,ParameterValue=$SMTP_HOST"
   PARAMS="$PARAMS ParameterKey=DLMExecutionRoleArn,ParameterValue=$ROLE_ARN"
-  PARAMS="$PARAMS ParameterKey=DLMPolicyDescription,ParameterValue=$DLM_POLICY_DESCRIPTION"
   PARAMS="$PARAMS ParameterKey=AvailabilityZone,ParameterValue=$SUBNET_AZ"
 
   if [ -n "$SMTP_USER" ]; then
