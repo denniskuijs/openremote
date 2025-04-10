@@ -157,9 +157,11 @@ Conditions:
   UseAMIID: !Equals [!Ref ImageId, ""]
 
 Outputs:
-  EBSDataVolume:
+  DataVolume:
     Description: Outputs Stack ID for targeting the volume in the DLM policy
     Value: !Sub "${AWS::StackId}"
+    Export:
+      Name: Test
 
 Resources:
   InstanceRoleProfile:
