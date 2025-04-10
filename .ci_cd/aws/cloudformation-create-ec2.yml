@@ -84,6 +84,9 @@ Parameters:
     Description: Snapshot ID to create the EBS volume based of an existing Snapshot.
     Type: String
     Default: ""
+  AvailabilityZone:
+    Description: The AZ where the EBS volume needs to be created.
+    Type: String
   EBSDeviceName:
     Description: Device name where data volume needs to be mounted.
     Type: String
@@ -105,10 +108,14 @@ Parameters:
       - true
       - false
     Default: false
-  DiskSize:
+  RootDiskSize:
     Description: Root EBS volume size GB
     Type: Number
     Default: 30
+  DataDiskSize:
+    Description: Amount of storage you want to provision for this EBS volume.
+    Type: Number
+    Default: 16
   HealthChecks:
     Description: Create health checks
     Type: String
@@ -145,6 +152,7 @@ Conditions:
   AssignElasticIP: !Equals [!Ref ElasticIP, "true"]
   MetricsEnabled: !Equals [!Ref Metrics, "true"]
   CreateHealthChecks: !Equals [!Ref HealthChecks, "true"]
+  SnapshotProvided: !Not [!Equals [!Ref SnapshotId, ""]]
   UseAMIID: !Equals [!Ref ImageId, ""]
 
 Resources:
@@ -887,7 +895,7 @@ Resources:
       BlockDeviceMappings:
         - DeviceName: /dev/xvda
           Ebs:
-            VolumeSize: !Ref DiskSize
+            VolumeSize: !Ref RootDiskSize
             VolumeType: gp3
             DeleteOnTermination: true
       Ipv6AddressCount: 1
@@ -924,6 +932,17 @@ Resources:
     Properties:
       InstanceId: !Ref EC2Instance
       EIP: !Ref IPAddress
+  
+  DataVolume:
+    Type: AWS::EC2::Volume
+    Properties:
+      AvailabilityZone: !Ref AvailabilityZone
+      Size: !Ref DataDiskSize
+      VolumeType: gp3
+      SnapshotId: !If [SnapshotProvided, !Ref SnapshotId, !Ref 'AWS::NoValue']
+      Tags:
+        - Key: Name
+          Value: !Sub ${Host}/data
 
   # Telemetry and Alarms
 
