@@ -70,7 +70,6 @@ Since the `EBS` volume is an external block device, this step is nessecary for `
 After adding the `PGDATA` variable the `Docker Compose` file looks like this.
 
 ```
-
 # OpenRemote v3
 #
 # Profile that runs the stack by default on https://localhost using a self-signed SSL certificate,
@@ -161,7 +160,6 @@ services:
       OR_SETUP_IMPORT_DEMO_AGENT_VELBUS:
     volumes:
       - manager-data:/storage
-
 ```
 
 With this setup, the `EBS` volume can now easily be attached to other `EC2` instances as long as the `PGDATA` variable is configured on both the original and target machine.
@@ -223,7 +221,6 @@ Next, I added the input variables to the `.env` section in the `provision host` 
     AWS_SECRET_ACCESS_KEY: ${{ secrets._TEMP_AWS_SECRET_ACCESS_KEY }}
     AWS_ROLE_NAME: ${{ secrets._TEMP_AWS_ROLE_NAME }}
     ENABLE_METRICS: ${{ github.event.inputs.ENABLE_METRICS }}
-
 ```
 
 Finally, I passed the newly created variables to the `provision_host.sh` script. This ensures that the script can access the variable values and execute its logic based on them.
@@ -236,7 +233,6 @@ Finally, I passed the newly created variables to the `provision_host.sh` script.
 In the `provision host` script, I modified the order of the variables passed from the `workflow` to the script. In Bash, you can reference each variable based on the order in which they are passed.
 
 ```
-
 AWS_ACCOUNT_NAME=${1,,}
 HOST=${2,,}
 INSTANCE_TYPE=${3,,}
@@ -247,7 +243,6 @@ ELASTIC_IP=${7,,}
 PROVISION_S3_BUCKET=${8,,}
 ENABLE_METRICS=${9,,}
 WAIT_FOR_STACK=${10,,}
-
 ```
 
 Next, I created the `EBS_STACK_NAME` variable, which generates a unique name for the CloudFormation stack by combining the `STACK_NAME` with a predefined text string. The `STACK_NAME` itself is created from the `HOST` variable, where all dots in the `hostname` are replaced with a separator. With this apparoach, the `CloudFormation` stack names are unique for every `host`.
@@ -257,10 +252,8 @@ It is crucial that the `EBS` volume is created in the same `Availabilty Zone` as
 First, the `SUBNET_NUMBER` variable is set to a random integer between 1 and 3. There are 3 different `public subnets` and this apparoach randomly selects one of them. Each subnet is located in a different `Availabilty Zone` (1a, 1b or 1c). The subnet name is then generated using the `SUBNET_NUMBER` variable and a predefined text string.
 
 ```
-
 SUBNET_NUMBER=$(( $RANDOM % 3 + 1 ))
 SUBNETNAME="or-subnet-public-$SUBNET_NUMBER"
-
 ```
 
 I still needed the exact `Availabilty Zone` name that the `EC2` instance will use. The script already includes a line that retrieves the `AvailabiltyZoneId` based on the `SUBNET_NAME` variable. However, this ID cannot be used to to create the `EBS` volume, as the volume requires the `Availabilty Zone` name, not the ID, to resolve this, I added the following line to the script to retrieve the name.
@@ -275,21 +268,18 @@ The volume creation is handeled by a seperate `CloudFormation` template to ensur
 Before creating the `EBS` volume, I first check if the stack not already exists.
 
 ```
-
 STATUS=$(aws cloudformation describe-stacks --stack-name $EBS_STACK_NAME --query "Stacks[0].StackStatus" --output text 2>/dev/null)
 
 if [ -n "$STATUS" ] && [ "$STATUS" != 'DELETE_COMPLETE' ]; then
     echo "Stack already exists for this host '$HOST' current status is '$STATUS'"
     EBS_STACK_ID=$(aws cloudformation describe-stacks --stack-name $EBS_STACK_NAME --query Stacks[0].StackId --output text 2>/dev/null)
 else
-
 ```
 
 If the stack exists, the `EBS_STACK_ID` variable will be set with the Stack ID for future reference. Otherwise, the `EBS` volume is created.
 Before creating the volume, I first check if the `CloudFormation` template exists in one of the specified directories. If the template is not found, the script will exit and throw an error.
 
 ```
-
 if [ -f "${awsDir}cloudformation-create-ebs-volume.yml" ]; then
   EBS_TEMPLATE_PATH="${awsDir}cloudformation-create-ebs-volume.yml"
   elif [ -f ".ci_cd/aws/cloudformation-create-ebs-volume.yml" ]; then
@@ -300,55 +290,46 @@ if [ -f "${awsDir}cloudformation-create-ebs-volume.yml" ]; then
     echo "Cannot determine location of cloudformation-create-ebs-volume.yml"
     exit 1
 fi
-
 ```
 
 Next, I set the `HOST`, `AvailabilityZone` and `DiskSize` parameters that are specified in the `CloudFormation` template to create the volume. These values are either provided by the `workflow` inputs or generated earlier in the script.
 
 ```
-
 PARAMS="ParameterKey=Host,ParameterValue=$HOST"
 PARAMS="$PARAMS ParameterKey=AvailabilityZone,ParameterValue=$SUBNET_AZ"
 PARAMS="$PARAMS ParameterKey=DiskSize,ParameterValue=$DATA_DISK_SIZE"
-
 ```
 
 When the `SNAPSHOT_ID` variable is provided, this parameter will be configured to ensure that the volume is created based of an existing snapshot.
 
 ```
-
 if [ -n "$SNAPSHOT_ID" ]; then
   PARAMS="$PARAMS ParameterKey=SnapshotId,ParameterValue='$SNAPSHOT_ID'"
 fi
-
 ```
 
 After configuring the parameters, the `CloudFormation` stack will be created with the following command. 
 In this command I specify the stack name that was generated at the beginning of the script and pass the configured parameters.
 
 ```
-
 EBS_STACK_ID=$(aws cloudformation create-stack --capabilities CAPABILITY_NAMED_IAM --stack-name $EBS_STACK_NAME --template-body file://$EBS_TEMPLATE_PATH --parameters $PARAMS --output text)
-
 ```
+
 When the stack is successfully created, it returns the Stack ID, which is then be stored in the `EBS_STACK_ID` variable. 
 The code below checks whether the stack creation command succeeded. If not, the script will trhow an exit code and stop execution.
 
 ```
-
 if [ $? -ne 0 ]; then
   echo "Create stack failed"
   exit 1
 else
   echo "Create stack in progress"
 fi
-
 ```
 
 After the stack is successfully created, we need to check whether the creation was succesfull or failed with an error. The code below retrieves the status from the `CloudFormation` stack based of the Stack ID  stored in the previous step. As long as the status returns `CREATE_IN_PROGRESS` the stack is still being created. The script checks the stack status every 30 seconds and stops when the status either returns `CREATE_COMPLETE` (indicating successful stack creation) or when the status is neither `CREATE_IN_PROGRESS` nor `CREATE_COMPLETE` (indicating stack creation failure).
 
 ```
-
     echo "Waiting for stack to be created"
     STATUS=$(aws cloudformation describe-stacks --stack-name $EBS_STACK_NAME --query "Stacks[?StackId=='$EBS_STACK_ID'].StackStatus" --output text 2>/dev/null)
 
@@ -364,7 +345,6 @@ After the stack is successfully created, we need to check whether the creation w
     else
         echo "Stack creation is complete"
     fi
-
 ```
 
 When the `EBS` volume is succesfully created, it can be attached to the `EC2` instance. To attach the volume to the instance, you must specify a `Device Name` such as `/dev/sda`, `/dev/sdb` etc. It is not possible to automatically assign a `device name` when attaching the volume. You must specify a specific `device name` upfront. To achieve this, I configured a variable named `EBS_DEVICE_NAME` and set it to `/dev/sdf` as the designated `device name`.
@@ -377,17 +357,14 @@ Attaching the volume to the EC2 instance is a technical process that involves se
 First, before the `EBS` volume can be mounted there must of course be a running `EC2` instance. To check this I retrieve the Instance ID and state from the `CloudFormation` stack that creates the `EC2` instance.
 
 ```
-
 INSTANCE_ID=$(aws ec2 describe-instances --filters "Name=tag:Name,Values='$HOST'" --query "Reservations[].Instances[?Tags[?Value=='$STACK_ID']].InstanceId" --output text $ACCOUNT_PROFILE 2>/dev/null)
 INSTANCE_STATE=$(aws ec2 describe-instances --filters "Name=tag:Name,Values='$HOST'" --query "Reservations[].Instances[?Tags[?Value=='$STACK_ID']].State.Name" --output text $ACCOUNT_PROFILE 2>/dev/null)
-
 ```
 
 The script checks for an `EC2` instance associated to the `CloudFormation` template by querying the specifc `Stack ID` that was returned when this stack was successfully created. To ensure that we always target the correct instance, a filter is applied to retrieve the instance with the name provided in the `CloudFormation` template.
 The script also retrieves the instance's status, as volume can only be attached to an instance that is in the `running` state.
 
 ```
-
 echo "Check if instance is available"
 count=0
 while [[ -z "$INSTANCE_ID" ]] && [[ "$INSTANCE_STATE" != 'running' ]] && [ $count -lt 30 ]; do
@@ -397,18 +374,15 @@ while [[ -z "$INSTANCE_ID" ]] && [[ "$INSTANCE_STATE" != 'running' ]] && [ $coun
     INSTANCE_STATE=$(aws ec2 describe-instances --filters "Name=tag:Name,Values='$HOST'" --query "Reservations[].Instances[?Tags[?Value=='$STACK_ID']].State.Name" --output text $ACCOUNT_PROFILE 2>/dev/null)
     count=$((count+1))
 done
-
 ```
 
 If the Instance ID is not found or the instance status is not `running`, the script waits for 30 seconds before retrying. Each attempt increments a counter, and the script continues checking as long as the counter remains below 30. This counter acts as a safeguard, in case the instance fails to launch successfully. If the counter exceeds 30, the script will stop prevent running indefinitely.
 
 ```
-
 if [ -z "$INSTANCE_ID" ] && [ "$INSTANCE_STATE" != 'running' ]; then
   echo "Failed to provision instance"
   exit 1
 fi
-
 ```
 
 If the `Instance ID` cannot be retrieved or the instance state is not `running` after 30 retry attempts, the script will exit with an error status code.
@@ -431,26 +405,22 @@ VOLUME=$(aws ec2 attach-volume --device $DEVICE_NAME --instance-id $INSTANCE_ID 
 Immediately after, the status of the volume is retrieved to check if it has been successfully attached. If the volume is not attached, the script waits for 30 seconds before retrying.
 
 ```
-
 while [[ "$STATUS" == 'attaching' ]]; do
     echo "Volume is still attaching .. Sleeping 30 seconds"
     sleep 30
     STATUS=$(aws ec2 describe-volumes --filters "Name=tag:Name,Values='$HOST/data'" --query "Volumes[?Tags[?Value=='$EBS_STACK_ID']].Attachments[].State" --output text $ACCOUNT_PROFILE 2>/dev/null)
 done
-
 ```
 
 When the status of the volume is `ATTACHED` the volume is attached succesfully to the instance. If the status is anything else, the attachment failed, and the script will exit with an error status code.
 
 ```
-
 if [ "$STATUS" != 'attached' ]; then
     echo "Volume attaching failed with status $STATUS"
     exit 1
 else
     echo "Volume attaching is complete"
 fi
-
 
 ```
 
@@ -691,7 +661,6 @@ To monitor disk usage, I added the mount point for the new `EBS` volume to the `
 This ensures that the `CloudWatch Agent` retrieves metrics for this specific mount point.
 
 ```
-
 "drop_device": true,
 "measurement": [
   "used_percent"
@@ -700,37 +669,34 @@ This ensures that the `CloudWatch Agent` retrieves metrics for this specific mou
   "/",
   "/var/lib/docker/volumes"
 ],
-
 ```
 
 Next, I added a new `CloudWatch Alarm` to the same `CloudFormation` template. This alarm is set to trigger if disk usage exceeds 90% within a one-hour period. When the alarm is triggered, Amazon sends a notification to the configured `SNS` topic, which in turn sends an email alert to the topic's subscribers.
 To connect the newly added metric to this alarm, I configured the `Dimensions` block with the required details, including the `Instance ID`, the path that is referring to the mount point in the metrics and the `Volume Type`.
 
 ```
-
-  DataDiskUtilizationAlarm:
-    Type: AWS::CloudWatch::Alarm
-    Condition: MetricsEnabled
-    Properties:
-      Namespace: CWAgent
-      MetricName: disk_used_percent
-      Statistic: Average
-      Period: 3600
-      EvaluationPeriods: 1
-      ComparisonOperator: GreaterThanThreshold
-      Threshold: 90
-      AlarmActions:
-        - !Ref SnsTopic
-      OKActions:
-        - !Ref SnsTopic
-      Dimensions:
-        - Name: InstanceId
-          Value: !Ref EC2Instance
-        - Name: path
-          Value: /var/lib/docker/volumes
-        - Name: fstype
-          Value: xfs
-
+DataDiskUtilizationAlarm:
+  Type: AWS::CloudWatch::Alarm
+  Condition: MetricsEnabled
+  Properties:
+    Namespace: CWAgent
+    MetricName: disk_used_percent
+    Statistic: Average
+    Period: 3600
+    EvaluationPeriods: 1
+    ComparisonOperator: GreaterThanThreshold
+    Threshold: 90
+    AlarmActions:
+      - !Ref SnsTopic
+    OKActions:
+      - !Ref SnsTopic
+    Dimensions:
+      - Name: InstanceId
+        Value: !Ref EC2Instance
+      - Name: path
+        Value: /var/lib/docker/volumes
+      - Name: fstype
+        Value: xfs
 ```
 
 ### 2.3. Adding support for automatic snapshot creation of the EBS data volume
@@ -748,18 +714,15 @@ DLM_STACK_NAME="$STACK_NAME-dlm-ebs-snapshot-policy"
 Next, the script checks if the `CloudFormation` stack for the `DLM` policy already exists, if it does, the `STACK_ID` variable is set for future reference and the script will continue with the next steps.
 
 ```
-
 if [ -n "$STATUS" ] && [ "$STATUS" != 'DELETE_COMPLETE' ]; then
   echo "Stack already exists for this host '$HOST' current status is '$STATUS'"
   STACK_ID=$(aws cloudformation describe-stacks --stack-name $DLM_STACK_NAME --query "Stacks[0].StackId" --output text 2>/dev/null)
 else
-
 ```
 
 If the `CloudFormation` stack for this feature does not exists, the script will attempt to create it by first searching for the `CloudFormation` template within the specified directories. If the `CloudFormation` template cannot be found, the system wil exit with an error status code, Otherwise the stack creation process will proceed.
 
 ```
-
   if [ -f "${awsDir}cloudformation-create-dlm-policy.yml" ]; then
     DLM_TEMPLATE_PATH="${awsDir}cloudformation-create-dlm-policy.yml"
   elif [ -f ".ci_cd/aws/cloudformation-create-dlm-policy.yml" ]; then
@@ -770,14 +733,12 @@ If the `CloudFormation` stack for this feature does not exists, the script will 
     echo "Cannot determine location of cloudformation-create-dlm-policy.yml"
     exit 1
   fi
-
 ```
 
 Before the stack can be created, the script first checks if the required `IAM` role is already created in the AWS account. This role is necessary for the `DLM` policy to perform snapshot creation tasks on behalf of the `IAM` user.
 If the role doesn't exists, the system will create the default role and set the `ROLE_ARN` variable with the `Amazon Resource Name` (ARN). This variable will then be passed to the `CloudFormation` template in the next step.
 
 ```
-
 echo "Check if IAM Role exists"
 ROLE_ARN=$(aws iam get-role --role-name AWSDataLifecycleManagerDefaultRole --query "Role.Arn" --output text $ACCOUNT_PROFILE)
 
@@ -793,19 +754,15 @@ if [ -z "$ROLE_ARN" ]; then
       
   ROLE_ARN=$(aws iam get-role --role-name AWSDataLifecycleManagerDefaultRole --query "Role.Arn" --output text $ACCOUNT_PROFILE)
 fi
-
-
 ```
 
 After configuring the `ROLE_ARN` variable, the script sets the necessary variables for the `CloudFormation` template. The `DLM_DESCRIPTION` variable is constructed by combining the `HOST` variable and removing any periods, as they are not allowed in the description. Additionally, the `ROLE_ARN` retrieved in the previous step is set, along with the `EBS_STACK_ID`, which identifies the volume that the policy should target.
 
 ```
-
 DLM_DESCRIPTION="OpenRemote-${HOST%.*}"
 PARAMS="ParameterKey=PolicyDescription,ParameterValue='$DLM_DESCRIPTION'"
 PARAMS="$PARAMS ParameterKey=DLMExecutionRoleArn,ParameterValue='$ROLE_ARN'"
 PARAMS="$PARAMS ParameterKey=EBSStackId,ParameterValue='$EBS_STACK_ID'"
-
 ```
 
 Once the parameters are configured, the script attempts to create the `CloudFormation` stack. If the stack creation fails, the script will exit with an error code and stops execution.
@@ -822,7 +779,6 @@ fi
 After the `CloudFormation` stack is successfully created, the script checks its status every 30 seconds. If the status returns `CREATE_COMPLETE`, the stack was created successfully, and the script proceeds to the next steps. However, if the status is neither `CREATE_IN_PROGRESS` nor `CREATE_COMPLETE`, it likely indicates an error, and the script will exit with an error code and stop execution.
 
 ```
-
   if [ "$WAIT_FOR_STACK" != 'false' ]; then
     # Wait for CloudFormation stack status to be CREATE_*
     echo "Waiting for stack to be created"
@@ -841,7 +797,6 @@ After the `CloudFormation` stack is successfully created, the script checks its 
         echo "Stack creation is complete"
     fi
   fi
-
 ```
 
 #### 2.3.2. CloudFormation Template
@@ -907,7 +862,6 @@ SSM_STACK_NAME="$STACK_NAME-ssm-attach-detach-documents"
 Next, the script checks if the `CloudFormation` stack for generating the `SSM` documents already exists.
 
 ```
-
 echo "Provisioning SSM Documents for attaching/detaching EBS Data volume"
 STATUS=$(aws cloudformation describe-stacks --stack-name $SSM_STACK_NAME --query "Stacks[0].StackStatus" --output text 2>/dev/null)
 
@@ -915,14 +869,12 @@ if [ -n "$STATUS" ] && [ "$STATUS" != 'DELETE_COMPLETE' ]; then
   echo "Stack already exists for this host '$HOST' current status is '$STATUS'"
   STACK_ID=$(aws cloudformation describe-stacks --stack-name $SSM_STACK_NAME --query "Stacks[0].StackId" --output text 2>/dev/null)
 else
-
 ```
 
 If the stack already exists, the `STACK_ID` variable will be set with the Stack ID for furture reference. Otherwise, the script continues with the stack creation process.
 The first step in this process is to verify whether the `CloudFormation` template for creating the `SSM` documents exists within the specified directories.
 
 ```
-
 if [ -f "${awsDir}cloudformation-create-ssm-document" ]; then
   SSM_TEMPLATE_PATH="${awsDir}cloudformation-create-ssm-document.yml"
 elif [ -f ".ci_cd/aws/cloudformation-create-ssm-document.yml" ]; then
@@ -933,19 +885,16 @@ else
   echo "Cannot determine location of cloudformation-create-ssm-document.yml"
   exit 1
 fi
-
 ```
 
 If the template is not found, the script exits with an error code and stops execution. Otherwise, it proceeds to configure the required parameters for provisioning the `SSM` documents.
 The `CloudFormation` template required several values such as the `INSTANCE_ID`, `VOLUME_ID` `DEVICE_NAME` and `HOST`, which are used within the scripts to handle the attachment and detachment of the `EBS` volume.
 
 ```
-
 PARAMS="ParameterKey=Host,ParameterValue='$HOST'"
 PARAMS="$PARAMS ParameterKey=InstanceId,ParameterValue='$INSTANCE_ID'"
 PARAMS="$PARAMS ParameterKey=VolumeId,ParameterValue='$VOLUME_ID'"
 PARAMS="$PARAMS ParameterKey=EBSDeviceName,ParameterValue='$DEVICE_NAME'"
-
 ```
 
 After setting the parameters, the script attempts to create the `CloudFormation` stack.
@@ -966,7 +915,6 @@ fi
 After the stack is successfully created, the script waits for the stack creation process to complete if the `WAIT_FOR_STACK` variable is set to true. During this time, it checks the stack status every 30 seconds and returns a success once the status changes to `CREATE_COMPLETE`. If the status is neither `CREATE_IN_PROGESS` nor `CREATE_COMPLETE`, it indicates that the stack creation has failed. In that case, the script exits with an error code and stops execution.
 
 ```
-
 if [ "$WAIT_FOR_STACK" != 'false' ]; then
   # Wait for CloudFormation stack status to be CREATE_*
   echo "Waiting for stack to be created"
@@ -985,14 +933,12 @@ if [ "$WAIT_FOR_STACK" != 'false' ]; then
       echo "Stack creation is complete"
   fi
 fi
-
 ```
 
 #### 2.4.2. CloudFormation Template
 The `CloudFormation` template for provisioning the `SSM` documents looks like this:
 
 ```
-
 AWSTemplateFormatVersion: '2010-09-09'
 Description: 'Creates an SSM Document for attaching/detaching the EBS volume'
 
@@ -1147,7 +1093,6 @@ Resources:
          UpdateMethod: Replace
          DocumentType: Command
          Name: !Sub ${Host}_attach
-
 ```
 
 It creates two seperate documents, one for attaching and another for detaching the `EBS` volume. 
