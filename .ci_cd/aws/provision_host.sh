@@ -106,7 +106,7 @@ else
   fi
 
   if [ "$WAIT_FOR_STACK" != 'false' ]; then
-    # Wait for cloud formation stack status to be CREATE_*
+    # Wait for CloudFormation stack status to be CREATE_*
     echo "Waiting for stack to be created"
     STATUS=$(aws cloudformation describe-stacks --stack-name $SMTP_STACK_NAME --query "Stacks[?StackId=='$STACK_ID'].StackStatus" --output text 2>/dev/null)
 
@@ -133,7 +133,7 @@ if [ -n "$STATUS" ] && [ "$STATUS" != 'DELETE_COMPLETE' ]; then
   STACK_ID=$(aws cloudformation describe-stacks --stack-name $STACK_NAME --query "Stacks[0].StackId" --output text $ACCOUNT_PROFILE 2>/dev/null)
 else
 
-  # Configure Parameters
+  # Configure parameters
   PARAMS="ParameterKey=Host,ParameterValue=$HOST"
 
   if [ -n "$INSTANCE_TYPE" ]; then
@@ -162,7 +162,6 @@ else
   if [ -n "$SMTP_USER" ]; then
     PARAMS="$PARAMS ParameterKey=SMTPUser,ParameterValue=$SMTP_USER"
   fi
-
   if [ -n "$SMTP_SECRET" ]; then
     PARAMS="$PARAMS ParameterKey=SMTPSecret,ParameterValue=$SMTP_SECRET ParameterKey=SMTPRegion,ParameterValue=$AWS_REGION"
   fi
@@ -202,7 +201,6 @@ EOF
           if [ "$callerAccount" == 'true' ]; then
             # Get Role ARN that can be assumed to allow DNS record update for this host from the host's account
             DNSHostedZoneRoleArn=$(aws ssm get-parameter --name Hosted-Zone-Access-Role-Arn --query "Parameter.Value" --output text $ACCOUNT_PROFILE)
-            echo $DNSHostedZoneRoleArn
             if [ -z "$DNSHostedZoneRoleArn" ]; then
               echo "Failed to get 'Hosted-Zone-Access-Role-Arn' from parameter store this must be set for cross account DNS support"
               exit 1
@@ -223,7 +221,6 @@ EOF
   if [ -n "$DNSHostedZoneName" ]; then
     PARAMS="$PARAMS ParameterKey=DNSHostedZoneName,ParameterValue=$DNSHostedZoneName"
   fi
-
   if [ -n "$DNSHostedZoneRoleArn" ]; then
     PARAMS="$PARAMS ParameterKey=DNSHostedZoneRoleArn,ParameterValue=$DNSHostedZoneRoleArn"
   fi
@@ -246,7 +243,7 @@ EOF
   PARAMS="$PARAMS ParameterKey=EFSDNS,ParameterValue=$EFS_DNS"
 
   # Check for DLM IAM Role
-  echo "Check if IAM Role exists"
+  echo "Check for DLM IAM Role"
   ROLE_ARN=$(aws iam get-role --role-name AWSDataLifecycleManagerDefaultRole --query "Role.Arn" --output text $ACCOUNT_PROFILE 2>/dev/null)
 
   if [ -z "$ROLE_ARN" ]; then
@@ -269,7 +266,6 @@ EOF
 
   if [ $? -ne 0 ]; then
     echo "Create stack failed"
-    exit 1
   else
     echo "Create stack in progress"
   fi
@@ -289,7 +285,7 @@ if [ "$WAIT_FOR_STACK" != 'false' ]; then
   if [ "$STATUS" != 'CREATE_COMPLETE' ] && [ "$STATUS" != 'UPDATE_COMPLETE' ]; then
     echo "Stack creation has failed status is '$STATUS'"
     exit 1
-    else
+  else
     echo "Stack creation is complete"
   fi
 fi
@@ -306,7 +302,7 @@ PARAMS="InstanceId=$INSTANCE_ID,VolumeId=$VOLUME_ID,EBSDeviceName=$EBS_DEVICE_NA
 COMMAND_ID=$(aws ssm send-command --document-name attach_volume --instance-ids $INSTANCE_ID --parameters $PARAMS --query "Command.CommandId" --output text $ACCOUNT_PROFILE 2>/dev/null)
 
 if [ $? -ne 0 ]; then
-  echo "Command Execution failed"
+  echo "Volume attaching/mounting failed"
   exit 1
 fi
 
@@ -345,7 +341,7 @@ if [ "$PROVISION_S3_BUCKET" != 'false' ]; then
   fi
 fi
 
-# Provision Route 53 healthcheck alarm cloud formation (if stack doesn't already exist) - must be in the us-east-1 region
+# Provision Route 53 healthcheck alarm CloudFormation (if stack doesn't already exist) - must be in the us-east-1 region
 echo "Provisioning Healthcheck Alarm"
 STATUS=$(aws cloudformation describe-stacks --stack-name $HEALTH_STACK_NAME --query "Stacks[0].StackStatus" --output text $ACCOUNT_PROFILE --region us-east-1 2>/dev/null)
 
@@ -365,7 +361,7 @@ else
     exit 1
   fi
 
-  #Configure parameters
+  # Configure parameters
   PARAMS="ParameterKey=Host,ParameterValue='$HOST'"
 
   # Create standard stack resources in specified account in us-east-1 region
@@ -377,7 +373,7 @@ else
   fi
 
   if [ "$WAIT_FOR_STACK" != 'false' ]; then
-    # Wait for cloud formation stack status to be CREATE_*
+    # Wait for CloudFormation stack status to be CREATE_*
     echo "Waiting for stack to be created"
     STATUS=$(aws cloudformation describe-stacks --stack-name $HEALTH_STACK_NAME --query "Stacks[?StackId=='$STACK_ID'].StackStatus" --output text $ACCOUNT_PROFILE --region us-east-1 2>/dev/null)
 
