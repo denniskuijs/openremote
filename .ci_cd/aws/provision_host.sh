@@ -294,7 +294,7 @@ if [ "$WAIT_FOR_STACK" != 'false' ]; then
   fi
 fi
 
-# Attach/mount EBS Data volume
+# Attach/mount EBS data volume
 echo "Attaching/Mounting EBS data volume"
 
 EBS_DEVICE_NAME="/dev/sdf" # Only change if you know what you are doing.
@@ -312,7 +312,7 @@ fi
 
 STATUS=$(aws ssm get-command-invocation --command-id $COMMAND_ID --instance-id $INSTANCE_ID --query "StatusDetails" --output text $ACCOUNT_PROFILE 2>/dev/null)
 
-while [[ "$STATUS" == 'In Progress' ]]; do
+while [[ "$STATUS" == 'InProgress' ]]; do
     echo "Command invocation is still in progress .. Sleeping 30 seconds"
     sleep 30
     STATUS=$(aws ssm get-command-invocation --command-id $COMMAND_ID --instance-id $INSTANCE_ID --query "StatusDetails" --output text $ACCOUNT_PROFILE 2>/dev/null)
