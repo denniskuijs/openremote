@@ -315,7 +315,7 @@ STATUS=$(aws ssm get-command-invocation --command-id $COMMAND_ID --instance-id $
 while [[ "$STATUS" == 'In Progress' ]]; do
     echo "Command invocation is still in progress .. Sleeping 30 seconds"
     sleep 30
-    STATUS=$(aws ssm get-command-invovation --command-id $COMMAND_ID --instance-id $INSTANCE_ID --query "StatusDetails" --output text $ACCOUNT_PROFILE 2>/dev/null)
+    STATUS=$(aws ssm get-command-invocation --command-id $COMMAND_ID --instance-id $INSTANCE_ID --query "StatusDetails" --output text $ACCOUNT_PROFILE 2>/dev/null)
 done
 
 if [ "$STATUS" != 'Success' ]; then
