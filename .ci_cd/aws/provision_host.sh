@@ -297,12 +297,9 @@ EBS_DEVICE_NAME="/dev/sdf" # Only change if you know what you are doing.
 INSTANCE_ID=$(aws ec2 describe-instances --filters "Name=tag:Name,Values='$HOST'" --query "Reservations[].Instances[?Tags[?Value=='$STACK_ID']].InstanceId" --output text $ACCOUNT_PROFILE 2>/dev/null)
 VOLUME_ID=$(aws ec2 describe-volumes --filters "Name=tag:Name,Values='$HOST/data'" --query "Volumes[?Tags[?Value=='$STACK_ID']].VolumeId" --output text $ACCOUNT_PROFILE 2>/dev/null)
 
-PARAMS="InstanceId=$INSTANCE_ID,VolumeId=$VOLUME_ID,EBSDeviceName=$EBS_DEVICE_NAME"
+PARAMS="InstanceId=$INSTANCE_ID,VolumeId=$VOLUME_ID,DeviceName=$EBS_DEVICE_NAME"
 
 COMMAND_ID=$(aws ssm send-command --document-name attach_volume --instance-ids $INSTANCE_ID --parameters $PARAMS --query "Command.CommandId" --output text $ACCOUNT_PROFILE)
-echo $COMMAND_ID
-echo $INSTANCE_ID
-echo $VOLUME_ID
 
 if [ $? -ne 0 ]; then
   echo "Volume attaching/mounting failed"
