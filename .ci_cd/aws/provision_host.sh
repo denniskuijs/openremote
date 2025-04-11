@@ -300,6 +300,7 @@ VOLUME_ID=$(aws ec2 describe-volumes --filters "Name=tag:Name,Values='$HOST/data
 PARAMS="InstanceId=$INSTANCE_ID,VolumeId=$VOLUME_ID,EBSDeviceName=$EBS_DEVICE_NAME"
 
 COMMAND_ID=$(aws ssm send-command --document-name attach_volume --instance-ids $INSTANCE_ID --parameters $PARAMS --query "Command.CommandId" --output text $ACCOUNT_PROFILE 2>/dev/null)
+echo $COMMAND_ID
 
 if [ $? -ne 0 ]; then
   echo "Volume attaching/mounting failed"
