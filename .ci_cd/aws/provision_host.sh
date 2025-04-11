@@ -313,16 +313,16 @@ fi
 STATUS=$(aws ssm get-command-invocation --command-id $COMMAND_ID --instance-id $INSTANCE_ID --query "StatusDetails" --output text $ACCOUNT_PROFILE 2>/dev/null)
 
 while [[ "$STATUS" == 'InProgress' ]]; do
-    echo "Command invocation is still in progress .. Sleeping 30 seconds"
+    echo "Volume attaching/mounting is still in progress .. Sleeping 30 seconds"
     sleep 30
     STATUS=$(aws ssm get-command-invocation --command-id $COMMAND_ID --instance-id $INSTANCE_ID --query "StatusDetails" --output text $ACCOUNT_PROFILE 2>/dev/null)
 done
 
 if [ "$STATUS" != 'Success' ]; then
-  echo "Command invocation has failed status is '$STATUS'"
+  echo "Volume attaching/mounting has failed status is '$STATUS'"
   exit 1
 else
-  echo "Command invocation is complete"
+  echo "Volume attaching/mounting is complete"
 fi
 
 # Provision S3 bucket
