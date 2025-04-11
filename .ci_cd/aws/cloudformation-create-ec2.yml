@@ -895,14 +895,6 @@ Resources:
           Value: !Sub ${Host}/data
     DeletionPolicy: Snapshot
   
-  EBSDataVolumeAttachment:
-    Type: AWS::EC2::VolumeAttachment
-    Properties:
-      Device: /dev/sdf
-      InstanceId: !Ref EC2Instance
-      VolumeId: !Ref EBSDataVolume
-
-
   # Telemetry and Alarms
 
   EmailSubscription:

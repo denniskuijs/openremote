@@ -294,6 +294,37 @@ if [ "$WAIT_FOR_STACK" != 'false' ]; then
   fi
 fi
 
+# Attach/mount EBS Data volume
+echo "Attaching/Mounting EBS data volume"
+
+EBS_DEVICE_NAME="/dev/sdf" # Only change if you know what you are doing.
+INSTANCE_ID=$(aws ec2 describe-instances --filters "Name=tag:Name,Values='$HOST'" --query "Reservations[].Instances[?Tags[?Value=='$STACK_ID']].InstanceId" --output text $ACCOUNT_PROFILE 2>/dev/null)
+VOLUME_ID=$(aws ec2 describe-volumes --filters "Name=tag:Name,Values='$HOST/data'" --query "Volumes[?Tags[?Value=='$STACK_ID']].VolumeId" --output text $ACCOUNT_PROFILE 2>/dev/null)
+
+PARAMS="InstanceId=$INSTANCE_ID,VolumeId=$VOLUME_ID,EBSDeviceName=$EBS_DEVICE_NAME"
+
+COMMAND_ID=$(aws ssm send-command --document-name attach_volume --instance-ids $INSTANCE_ID --parameters $PARAMS --query "Command.CommandId" --output text $ACCOUNT_PROFILE 2>/dev/null)
+
+if [ $? -ne 0 ]; then
+  echo "Command Execution failed"
+  exit 1
+fi
+
+STATUS=$(aws ssm get-command-invovation --command-id $COMMAND_ID --instance-id $INSTANCE_ID --query "StatusDetails" --output text $ACCOUNT_PROFILE 2>/dev/null)
+
+while [[ "$STATUS" == 'In Progress' ]]; do
+    echo "Command invocation is still in progress .. Sleeping 30 seconds"
+    sleep 30
+    STATUS=$(aws ssm get-command-invovation --command-id $COMMAND_ID --instance-id $INSTANCE_ID --query "StatusDetails" --output text $ACCOUNT_PROFILE 2>/dev/null)
+done
+
+if [ "$STATUS" != 'Success' ]; then
+  echo "Command invocation has failed status is '$STATUS'"
+  exit 1
+else
+  echo "Command invocation is complete"
+fi
+
 # Provision S3 bucket
 if [ "$PROVISION_S3_BUCKET" != 'false' ]; then
   echo "Provisioning S3 bucket for host '$HOST'"
@@ -364,8 +395,6 @@ else
     fi
   fi
 fi
-
-
 
 # # Provision SSM Documents
 # echo "Provisioning SSM Documents for attaching/detaching EBS Data volume"
