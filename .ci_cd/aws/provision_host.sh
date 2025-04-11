@@ -301,6 +301,8 @@ PARAMS="InstanceId=$INSTANCE_ID,VolumeId=$VOLUME_ID,EBSDeviceName=$EBS_DEVICE_NA
 
 COMMAND_ID=$(aws ssm send-command --document-name attach_volume --instance-ids $INSTANCE_ID --parameters $PARAMS --query "Command.CommandId" --output text $ACCOUNT_PROFILE)
 echo $COMMAND_ID
+echo $INSTANCE_ID
+echo $VOLUME_ID
 
 if [ $? -ne 0 ]; then
   echo "Volume attaching/mounting failed"
