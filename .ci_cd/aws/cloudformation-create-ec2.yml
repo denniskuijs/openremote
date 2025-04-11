@@ -233,7 +233,6 @@ Resources:
             - setupCfnHup
             - create_swapfile
             - docker_setup
-           # - prepare_volume
             - cloudwatch_config
             - restart_amazon-cloudwatch-agent
             - cron_setup
@@ -242,7 +241,6 @@ Resources:
             - s3_backup_service
             - deployment_local_dir
             - daily_cleanup
-           # - start_openremote
 
         create_swapfile:
           commands:
@@ -780,36 +778,12 @@ Resources:
                 usermod -a -G docker ec2-user
                 chkconfig docker on
                 curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/bin/docker-compose && chmod +x /usr/bin/docker-compose && docker-compose --version
-            # 02_download_docker_compose_openremote:
-            #   command: |
-            #     sudo wget https://raw.githubusercontent.com/denniskuijs/openremote/refs/heads/master/docker-compose.yml -P /openremote
           services:
             systemd:
               docker: 
                 enabled: "true"
                 ensureRunning: "true"
         
-        # prepare_volume:
-        #   commands:
-        #     01_mount_volume:
-        #       command: !Sub |
-        #         if [ -n "${SnapshotId}" ]; then
-        #           sudo mount "${EBSDeviceName}" /var/lib/docker/volumes
-        #         else
-        #           sudo mkfs -t xfs "${EBSDeviceName}"
-        #           sudo mount "${EBSDeviceName}" /var/lib/docker/volumes
-        #         fi
-        #     02_configure_fstab:
-        #       command: !Sub |
-        #         UUID=$(sudo blkid -o value -s UUID "${EBSDeviceName}")
-        #         if [ -n $UUID ]; then
-        #            sudo cp /etc/fstab /etc/fstab.orig
-        #            sudo echo "UUID=$UUID /var/lib/docker/volumes xfs defaults,nofail 0 2" >> /etc/fstab
-        #         else
-        #           echo "Failed to create /etc/fstab entry. UUID is not found"
-        #           exit 1
-        #         fi
-
         cron_setup:
           packages:
             yum:
@@ -828,21 +802,6 @@ Resources:
               command: |
                 /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:/opt/aws/amazon-cloudwatch-agent/var/config.json
       
-        # start_openremote:
-        #   commands:
-        #     01_start_openremote:
-        #       command: !Sub |
-                
-        #         # If no hostname is provided, use the IPv4 address of the virtual machine, otherwise use the hostname.
-        #         [ -z ${Host} ] && HOST=$(curl v4.ident.me 2>/dev/null) || HOST=${Host}
-
-        #         # Set Environment variables and start OpenRemote with the Docker-Compose file.
-        #         OR_HOSTNAME=$HOST \
-        #         OR_EMAIL_HOST=${SMTPHost} \
-        #         OR_EMAIL_USER=${SMTPUser} \
-        #         OR_EMAIL_PASSWORD=${SMTPPassword} \
-        #         docker-compose -f /openremote/docker-compose.yml -p openremote up -d
-
         setupCfnHup:
           files:
             '/etc/cfn/cfn-hup.conf':
@@ -934,6 +893,7 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub ${Host}/data
+    DeletionPolicy: Snapshot
   
   EBSDataVolumeAttachment:
     Type: AWS::EC2::VolumeAttachment

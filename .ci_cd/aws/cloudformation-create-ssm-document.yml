@@ -42,6 +42,11 @@ Resources:
                   description: EBS DeviceName where this volume is mounted on.
                   default: !Ref EBSDeviceName
             mainSteps:
+              - name: StopDocker
+                action: aws:runShellScript
+                inputs:
+                    runCommand:
+                      - systemctl stop docker
               - name: RemoveFstabEntry
                 action: aws:runShellScript
                 inputs:
@@ -55,11 +60,6 @@ Resources:
                         echo "Failed to remove /etc/fstab entry. UUID is not found"
                         exit 1
                       fi
-              - name: StopDocker
-                action: aws:runShellScript
-                inputs:
-                    runCommand:
-                      - systemctl stop docker
               - name: UmountVolume
                 action: aws:runShellScript
                 inputs:
@@ -74,7 +74,7 @@ Resources:
                       STATUS=$(aws ec2 describe-volumes --query "Volumes[?VolumeId=='{{ VolumeId }}'].State" --output text 2>/dev/null)
                       
                       while [[ "$STATUS" == 'in-use' ]] do
-                        echo "Instance is still in-use .. Sleeping 30 seconds"
+                        echo "Volume is still in-use .. Sleeping 30 seconds"
                         sleep 30
                         STATUS=$(aws ec2 describe-volumes --query "Volumes[?VolumeId=='{{ VolumeId }}'].State" --output text 2>/dev/null)
                       done
@@ -109,27 +109,11 @@ Resources:
                   description: EBS DeviceName where this volume needs to be mounted on.
                   default: !Ref EBSDeviceName
             mainSteps:
-              - name: AttachVolume
+              - name: StopDocker
                 action: aws:runShellScript
                 inputs:
                   runCommand:
-                    -  |
-                       VOLUME=$(aws ec2 attach-volume --device {{ EBSDeviceName }} --instance-id {{ InstanceId }} --volume-id {{ VolumeId }})
-                       STATUS=$(aws ec2 describe-volumes --query "Volumes[?VolumeId=='{{ VolumeId }}'].Attachments[].State" --output text 2>/dev/null)
-                       
-                       while [[ "$STATUS" == 'attaching' ]] do
-                          echo "Volume is still attaching .. Sleeping 30 seconds"
-                          sleep 30
-                          STATUS=$(aws ec2 describe-volumes --query "Volumes[?VolumeId=='{{ VolumeId }}'].Attachments[].State" --output text 2>/dev/null)
-                       done
-
-                       if [ "$STATUS" != 'attached' ]; then
-                          echo "Volume attaching failed with status $STATUS"
-                          exit 1
-                       else
-                          echo "Volume attaching is complete"
-                       fi
-                      
+                    - systemctl stop docker
               - name: MountVolume
                 action: aws:runShellScript
                 inputs:

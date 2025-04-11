@@ -72,8 +72,6 @@ ACCOUNT_PROFILE=
 STACK_NAME=$(tr '.' '-' <<< "$HOST")
 SMTP_STACK_NAME="$STACK_NAME-smtp"
 HEALTH_STACK_NAME="$STACK_NAME-healthcheck"
-EBS_STACK_NAME="$STACK_NAME-ebs-data-volume"
-DLM_STACK_NAME="$STACK_NAME-dlm-ebs-snapshot-policy"
 SSM_STACK_NAME="$STACK_NAME-ssm-attach-detach-documents"
 
 # Provision SMTP user using CloudFormation (if stack doesn't already exist)
@@ -96,7 +94,7 @@ else
     exit 1
   fi
 
-  #Configure parameters
+  # Configure parameters
   PARAMS="ParameterKey=UserName,ParameterValue='$SMTP_STACK_NAME'"
 
   # Create standard stack resources in specified account
@@ -135,10 +133,39 @@ if [ -n "$STATUS" ] && [ "$STATUS" != 'DELETE_COMPLETE' ]; then
   STACK_ID=$(aws cloudformation describe-stacks --stack-name $STACK_NAME --query "Stacks[0].StackId" --output text $ACCOUNT_PROFILE 2>/dev/null)
 else
 
+  # Configure Parameters
+  PARAMS="ParameterKey=Host,ParameterValue=$HOST"
+
+  if [ -n "$INSTANCE_TYPE" ]; then
+    PARAMS="$PARAMS ParameterKey=InstanceType,ParameterValue=$INSTANCE_TYPE"
+  fi
+
+  if [ -n "$DISK_SIZE" ]; then
+    PARAMS="$PARAMS ParameterKey=DiskSize,ParameterValue=$DISK_SIZE"
+  fi
+
+  if [ -n "$ELASTIC_IP" ]; then
+    PARAMS="$PARAMS ParameterKey=ElasticIP,ParameterValue=$ELASTIC_IP"
+  fi
+
+  if [ -n "$ENABLE_METRICS" ]; then
+    PARAMS="$PARAMS ParameterKey=Metrics,ParameterValue=$ENABLE_METRICS"
+  fi
+
   # Get SMTP credentials
   SMTP_HOST="email-smtp.$AWS_REGION.amazonaws.com"
   SMTP_USER=$(aws cloudformation describe-stacks --stack-name $SMTP_STACK_NAME --query "Stacks[0].Outputs[?OutputKey=='SMTPUserKey'].OutputValue" --output text 2>/dev/null)
   SMTP_SECRET=$(aws cloudformation describe-stacks --stack-name $SMTP_STACK_NAME --query "Stacks[0].Outputs[?OutputKey=='SMTPUserSecret'].OutputValue" --output text 2>/dev/null)
+
+  PARAMS="$PARAMS ParameterKey=SMTPHost,ParameterValue=$SMTP_HOST"
+
+  if [ -n "$SMTP_USER" ]; then
+    PARAMS="$PARAMS ParameterKey=SMTPUser,ParameterValue=$SMTP_USER"
+  fi
+
+  if [ -n "$SMTP_SECRET" ]; then
+    PARAMS="$PARAMS ParameterKey=SMTPSecret,ParameterValue=$SMTP_SECRET ParameterKey=SMTPRegion,ParameterValue=$AWS_REGION"
+  fi
 
   # Determine DNSHostedZoneName and DNSHostedZoneRoleArn (must be set if hosted zone is not in the same account as where the host is being created)
   echo "Determining DNS parameters"
@@ -193,10 +220,18 @@ EOF
     done
   fi
 
+  if [ -n "$DNSHostedZoneName" ]; then
+    PARAMS="$PARAMS ParameterKey=DNSHostedZoneName,ParameterValue=$DNSHostedZoneName"
+  fi
+
+  if [ -n "$DNSHostedZoneRoleArn" ]; then
+    PARAMS="$PARAMS ParameterKey=DNSHostedZoneRoleArn,ParameterValue=$DNSHostedZoneRoleArn"
+  fi
+
   # Get OR VPC ID, Subnet ID, SSH Security Group ID and EFS MOUNT TARGET IP
+  VPCID=$(aws ec2 describe-vpcs --filters Name=tag:Name,Values=or-vpc --query "Vpcs[0].VpcId" --output text $ACCOUNT_PROFILE 2>/dev/null)
   SUBNET_NUMBER=$(( $RANDOM % 3 + 1 ))
   SUBNETNAME="or-subnet-public-$SUBNET_NUMBER"
-  VPCID=$(aws ec2 describe-vpcs --filters Name=tag:Name,Values=or-vpc --query "Vpcs[0].VpcId" --output text $ACCOUNT_PROFILE 2>/dev/null)
   SUBNETID=$(aws ec2 describe-subnets --filters Name=tag:Name,Values=$SUBNETNAME --query "Subnets[0].SubnetId" --output text $ACCOUNT_PROFILE 2>/dev/null)
   SUBNET_AZ=$(aws ec2 describe-subnets --filters Name=tag:Name,Values=$SUBNETNAME --query "Subnets[0].AvailabilityZoneId" --output text $ACCOUNT_PROFILE 2>/dev/null)
   SGID=$(aws ec2 describe-security-groups --filters Name=tag:Name,Values=ssh-access --query "SecurityGroups[0].GroupId" --output text $ACCOUNT_PROFILE 2>/dev/null)
@@ -205,9 +240,14 @@ EOF
   EFS_ID=$(aws efs describe-file-systems --query "FileSystems[?Name=='or-map-efs'].FileSystemId" --output text)
   EFS_DNS=$(aws efs describe-mount-targets --file-system-id $EFS_ID --query "MountTargets[?AvailabilityZoneId=='$SUBNET_AZ'].IpAddress" --output text)
 
+  PARAMS="$PARAMS ParameterKey=VpcId,ParameterValue=$VPCID"
+  PARAMS="$PARAMS ParameterKey=SSHSecurityGroupId,ParameterValue=$SGID"
+  PARAMS="$PARAMS ParameterKey=SubnetId,ParameterValue=$SUBNETID"
+  PARAMS="$PARAMS ParameterKey=EFSDNS,ParameterValue=$EFS_DNS"
+
   # Check for DLM IAM Role
   echo "Check if IAM Role exists"
-  ROLE_ARN=$(aws iam get-role --role-name AWSDataLifecycleManagerDefaultRole --query "Role.Arn" --output text $ACCOUNT_PROFILE)
+  ROLE_ARN=$(aws iam get-role --role-name AWSDataLifecycleManagerDefaultRole --query "Role.Arn" --output text $ACCOUNT_PROFILE 2>/dev/null)
 
   if [ -z "$ROLE_ARN" ]; then
     ROLE=$(aws dlm create-default-role --resource-type snapshot)
@@ -219,48 +259,10 @@ EOF
       echo "IAM Role creation is complete"
     fi
       
-    ROLE_ARN=$(aws iam get-role --role-name AWSDataLifecycleManagerDefaultRole --query "Role.Arn" --output text $ACCOUNT_PROFILE)
+    ROLE_ARN=$(aws iam get-role --role-name AWSDataLifecycleManagerDefaultRole --query "Role.Arn" --output text $ACCOUNT_PROFILE 2>/dev/null)
   fi
 
-  PARAMS="ParameterKey=Host,ParameterValue=$HOST"
-  PARAMS="$PARAMS ParameterKey=VpcId,ParameterValue=$VPCID"
-  PARAMS="$PARAMS ParameterKey=SSHSecurityGroupId,ParameterValue=$SGID"
-  PARAMS="$PARAMS ParameterKey=SubnetId,ParameterValue=$SUBNETID"
-  PARAMS="$PARAMS ParameterKey=EFSDNS,ParameterValue=$EFS_DNS"
-  PARAMS="$PARAMS ParameterKey=SMTPHost,ParameterValue=$SMTP_HOST"
   PARAMS="$PARAMS ParameterKey=DLMExecutionRoleArn,ParameterValue=$ROLE_ARN"
-
-  if [ -n "$SMTP_USER" ]; then
-    PARAMS="$PARAMS ParameterKey=SMTPUser,ParameterValue=$SMTP_USER"
-  fi
-
-  if [ -n "$SMTP_SECRET" ]; then
-    PARAMS="$PARAMS ParameterKey=SMTPSecret,ParameterValue=$SMTP_SECRET ParameterKey=SMTPRegion,ParameterValue=$AWS_REGION"
-  fi
-
-  if [ -n "$INSTANCE_TYPE" ]; then
-    PARAMS="$PARAMS ParameterKey=InstanceType,ParameterValue=$INSTANCE_TYPE"
-  fi
-
-  if [ -n "$DISK_SIZE" ]; then
-    PARAMS="$PARAMS ParameterKey=DiskSize,ParameterValue=$DISK_SIZE"
-  fi
-
-  if [ -n "$ELASTIC_IP" ]; then
-    PARAMS="$PARAMS ParameterKey=ElasticIP,ParameterValue=$ELASTIC_IP"
-  fi
-
-  if [ -n "$ENABLE_METRICS" ]; then
-    PARAMS="$PARAMS ParameterKey=Metrics,ParameterValue=$ENABLE_METRICS"
-  fi
-
-  if [ -n "$DNSHostedZoneName" ]; then
-    PARAMS="$PARAMS ParameterKey=DNSHostedZoneName,ParameterValue=$DNSHostedZoneName"
-  fi
-
-  if [ -n "$DNSHostedZoneRoleArn" ]; then
-    PARAMS="$PARAMS ParameterKey=DNSHostedZoneRoleArn,ParameterValue=$DNSHostedZoneRoleArn"
-  fi
 
   # Create standard stack resources in specified account
   STACK_ID=$(aws cloudformation create-stack --capabilities CAPABILITY_NAMED_IAM --stack-name $STACK_NAME --template-body file://$TEMPLATE_PATH --parameters $PARAMS --output text $ACCOUNT_PROFILE)
@@ -271,118 +273,24 @@ EOF
   else
     echo "Create stack in progress"
   fi
-
-  # # Retrieve Instance ID and state before EBS data volume can be attached.
-  # INSTANCE_ID=$(aws ec2 describe-instances --filters "Name=tag:Name,Values='$HOST'" --query "Reservations[].Instances[?Tags[?Value=='$STACK_ID']].InstanceId" --output text $ACCOUNT_PROFILE 2>/dev/null)
-  # INSTANCE_STATE=$(aws ec2 describe-instances --filters "Name=tag:Name,Values='$HOST'" --query "Reservations[].Instances[?Tags[?Value=='$STACK_ID']].State.Name" --output text $ACCOUNT_PROFILE 2>/dev/null)
-
-  # # Check if instance is created and running
-  # echo "Check if instance is available"
-  # count=0
-  # while [[ -z "$INSTANCE_ID" ]] && [[ "$INSTANCE_STATE" != 'running' ]] && [ $count -lt 30 ]; do
-  #     echo "Instance creation is still in progress .. Sleeping 30 seconds"
-  #     sleep 30 
-  #     INSTANCE_ID=$(aws ec2 describe-instances --filters "Name=tag:Name,Values='$HOST'" --query "Reservations[].Instances[?Tags[?Value=='$STACK_ID']].InstanceId" --output text $ACCOUNT_PROFILE 2>/dev/null)
-  #     INSTANCE_STATE=$(aws ec2 describe-instances --filters "Name=tag:Name,Values='$HOST'" --query "Reservations[].Instances[?Tags[?Value=='$STACK_ID']].State.Name" --output text $ACCOUNT_PROFILE 2>/dev/null)
-  #     count=$((count+1))
-  # done
-
-  # if [ -z "$INSTANCE_ID" ] && [ "$INSTANCE_STATE" != 'running' ]; then
-  #   echo "Failed to provision instance"
-  #   exit 1
-  # fi
-
-  # # Retrieve Volume ID and attach volume to Instance.
-  # echo "Instance is ready, attaching volume.."
-  # VOLUME_ID=$(aws ec2 describe-volumes --filters "Name=tag:Name,Values='$HOST/data'" --query "Volumes[?Tags[?Value=='$EBS_STACK_ID']].VolumeId" --output text $ACCOUNT_PROFILE 2>/dev/null)
-  # VOLUME=$(aws ec2 attach-volume --device $DEVICE_NAME --instance-id $INSTANCE_ID --volume-id $VOLUME_ID --output text $ACCOUNT_PROFILE 2>/dev/null)
-  # STATUS=$(aws ec2 describe-volumes --filters "Name=tag:Name,Values='$HOST/data'" --query "Volumes[?Tags[?Value=='$EBS_STACK_ID']].Attachments[].State" --output text $ACCOUNT_PROFILE 2>/dev/null)
-
-  # # Check if volume is attached
-  # while [[ "$STATUS" == 'attaching' ]]; do
-  #     echo "Volume is still attaching .. Sleeping 30 seconds"
-  #     sleep 30
-  #     STATUS=$(aws ec2 describe-volumes --filters "Name=tag:Name,Values='$HOST/data'" --query "Volumes[?Tags[?Value=='$EBS_STACK_ID']].Attachments[].State" --output text $ACCOUNT_PROFILE 2>/dev/null)
-  # done
-
-  # if [ "$STATUS" != 'attached' ]; then
-  #     echo "Volume attaching failed with status $STATUS"
-  #     exit 1
-  # else
-  #     echo "Volume attaching is complete"
-  # fi
-
-  if [ "$WAIT_FOR_STACK" != 'false' ]; then
-     # Wait for CloudFormation stack status to be CREATE_*
-    echo "Waiting for stack to be created"
-    STATUS=$(aws cloudformation describe-stacks --stack-name $STACK_NAME --query "Stacks[?StackId=='$STACK_ID'].StackStatus" --output text $ACCOUNT_PROFILE 2>/dev/null)
-
-    while [[ "$STATUS" == 'CREATE_IN_PROGRESS' ]]; do
-      echo "Stack creation is still in progress .. Sleeping 30 seconds"
-      sleep 30
-      STATUS=$(aws cloudformation describe-stacks --stack-name $STACK_NAME --query "Stacks[?StackId=='$STACK_ID'].StackStatus" --output text $ACCOUNT_PROFILE 2>/dev/null)
-    done
-
-    if [ "$STATUS" != 'CREATE_COMPLETE' ] && [ "$STATUS" != 'UPDATE_COMPLETE' ]; then
-      echo "Stack creation has failed status is '$STATUS'"
-      exit 1
-     else
-      echo "Stack creation is complete"
-    fi
-  fi
 fi
 
-# Provision SSM Documents
-echo "Provisioning SSM Documents for attaching/detaching EBS Data volume"
-STATUS=$(aws cloudformation describe-stacks --stack-name $SSM_STACK_NAME --query "Stacks[0].StackStatus" --output text 2>/dev/null)
+if [ "$WAIT_FOR_STACK" != 'false' ]; then
+  # Wait for CloudFormation stack status to be CREATE_*
+  echo "Waiting for stack to be created"
+  STATUS=$(aws cloudformation describe-stacks --stack-name $STACK_NAME --query "Stacks[?StackId=='$STACK_ID'].StackStatus" --output text $ACCOUNT_PROFILE 2>/dev/null)
 
-if [ -n "$STATUS" ] && [ "$STATUS" != 'DELETE_COMPLETE' ]; then
-  echo "Stack already exists for this host '$HOST' current status is '$STATUS'"
-  STACK_ID=$(aws cloudformation describe-stacks --stack-name $SSM_STACK_NAME --query "Stacks[0].StackId" --output text 2>/dev/null)
-else
+  while [[ "$STATUS" == 'CREATE_IN_PROGRESS' ]]; do
+    echo "Stack creation is still in progress .. Sleeping 30 seconds"
+    sleep 30
+    STATUS=$(aws cloudformation describe-stacks --stack-name $STACK_NAME --query "Stacks[?StackId=='$STACK_ID'].StackStatus" --output text $ACCOUNT_PROFILE 2>/dev/null)
+  done
 
-  if [ -f "${awsDir}cloudformation-create-ssm-document" ]; then
-    SSM_TEMPLATE_PATH="${awsDir}cloudformation-create-ssm-document.yml"
-  elif [ -f ".ci_cd/aws/cloudformation-create-ssm-document.yml" ]; then
-    SSM_TEMPLATE_PATH=".ci_cd/aws/cloudformation-create-ssm-document.yml"
-  elif [ -f "openremote/.ci_cd/aws/cloudformation-create-ssm-document.yml" ]; then
-    SSM_TEMPLATE_PATH="openremote/.ci_cd/aws/cloudformation-create-ssm-document.yml"
-  else
-    echo "Cannot determine location of cloudformation-create-ssm-document.yml"
+  if [ "$STATUS" != 'CREATE_COMPLETE' ] && [ "$STATUS" != 'UPDATE_COMPLETE' ]; then
+    echo "Stack creation has failed status is '$STATUS'"
     exit 1
-  fi
-
-  # Configure parameters
-  PARAMS="ParameterKey=Host,ParameterValue='$HOST'"
-  PARAMS="$PARAMS ParameterKey=InstanceId,ParameterValue='$INSTANCE_ID'"
-  PARAMS="$PARAMS ParameterKey=VolumeId,ParameterValue='$VOLUME_ID'"
-  PARAMS="$PARAMS ParameterKey=EBSDeviceName,ParameterValue='$DEVICE_NAME'"
-  
-  # Create standard stack resources in specified account
-  STACK_ID=$(aws cloudformation create-stack --capabilities CAPABILITY_NAMED_IAM --stack-name $SSM_STACK_NAME --template-body file://$SSM_TEMPLATE_PATH --parameters $PARAMS --output text)
-
-  if [ $? -ne 0 ]; then
-    echo "Create stack failed"
-    exit 1
-  fi
-
-  if [ "$WAIT_FOR_STACK" != 'false' ]; then
-    # Wait for CloudFormation stack status to be CREATE_*
-    echo "Waiting for stack to be created"
-    STATUS=$(aws cloudformation describe-stacks --stack-name $SSM_STACK_NAME --query "Stacks[?StackId=='$STACK_ID'].StackStatus" --output text 2>/dev/null)
-
-    while [[ "$STATUS" == 'CREATE_IN_PROGRESS' ]]; do
-        echo "Stack creation is still in progress .. Sleeping 30 seconds"
-        sleep 30
-        STATUS=$(aws cloudformation describe-stacks --stack-name $SSM_STACK_NAME --query "Stacks[?StackId=='$STACK_ID'].StackStatus" --output text 2>/dev/null)
-    done
-
-    if [ "$STATUS" != 'CREATE_COMPLETE' ]; then
-        echo "Stack creation has failed status is '$STATUS'"
-        exit 1
     else
-        echo "Stack creation is complete"
-    fi
+    echo "Stack creation is complete"
   fi
 fi
 
@@ -456,3 +364,63 @@ else
     fi
   fi
 fi
+
+
+
+# # Provision SSM Documents
+# echo "Provisioning SSM Documents for attaching/detaching EBS Data volume"
+# STATUS=$(aws cloudformation describe-stacks --stack-name $SSM_STACK_NAME --query "Stacks[0].StackStatus" --output text 2>/dev/null)
+
+# if [ -n "$STATUS" ] && [ "$STATUS" != 'DELETE_COMPLETE' ]; then
+#   echo "Stack already exists for this host '$HOST' current status is '$STATUS'"
+#   STACK_ID=$(aws cloudformation describe-stacks --stack-name $SSM_STACK_NAME --query "Stacks[0].StackId" --output text 2>/dev/null)
+# else
+
+#   if [ -f "${awsDir}cloudformation-create-ssm-document" ]; then
+#     SSM_TEMPLATE_PATH="${awsDir}cloudformation-create-ssm-document.yml"
+#   elif [ -f ".ci_cd/aws/cloudformation-create-ssm-document.yml" ]; then
+#     SSM_TEMPLATE_PATH=".ci_cd/aws/cloudformation-create-ssm-document.yml"
+#   elif [ -f "openremote/.ci_cd/aws/cloudformation-create-ssm-document.yml" ]; then
+#     SSM_TEMPLATE_PATH="openremote/.ci_cd/aws/cloudformation-create-ssm-document.yml"
+#   else
+#     echo "Cannot determine location of cloudformation-create-ssm-document.yml"
+#     exit 1
+#   fi
+
+#   INSTANCE_ID=$(aws ec2 describe-instances --filters "Name=tag:Name,Values='$HOST'" --query "Reservations[].Instances[?Tags[?Value=='$STACK_NAME']].InstanceId" --output text $ACCOUNT_PROFILE 2>/dev/null)
+#   VOLUME_ID=$(aws ec2 describe-volumes --filters "Name=tag:Name,Values='$HOST/data'" --query "Volumes[?Tags[?Value=='$STACK_NAME']].VolumeId" --output text $ACCOUNT_PROFILE 2>/dev/null)
+#   VOLUME_DEVICE_NAME=$(aws ec2 describe-volumes --filters "Name=tag:Name,Values='$HOST/data'" --query "Volumes[].Attachments[].Device" --output text $ACCOUNT_PROFILE 2>/dev/null)
+
+#   # Configure parameters
+#   PARAMS="ParameterKey=Host,ParameterValue='$HOST'"
+#   PARAMS="$PARAMS ParameterKey=InstanceId,ParameterValue='$INSTANCE_ID'"
+#   PARAMS="$PARAMS ParameterKey=VolumeId,ParameterValue='$VOLUME_ID'"
+#   PARAMS="$PARAMS ParameterKey=EBSDeviceName,ParameterValue='$VOLUME_DEVICE_NAME'"
+  
+#   # Create standard stack resources in specified account
+#   STACK_ID=$(aws cloudformation create-stack --capabilities CAPABILITY_NAMED_IAM --stack-name $SSM_STACK_NAME --template-body file://$SSM_TEMPLATE_PATH --parameters $PARAMS --output text)
+
+#   if [ $? -ne 0 ]; then
+#     echo "Create stack failed"
+#     exit 1
+#   fi
+
+#   if [ "$WAIT_FOR_STACK" != 'false' ]; then
+#     # Wait for CloudFormation stack status to be CREATE_*
+#     echo "Waiting for stack to be created"
+#     STATUS=$(aws cloudformation describe-stacks --stack-name $SSM_STACK_NAME --query "Stacks[?StackId=='$STACK_ID'].StackStatus" --output text 2>/dev/null)
+
+#     while [[ "$STATUS" == 'CREATE_IN_PROGRESS' ]]; do
+#         echo "Stack creation is still in progress .. Sleeping 30 seconds"
+#         sleep 30
+#         STATUS=$(aws cloudformation describe-stacks --stack-name $SSM_STACK_NAME --query "Stacks[?StackId=='$STACK_ID'].StackStatus" --output text 2>/dev/null)
+#     done
+
+#     if [ "$STATUS" != 'CREATE_COMPLETE' ]; then
+#         echo "Stack creation has failed status is '$STATUS'"
+#         exit 1
+#     else
+#         echo "Stack creation is complete"
+#     fi
+#   fi
+# fi
