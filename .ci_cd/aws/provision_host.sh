@@ -241,6 +241,7 @@ EOF
   PARAMS="$PARAMS ParameterKey=SSHSecurityGroupId,ParameterValue=$SGID"
   PARAMS="$PARAMS ParameterKey=SubnetId,ParameterValue=$SUBNETID"
   PARAMS="$PARAMS ParameterKey=EFSDNS,ParameterValue=$EFS_DNS"
+  PARAMS="$PARAMS ParameterKey=SnapshotId,ParameterValue=$SNAPSHOT_ID"
 
   # Check for DLM IAM Role
   echo "Check for DLM IAM Role"
