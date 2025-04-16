@@ -655,7 +655,6 @@ As part of the `cfn-scripts` the `Cloudwatch Agent` will be configured to collec
                       }
                     }
                   }
-
 ```
 
 To monitor disk usage, I added the mount point for the new `EBS` volume to the `resources` block. 

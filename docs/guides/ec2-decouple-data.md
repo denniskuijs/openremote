@@ -31,13 +31,6 @@ For this research, the following methods from the [DOT Framework](https://ictres
 
 ## Contents <!-- omit in toc -->
 
-<style>
-  .toc > ul { padding-left: 1em; }
-  .toc > * * ul { padding-left: 1em; }
-  .toc > * > li { list-style-type: none; }
-  .toc > * * > li { list-style-type: none; }
-</style>
-
 <div class="toc">
 
 - [Context](#context)
