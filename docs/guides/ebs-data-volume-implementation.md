@@ -1,4 +1,4 @@
-<!-- title: Implementation: Separate EBS Volume -->
+<!-- title: Implementation: Separate EBS Volume for storing/decoupling the IoT Data -->
 
 ## Implementation: Separate EBS Volume for storing/decoupling the IoT Data  <!-- omit in toc -->
 
