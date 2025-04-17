@@ -111,27 +111,6 @@ Resources:
                       if [ "$STATUS" != 'in-use' ]; then
                         echo "Volume attaching failed with status $STATUS"
                         exit 1
-                      else
-                        echo "Volume successfully attached"
-                      fi
-              - name: PrepareVolume
-                action: aws:runShellScript
-                inputs:
-                  runCommand: 
-                    - |
-                      STATUS=$(aws ec2 describe-volumes --query "Volumes[?VolumeId=='{{ VolumeId }}'].State" --output text 2>/dev/null)
-                      
-                      count=0
-                      while [[ "$STATUS" == "available" ]] && [ $count -lt 30 ]; do
-                        echo "Volume is still attching .. Sleeping 30 seconds"
-                        sleep 30
-                        STATUS=$(aws ec2 describe-volumes --query "Volumes[?VolumeId=='{{ VolumeId }}'].State" --output text 2>/dev/null)
-                        count=$((count+1))
-                      done
-
-                      if [ "$STATUS" != "in-use" ]; then
-                        echo "Volume is not attached .. Cannot retrieve filesystem"
-                        exit 1
                       fi
 
                       FILESYSTEM=$(blkid -o value -s TYPE {{ DeviceName }})
