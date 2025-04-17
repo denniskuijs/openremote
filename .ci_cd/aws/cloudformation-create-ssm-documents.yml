@@ -122,14 +122,14 @@ Resources:
                       STATUS=$(aws ec2 describe-volumes --query "Volumes[?VolumeId=='{{ VolumeId }}'].State" --output text 2>/dev/null)
                       
                       count=0
-                      while [[ "$STATUS" == "attaching" ]] && [ $count -lt 30 ]; do
+                      while [[ "$STATUS" == "available" ]] && [ $count -lt 30 ]; do
                         echo "Volume is still attching .. Sleeping 30 seconds"
                         sleep 30
                         STATUS=$(aws ec2 describe-volumes --query "Volumes[?VolumeId=='{{ VolumeId }}'].State" --output text 2>/dev/null)
                         count=$((count+1))
                       done
 
-                      if [ "$STATUS" != "attached" ]; then
+                      if [ "$STATUS" != "in-use" ]; then
                         echo "Volume is not attached .. Cannot retrieve filesystem"
                         exit 1
                       fi
