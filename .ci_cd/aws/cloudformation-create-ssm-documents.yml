@@ -119,15 +119,22 @@ Resources:
                 inputs:
                   runCommand: 
                     - |
-                      FILESYSTEM=$(blkid -o value -s TYPE {{ DeviceName }})
-
+                      STATUS=$(aws ec2 describe-volumes --query "Volumes[?VolumeId=='{{ VolumeId }}'].State" --output text 2>/dev/null)
+                      
                       count=0
-                      while [[ -z "$FILESYSTEM" ]] && [ $count -lt 30 ]; do
-                        echo "Filesystem is currently not available .. Sleeping 30 seconds"
+                      while [[ "$STATUS" == "attaching" ]] && [ $count -lt 30 ]; do
+                        echo "Volume is still attching .. Sleeping 30 seconds"
                         sleep 30
-                        FILESYSTEM=$(blkid -o value -s TYPE {{ DeviceName }})
+                        STATUS=$(aws ec2 describe-volumes --query "Volumes[?VolumeId=='{{ VolumeId }}'].State" --output text 2>/dev/null)
                         count=$((count+1))
                       done
+
+                      if [ "$STATUS" != "attached" ]; then
+                        echo "Volume is not attached .. Cannot retrieve filesystem"
+                        exit 1
+                      fi
+
+                      FILESYSTEM=$(blkid -o value -s TYPE {{ DeviceName }})
 
                       if [ -z "$FILESYSTEM" ]; then
                         mkfs -t xfs {{ DeviceName }}
