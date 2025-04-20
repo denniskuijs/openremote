@@ -1,1 +1,1 @@
-# openremote
+# OpenRemote

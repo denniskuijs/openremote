@@ -19,10 +19,10 @@ This document provides an overview of the flowcharts I created to decomposite th
 
 The picture below visualizes the working of the `provision account` bash script. The bash script will be executed when the `provision account` workflow get triggered by a manual `workflow dispatch`
 
-<img src="../assets/image/provision-account-script.png" width="1000">
+<img src="./Media/provision_account_script.png" width="1000">
 
 ## 2. Flowchart: Provision Host
 
 The picture below visualizes the working of the `provision host` bash script. The bash script will be executed when the `provision host` workflow get triggered by a manual `workflow dispatch`
 
-<img src="../assets/image/provision-host-script.png" width="1000">
+<img src="./Media/provision_host_script.png" width="1000">

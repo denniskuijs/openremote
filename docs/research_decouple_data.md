@@ -1,9 +1,9 @@
-<!-- title: Research: How can we decouple the IoT data from the 'virtual' machine and store them on a separate EBS volume? -->
+<!-- title: Research: How can we decouple the IoT data from the virtual machine and store them on a separate EBS (data) volume? -->
 
-## Research: How can we decouple the IoT data from the 'virtual' machine and store them on a separate EBS volume? <!-- omit in toc -->
+## Research: How can we decouple the IoT data from the virtual machine and store them on a separate EBS (data) volume? <!-- omit in toc -->
 
 ## Context
-The creation of various (cloud) services is done using `CloudFormation` Templates. [CloudFormation](https://aws.amazon.com/cloudformation/) is Amazon's Infrastructure as Code (IaaC) tool, allowing infrastructure to be set up through code. 
+The creation of various cloud services is done using `CloudFormation` templates. [CloudFormation](https://aws.amazon.com/cloudformation/) is Amazon's Infrastructure as Code (IaaC) tool, allowing infrastructure to be set up through code. 
 This approach makes it possible to easily create and modify infrastructure without having to make changes through an administrator panel.
 
 However, the current process is not ideal and causes some issues in certain cases.
@@ -14,7 +14,7 @@ It is difficult to predict when Amazon will take this drastic measure. Sometimes
 Before each update, a `snapshot` (backup) of the `virtual` machine is created. This snapshot contains both the IoT platform data and a copy of the operating system. If an issue occurs during or after the update, the `snapshot` can be quickly restored, resulting in minimal downtime for the customer. In this situation, no data is lost.
 
 Manually updating the `virtual` machines is a time-consuming process. As the number of customers using the 'managed' service increases, more time is spent on these tasks.
-Therefore, OpenRemote is looking for ways to further automate this process. This research focuses on storing the IoT data on a separate `EBS` volume so that backups can be more targeted, reducing the risk of data loss (during updates) by decoupling the data from the `virtual` machine.
+Therefore, OpenRemote is looking for ways to further automate this process. This research focuses on storing the IoT data on a separate `EBS` data volume so that backups can be more targeted, reducing the risk of data loss during updates by decoupling the data from the `virtual` machine.
 
 <div style="page-break-after: always;"></div>
 
@@ -75,47 +75,47 @@ For this research, the following methods from the [DOT Framework](https://ictres
 <div style="page-break-after: always;"></div>
 
 ## 1. Situation
-In this section, I will discuss the current situation and the desired outcome. Additionally, it will provide an overview of the 'bridges' that need to be built to reach the new situation.
+In this section, I will discuss the current situation and the desired outcome. Additionally, it will provide an overview of the bridges that need to be built to reach the new situation.
 
 ### 1.1. Current Situation
 The picture below gives an overview of the current situation. The `EC2` machine is created with an `CloudFormation` template. The machine is using the default `Amazon Linux 2023 AMI` (Amazon Machine Image) and is provisoned with 30 GB of `gp3` (General Purpose) block storage. Optionally there will be a `Elastic IP` assigned to the `EC2` instance.
 The `EBS` volume is used for both the operating system and data storage and no additional volumes or partitions are being created.
 
-During the execution of the CloudFormation template `cfn-init` runs several scripts after the machine is booted. These scripts setup the following services on the `EC2` instance.
+During the execution of the `CloudFormation` template `cfn-init` runs several scripts after the machine is booted. These scripts setup the following services on the `EC2` instance.
 
-- The system creates a `Swapfile` if not already exists.
+- The system creates a `swapfile` if not already exists.
 - The system configures the `CloudWatch` agent.
-- The system creates an `Cronjob` for daily cleanup (vacuum). 
+- The system creates an `cronjob` for daily cleanup (vacuum). 
 - The system creates an `deployment.local` directory.
-- The system creates an S3 bucket for storing backups if not already exists and synchronises the contents to the bucket. There will be an `systemd` process created for executing the backup task as well as an `cronjob` for executing it every day on 5AM.
+- The system creates an `S3` bucket for storing backups if not already exists and synchronises the contents to the bucket. There will be an `systemd` process created for executing the backup task as well as an `cronjob` for executing it every day on 5AM.
 - The system sets the permissions and starts the backup services.
 - The system creates an `DNS` `A-record` update script if no `Hosted Zone Name` is provided and creates an `systemd` process for it.
 - The system sets the permissions and starts the DNS update service.
 - The system executes an `Python` script that genereates `SMTP` credentials for Amazon `SES`.
-- The system configures the `.env` variables for Amazon `SES`, `EFS`, `Route53` and `CloudWatch` depending on the `.env`. variable
+- The system configures the `.env` variables for Amazon `SES`, `EFS`, `Route53` and `CloudWatch` depending on the `.env` variable
 - The systems installs `Docker` and `Docker Compose` and creates and `systemd` process for it.
 - The system installs `Cronie` and creates and `systemd` process for it.
 - The system restarts the `CloudWatch` agent.
 - The system configures the `cfn-hup` helper that detects changes in the resource metadata and creates and `systemd` process for it.
 
-The system also configures `CloudWatch` and creates some alarms for several metrics. When an alaram is triggered, an e-mail will be sent to OpenRemote. This is configured via the `SNS` subscription/topic.
+The system also configures `CloudWatch` and creates some alarms for several metrics. When an alarm is triggered, an e-mail will be sent to OpenRemote. This is configured via the `SNS` subscription/topic.
 
-<img src="../assets/image/ec2-cloudformation.png" width="500">
+<img src="./Media/ec2_cloudformation.png" width="500">
 
-There are several things happening simultaneously in this scenario. The `EC2` instance is using a single root block device, which means there is no separation between the system data and application data. The volume has been configured with the property `DeleteOnTermination=true`, meaning it will be deleted when the instance is terminated. However, simply changing this setting is not enough to access the IoT data easily. This is because the volume is also serving as the boot drive for the operating system. <br/> <br/>
+There are several things happening simultaneously in this scenario. The `EC2` instance is using a single root block device, which means there is no separation between the system data and application data. The volume has been configured with the property `DeleteOnTermination=true`, meaning it will be deleted when the instance is terminated. However, simply changing this setting is not enough to access the IoT data easily. This is because the volume is also serving as the boot drive for the operating system.
 When changes are made to the `CloudFormation` template, there is a possibility that the `EC2` instance will be recreated to apply the updates. This could result in the termination of both the instance and its associated volume, along with the data stored on it.
 
 ### 1.2. Desired Situation
-To solve this issue, I suggest decoupling the IoT data from the root volume and storing it on a separate `EBS` volume. This approach simplifies data backup since it is no longer tied to the boot device and can be attached to other `EC2` (OpenRemote) instances. These instances can seamlessly access the same data and connections. <br/>
+To solve this issue, I suggest decoupling the IoT data from the root volume and storing it on a separate `EBS` data volume. This approach simplifies data backup since it is no longer tied to the boot device and can be attached to other `EC2` (OpenRemote) instances. These instances can seamlessly access the same data and connections.
 
 Additionally, by detaching the data from the root volume, there is no risk of data loss during `CloudFormation` updates. This opens up new possibilities, such as creating test instances with specific data or enabling `blue/green deployments`. With this setup, a new instance can be launched with the necessary data while the existing instances are being updated.
 
-<img src="../assets/image/ec2-new-situation-ebs.png" width="500">
+<img src="./Media/new_situation_ebs.png" width="500">
 
 <div style="page-break-after: always;"></div>
 
 ## 2. Amazon Elastic Block Storage (EBS)
-In this section, I will discuss both the opportunities and challenges I have encountered during my research on Amazon Elastic Block Storage (EBS).
+In this section, I will discuss both the opportunities and challenges I have encountered during my research on Amazon Elastic Block Storage (`EBS`).
 
 ### 2.1. What is Amazon Elastic Block Storage (EBS)?
 Amazon Block Storage provides scalable, high-performance block storage that integrates seamlessly with Amazon Elastic Compute Cloud (EC2). You can create volumes that attach to `EC2` instances, enabling you to store files and install applications just like on a traditional hard drive. Additionally, you can create snapshots, which are point-in-time backups of your volumes. These snapshots allow for quick data recovery and you can easily create new volumes from a snapshot.
@@ -174,7 +174,7 @@ To further reduce costs, OpenRemote can consider auto-scaling the volumes based 
 #### 2.4.2. Creating a new EBS Volume
 There are several methods to create a new Elastic Block Storage (`EBS`) volume, including using the `AWS CLI`, `AWS CloudFormation`, or the Management Console.
 
-<img src="../assets/image/ec2-volume-creation.png" width="500">
+<img src="./Media/volume_creation.png" width="500">
 
 Creating a new volume through the Management Console is simple and straightforward. 
 You can configure the following options:
@@ -210,13 +210,13 @@ It is also possible to create `EBS` volumes while launching an `EC2` instance. T
 
 #### 2.4.3. Attach Volume to an EC2 Instance
 
-<img src="../assets/image/ec2-volume-detail.png" width="500">
+<img src="./Media/volume_detail.png" width="500">
 
 After creating an `EBS` volume, you can attach it to an `EC2` instance. <br/>
 Data volumes can be attached to either running or stopped instances, while root volumes can only be attached or detached when the instance is fully stopped. <br/>
 You can only attach volumes that are in the available state. You can check the status on the details page for each individual volume.
 
-<img src="../assets/image/ec2-volume-attach.png" width="500">
+<img src="./Media/volume_attach.png" width="500">
 
 To attach a volume to an instance, you need to configure the following options:
 
@@ -241,7 +241,7 @@ sudo lsblk -f
 
 As shown in the image below, the device is recognized, but it does not yet have a filesystem or a mountpoint.
 
-<img src="../assets/image/ec2-lsblk.png" width="500">
+<img src="./Media/lsblk.png" width="500">
 
 To create a filesystem, use the command below.
 
@@ -252,12 +252,12 @@ sudo mkfs -t xfs /dev/sdb
 This command creates an `XFS` filesystem on the device named `/dev/sdb`. <br/>
 You cannot use the name visible in the `lsblk` output. Instead, you need to use the device name assigned during the `EBS` volume creation. The device names can be found under the storage tab on the details page of the specific `EC2` instance.
 
-<img src="../assets/image/ec2-storage-overview.png" width="500">
+<img src="./Media/storage_overview.png" width="500">
 
 `XFS` is one of the filesystems you can use, but you can also choose others like `ext3`, `ext4`, and more. Since the root device is also using the `XFS` filesystem, it's recommended to stick with the same for consistency. <br/>
 After creating the filesystem, run the `lsblk` command again to verify if the filesystem appears in the list.
 
-<img src="../assets/image/ec2-lsblk-2.png" width="500">
+<img src="./Media/lsblk_2.png" width="500">
 
 As shown in the picture above, the filesystem has been created successfully, and the device now has an assigned `UUID`. <br/>
 It is recommended to copy the device's `UUID` and store it in a safe place, as you will need it in a later step.
@@ -276,7 +276,7 @@ The directory must already exist at the root of the host before you can mount th
 
 After mounting the volume, you can check the status with the `lsblk` command. If the device is successfully mounted, you should see the directory in the list, along with the remaining capacity and the amount of storage used.
 
-<img src="../assets/image/ec2-lsblk-3.png" width="500">
+<img src="./Media/lsblk_3.png" width="500">
 
 #### 2.4.6. Automatically mount volume on system reboot
 To make sure that the volume is mounted after a system reboot. You need to add a line in the `/etc/fstab/` file. This is the `System File Table` and stores information about the drives. <br/>
@@ -330,13 +330,13 @@ The last parameter determines whether the device is a `root` or `non-root` devic
 
 When you succesfully created the entry in the `/etc/fstab` file, it should look like this
 
-<img src="../assets/image/ec2-fstab-complete.png" width="1000">
+<img src="./Media/fstab_complete.png" width="1000">
 
 If this entry is not created, the system will not only skip mounting the volume on reboot, but it can also result in mount errors when the volume is attached to another `EC2` instance. <br/>
 This happens because device names can change depending on the machine, but the `UUID` remains consistent throughout the volume's lifespan. <br/><br/>
 If the system detects that you are attempting to mount the volume that was previously mounted to a different device name, the following error will be thrown:
 
-<img src="../assets/image/ec2-mount-nouuid.png" width="1000">
+<img src="./Media/mount_nouuid.png" width="1000">
 
 You can ignore the error and mount the volume anyway with the following command:
 
@@ -356,7 +356,7 @@ This section explains how snapshots (backups) can be created/restored with the b
 You can create snapshots on specific `EBS` volumes and on instance level.
 To create a snapshot via the management console, You need to configure the following options:
 
-<img src="../assets/image/ec2-snapshot-creation.png" width="500"><br/>
+<img src="./Media/snapshot_creation.png" width="500"><br/>
 
 - `Source`: You can choose between `Volumes` and `Instances` when creating a snapshot. When creating a snapshot from an instance, you still have the option to exclude the root device or specific data volumes.
 - `Volume/Instance ID`: Depending on the source, you will need to select either the `Volume` or `Instance ID` for which you want to create the snapshot.
@@ -364,11 +364,11 @@ To create a snapshot via the management console, You need to configure the follo
 
 When the snapshot is being created, It will show the `Pending` status on the overview page. Creating snapshots can take between 5 min and several hours depending on the volume size.
 
-<img src="../assets/image/ec2-snapshot-progress.png" width="1000">
+<img src="./Media/snapshot_progress.png" width="1000">
 
 After the snaphot is successfully created you will see the `Complete` status on the overview page.
 
-<img src="../assets/image/ec2-snapshot-complete.png" width="1000">
+<img src="./Media/snapshot_complete.png" width="1000">
 
 <div style="page-break-after: always;"></div>
 
@@ -376,12 +376,12 @@ After the snaphot is successfully created you will see the `Complete` status on 
 
 To restore a snapshot, you can choose to either create a new volume or an `AMI (Amazon Machine Image)`, which can then be used to launch a new instance.
 
-<img src="../assets/image/ec2-snapshot-restore.png" width="500"><br/>
+<img src="./Media/snapshot_restore.png" width="500"><br/>
 
 You can configure the volume in the same way as you would when creating a new volume, but by specifying a `Snapshot ID`. <br/>
 Once the volume is created, you can attach and mount it to an `EC2` instance. The data from the snapshot will be immediately available.
 
-<img src="../assets/image/ec2-volume-creation.png" width="500"><br/>
+<img src="./Media/volume_creation.png" width="500"><br/>
 
 #### 2.5.3. Pricing
 Pricing varies based on the region where the resources are deployed. Since OpenRemote uses `eu-west-1` as their primary region, the prices listed below will apply on this. 
@@ -411,7 +411,7 @@ To create a policy you can either choose between two different options:
 - `Default Policy`: The default policy is simple and can only be used to create snapshots from volumes. Customization options are limited. it’s not possible to target specific volumes or instances. Retention settings can only be configured with a maximum of 14 days, and snapshot creation can be scheduled between 1 and 7 days. <br/> Additional features such as fast snapshot restore, archiving, and sharing are not available when using this policy. <br/> <br/>
 - `Custom Policy`: With a custom policy, there are no limits. You can target volumes and instances based on tags. It allows up to 4 different schedules, which can run at any time using a cron expression. Advanced features such as archiving, deletion, sharing, and running scripts are also available with this option.
 
-<img src="../assets/image/ec2-lifecycle-policy.png" width="500"><br/>
+<img src="./Media/lifecycle_policy.png" width="500"><br/>
 
 In this example, I have created a `Custom Policy` because it offers more flexibility and is better suited to the needs of OpenRemote.
 To create an `Custom Policy` within the management console, you need to configure the following options:
@@ -422,7 +422,7 @@ To create an `Custom Policy` within the management console, you need to configur
 - `Policy status`: You can specify if you want to enable this policy after creation. By doing so, Lifecycle manager wil start the creation of snapshots inmmediately according to the configured schedule.
 - `Exclude devices`: If you have selected the instance as an resource type, you have additionaly the option to exclude the root volume or specfic data volumes that are attached to the `EC2` instance.
 
-<img src="../assets/image/ec2-lifecycle-policy-scheduele.png" width="500"><br/>
+<img src="./Media/lifecycle_policy_schedule.png" width="500"><br/>
 
 After that, you can create a schedule to specify how often the snapshots should be created. With a `Custom Policy`, you can configure up to 4 different schedules. At this stage, you can also set the retention period, determining how long the snapshots will persist. This can be specified either as a number of days or based on the number of recurring snapshots.
 
@@ -437,7 +437,7 @@ Optionally, You can configure a few advanced settings such as:
 
 Once you have successfully created the policy, it will appear in the list. Based on the policy status, it will immediately begin executing according to the schedule you provided. 
 
-<img src="../assets/image/ec2-lifecycle-policy-list.png" width="500"><br/>
+<img src="./Media/lifecycle_policy_list.png" width="500"><br/>
 
 <div style="page-break-after: always;"></div>
 
@@ -577,7 +577,7 @@ In my first approach, I tried to replace the `named` volumes with the directory 
 
 Unfortunately, this approach wasn't successful as I encountered various issues related to permissions. The `PostgresSQL` `container` couldn't start because it has insuficcient permissions. 
 
-<img src="../assets/image/ec2-postgres-error.png" width="500"><br/>
+<img src="./Media/postgres_error.png" width="500"><br/>
 
 After investigating the issue I tried to give the `postgres` user the required permissions with the following command
 
@@ -595,20 +595,20 @@ sudo chmod -R 777 /or-data
 This command grants full permissions (`777`) to the `/or-data` directory for read/write operations. While combining these commands sometimes resolves the issue, the problem reoccurs after rebooting the machine or the containers. <br/>
 I continued my investigation and found an interesting note in the `PostgreSQL` documentation on `DockerHub`
 
-<img src="../assets/image/ec2-postgres-dockerhub.png" width="500"><br/>
+<img src="./Media/postgres_dockerhub.png" width="500"><br/>
 
 They describe the exact problem I encountered and resolve it by overriding the default `Postgres` data location, using the `PGDATA` `environment` variable within the `container`.
 
-<img src="../assets/image/ec2-pgdata.png" width="200"><br/>
+<img src="./Media/pgdata.png" width="200"><br/>
 
 After saving the `Docker Compose` file and rebuilding the containers, all the `containers` started without any issues, and OpenRemote is now accessible via the `Public IP`.
 
-<img src="../assets/image/ec2-docker-ps-healthy.png" width="500"><br/>
+<img src="./Media/docker_ps_healthy.png" width="500"><br/>
 
 Unfortunately, after detaching the `volume` and connecting it to a separate instance, the same permissions error occurred, even with the `PGDATA` variable added to the `Docker Compose` file. <br/>
 Despite resetting the permissions multiple times, the issue remained unresolved.
 
-<img src="../assets/image/ec2-postgres-error.png" width="500"><br/>
+<img src="./Media/postgres_error.png" width="500"><br/>
 
 I continued my investigation and attempted to add `subdirectories` for each `container` in the `Docker Compose` file, as shown below:
 
@@ -740,8 +740,8 @@ sudo docker volume create -d local -o type=block -o device=/or-data -o o=bind or
 
 With the `-d` flag, you can specify the driver that `Docker` uses for the volume. The default driver is `local`, which I have used for this approach. While there are some AWS `EBS` volume drivers available online, I found out that they are either no longer maintained or rarely updated.
 
-<img src="../assets/image/ec2-docker-plugin-1.png" width="500"><br/>
-<img src="../assets/image/ec2-docker-plugin-2.png" width="200"><br/>
+<img src="./Media/docker_plugin_1.png" width="500"><br/>
+<img src="./Media/docker_plugin_2.png" width="200"><br/>
 
 The `o` flag allows you to configure various settings for the drive. I have configured the following settings:
 
@@ -757,7 +757,7 @@ After succesful creating the `Docker` volume you can see them in the `volume` li
 sudo docker volume list.
 ```
 
-<img src="../assets/image/ec2-docker-volume-list.png" width="200"><br/>
+<img src="./Media/docker_volume_list.png" width="200"><br/>
 
 The `Docker Compose` file should now look like this.
 
@@ -858,8 +858,8 @@ services:
 In this situation, there is a single `named` volume created using the `Docker CLI`. The exact name is attached to the `Docker Compose` file, and the value `external: true` ensures that this volume is not automatically created. instead, the existing one will be used.
 With this setup, the `Docker` `containers` are spinning up and OpenRemote is available on the `Public IP`
 
-<img src="../assets/image/ec2-docker-ps-success.png" width="500"><br/>
-<img src="../assets/image/ec2-openremote-working.png" width="500"><br/>
+<img src="./Media/docker-ps_success.png" width="500"><br/>
+<img src="./Media/openremote_working.png" width="500"><br/>
 
 <div style="page-break-after: always;"></div>
 
@@ -867,7 +867,7 @@ With this setup, the `Docker` `containers` are spinning up and OpenRemote is ava
 
 The second approach is working, but to improve this setup further, I made some additional changes. Currently, all the data is stored in a single `volume/directory` without subfolders, leading to a large mess.
 
-<img src="../assets/image/ec2-ls-unordered.png" width="200"><br/>
+<img src="./Media/ls_unordered.png" width="200"><br/>
 
 To solve this issue, I created multiple `named` volumes using the `Docker CLI` command and pointed them to subdirectories within the main directory. I also assigned them the same names currently used in the `Docker Compose` file. This ensures that no seperate volume needs to be added and we're only using the existing ones.
 
@@ -974,7 +974,7 @@ services:
 
 The files are now structered in different subfolders
 
-<img src="../assets/image/ec2-ls-folders.png" width="200"><br/>
+<img src="./Media/ls_folders.png" width="200"><br/>
 
 Lastly, I added an `environment` variable to make this approach more modular and easily configurable. The environment variable `${OR_EXTERNAL_VOLUME:-false}` is included in the volume block at the top of the file. <br/>
 If no value is provided, the default value of `false` is applied, meaning the data will be stored on the same root device. If the value is set to `true`, `Docker` will search for the external volume in the list and use that one if it exists.
@@ -1150,7 +1150,7 @@ The following test cases are described and executed:
 The test results indicate that when using a `Public IP`, the OpenRemote software occasionally fails to start properly. 
 When reviewing the logs, it turns out that the `proxy` container sometimes encounters issues while setting the self-signed certificate. <br/>
 
-<img src="../assets/image/ec2-certs-error.png" width="1000">
+<img src="./Media/certs_error.png" width="1000">
 
 To solve this problem, you need to manually start and stop the `Docker` containers using the following commands:
 

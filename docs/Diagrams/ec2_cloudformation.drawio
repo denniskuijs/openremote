@@ -1,0 +1,472 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:136.0) Gecko/20100101 Firefox/136.0" version="26.1.0">
+  <diagram name="Page-1" id="uUANynywvxxu3b6Ip_Ak">
+    <mxGraphModel dx="2074" dy="-124" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1200" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-8" value="&amp;nbsp;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
+          <mxGeometry x="1285" y="1215.5" width="30" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-21" value="AWS Cloud" style="points=[[0,0],[0.25,0],[0.5,0],[0.75,0],[1,0],[1,0.25],[1,0.5],[1,0.75],[1,1],[0.75,1],[0.5,1],[0.25,1],[0,1],[0,0.75],[0,0.5],[0,0.25]];outlineConnect=0;gradientColor=none;html=1;whiteSpace=wrap;fontSize=12;fontStyle=0;container=1;pointerEvents=0;collapsible=0;recursiveResize=0;shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_aws_cloud_alt;strokeColor=#232F3E;fillColor=none;verticalAlign=top;align=left;spacingLeft=30;fontColor=#232F3E;dashed=0;" parent="1" vertex="1">
+          <mxGeometry x="240" y="1920" width="2300" height="1660" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-31" value="VPC" style="points=[[0,0],[0.25,0],[0.5,0],[0.75,0],[1,0],[1,0.25],[1,0.5],[1,0.75],[1,1],[0.75,1],[0.5,1],[0.25,1],[0,1],[0,0.75],[0,0.5],[0,0.25]];outlineConnect=0;gradientColor=none;html=1;whiteSpace=wrap;fontSize=12;fontStyle=0;container=0;pointerEvents=0;collapsible=0;recursiveResize=0;shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_vpc2;strokeColor=#8C4FFF;fillColor=none;verticalAlign=top;align=left;spacingLeft=30;fontColor=#AAB7B8;dashed=0;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" vertex="1">
+          <mxGeometry x="280" y="70" width="520" height="590" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-2" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;Cloudformation Template (Create EC2)&lt;/font&gt;" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#E7157B;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.cloudformation;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" vertex="1">
+          <mxGeometry x="160" y="320" width="59.5" height="59.5" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-50" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" source="QiTi8xb_RrgLeZ87Y-Lt-2" target="QiTi8xb_RrgLeZ87Y-Lt-24" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-4" value="&lt;div style=&quot;text-align: left;&quot;&gt;&lt;b style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;Parameters:&lt;/font&gt;&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;FQDN for host&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;VPC ID&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;Subnet ID&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;SSH Security Group ID&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;EFS DNS&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;Image ID&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;Image AMI&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;InstanceType&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;DNSHostedZoneName&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;DNSHostedZoneRoleARN&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;ElasticIP&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;Metrics&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;DiskSize&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;HealthChecks&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;SMTPHost&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;SMTPUser&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;SMTPPassword&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;SMTPSecret&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;SMTPRegion&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;SMTPORARN&lt;/font&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" vertex="1">
+          <mxGeometry x="10" y="205" width="140" height="320" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-52" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;Create Swapfile if not already exists&lt;/font&gt;" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#E7157B;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.cloudformation;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" vertex="1">
+          <mxGeometry x="900" y="280" width="54" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-32" value="Public subnet" style="points=[[0,0],[0.25,0],[0.5,0],[0.75,0],[1,0],[1,0.25],[1,0.5],[1,0.75],[1,1],[0.75,1],[0.5,1],[0.25,1],[0,1],[0,0.75],[0,0.5],[0,0.25]];outlineConnect=0;gradientColor=none;html=1;whiteSpace=wrap;fontSize=12;fontStyle=0;container=1;pointerEvents=0;collapsible=0;recursiveResize=0;shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_security_group;grStroke=0;strokeColor=#7AA116;fillColor=#F2F6E8;verticalAlign=top;align=left;spacingLeft=30;fontColor=#248814;dashed=0;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" vertex="1">
+          <mxGeometry x="300" y="120" width="310" height="520" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-33" value="" style="rounded=1;arcSize=10;dashed=1;strokeColor=#ff0000;fillColor=none;gradientColor=none;dashPattern=8 4;strokeWidth=2;" parent="QiTi8xb_RrgLeZ87Y-Lt-32" vertex="1">
+          <mxGeometry x="22.5" y="30" width="257.5" height="470" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-24" value="" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#ED7100;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.ec2;" parent="QiTi8xb_RrgLeZ87Y-Lt-32" vertex="1">
+          <mxGeometry x="125.5" y="200" width="59" height="59" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-45" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;t4g.medium&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="QiTi8xb_RrgLeZ87Y-Lt-32" vertex="1">
+          <mxGeometry x="115" y="260" width="80" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-51" value="" style="rounded=1;arcSize=10;dashed=1;strokeColor=#ff0000;fillColor=none;gradientColor=none;dashPattern=8 4;strokeWidth=2;" parent="QiTi8xb_RrgLeZ87Y-Lt-32" vertex="1">
+          <mxGeometry x="40" y="45" width="220" height="440" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-35" value="&lt;span style=&quot;color: rgb(0, 0, 0); font-size: 10px;&quot;&gt;Amazon Linux 2023&lt;/span&gt;" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#ED7100;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.ami;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" vertex="1">
+          <mxGeometry x="700" y="220" width="48" height="48" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-36" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" source="QiTi8xb_RrgLeZ87Y-Lt-35" target="QiTi8xb_RrgLeZ87Y-Lt-24" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-68" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;exitX=1;exitY=0.25;exitDx=0;exitDy=0;exitPerimeter=0;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" source="QiTi8xb_RrgLeZ87Y-Lt-24" target="QiTi8xb_RrgLeZ87Y-Lt-52" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="520" y="335" as="sourcePoint" />
+            <Array as="points">
+              <mxPoint x="830" y="335" />
+              <mxPoint x="830" y="307" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-72" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" source="QiTi8xb_RrgLeZ87Y-Lt-69" target="QiTi8xb_RrgLeZ87Y-Lt-71" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-69" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;Cloudwatch Config&lt;/font&gt;" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#E7157B;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.cloudformation;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" vertex="1">
+          <mxGeometry x="900" y="375.25" width="54" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-84" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" source="QiTi8xb_RrgLeZ87Y-Lt-71" target="QiTi8xb_RrgLeZ87Y-Lt-83" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-71" value="&lt;span style=&quot;font-size: 10px;&quot;&gt;Configure CloudWatch Config&lt;/span&gt;" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#E7157B;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.cloudwatch_2;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" vertex="1">
+          <mxGeometry x="1040" y="376.75" width="52.5" height="52.5" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-73" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;Create Cronjob for daily cleanup&lt;/font&gt;" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#E7157B;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.cloudformation;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" vertex="1">
+          <mxGeometry x="900" y="471" width="54" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-74" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;Create deployment.local directory&lt;/font&gt;" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#E7157B;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.cloudformation;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" vertex="1">
+          <mxGeometry x="900" y="560" width="54" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-75" value="&lt;span style=&quot;font-size: 10px;&quot;&gt;Setup S3 Backup Service&lt;/span&gt;" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#E7157B;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.cloudformation;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" vertex="1">
+          <mxGeometry x="900" y="650" width="54" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-86" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" source="QiTi8xb_RrgLeZ87Y-Lt-76" target="QiTi8xb_RrgLeZ87Y-Lt-85" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-76" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;Create S3 Backup Script&lt;/font&gt;" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#7AA116;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.s3;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" vertex="1">
+          <mxGeometry x="1048.1" y="647" width="60" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-77" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" source="QiTi8xb_RrgLeZ87Y-Lt-75" target="QiTi8xb_RrgLeZ87Y-Lt-76" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-78" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;CloudFormation Init Scripts&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" vertex="1">
+          <mxGeometry x="857" y="238" width="140" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-82" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" source="QiTi8xb_RrgLeZ87Y-Lt-79" target="QiTi8xb_RrgLeZ87Y-Lt-80" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-79" value="&lt;span style=&quot;font-size: 10px;&quot;&gt;DNS Updater&lt;/span&gt;" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#E7157B;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.cloudformation;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" vertex="1">
+          <mxGeometry x="900" y="753" width="54" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-90" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" source="QiTi8xb_RrgLeZ87Y-Lt-80" target="QiTi8xb_RrgLeZ87Y-Lt-89" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-80" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;Create script for updating DNS A-record if no hosted zone is provided&lt;/font&gt;" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#8C4FFF;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.route_53;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" vertex="1">
+          <mxGeometry x="1108.1" y="750" width="60" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-83" value="&lt;span style=&quot;font-size: 10px;&quot;&gt;Configure Prometheus config&lt;/span&gt;" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#E7157B;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.cloudwatch_2;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" vertex="1">
+          <mxGeometry x="1200" y="376.75" width="52.5" height="52.5" as="geometry" />
+        </mxCell>
+        <mxCell id="k49dQEgFSicX2dteUIUj-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="QiTi8xb_RrgLeZ87Y-Lt-21" source="QiTi8xb_RrgLeZ87Y-Lt-85" target="QiTi8xb_RrgLeZ87Y-Lt-87">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1320" y="677" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-85" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;Create backup service systemd&lt;/font&gt;" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/other/Azure_Cloud_Shell.svg;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" vertex="1">
+          <mxGeometry x="1210" y="653.4000000000002" width="68" height="47.199999999999996" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-87" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;Schedule Backup Cronjob (Daily on 5AM)&lt;/font&gt;" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/other/Azure_Cloud_Shell.svg;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" vertex="1">
+          <mxGeometry x="1405" y="653.4" width="67.14" height="46.6" as="geometry" />
+        </mxCell>
+        <mxCell id="k49dQEgFSicX2dteUIUj-29" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="QiTi8xb_RrgLeZ87Y-Lt-21" source="QiTi8xb_RrgLeZ87Y-Lt-89" target="k49dQEgFSicX2dteUIUj-44">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1580" y="780" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-89" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;Create DNS updater systemd process&lt;/font&gt;" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/other/Azure_Cloud_Shell.svg;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" vertex="1">
+          <mxGeometry x="1360" y="756.4" width="68" height="47.199999999999996" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-93" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" source="QiTi8xb_RrgLeZ87Y-Lt-91" target="QiTi8xb_RrgLeZ87Y-Lt-92" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-91" value="&lt;span style=&quot;font-size: 10px;&quot;&gt;Enviroment variables&lt;/span&gt;" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#E7157B;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.cloudformation;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" vertex="1">
+          <mxGeometry x="900.75" y="857.9" width="54" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-95" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" source="QiTi8xb_RrgLeZ87Y-Lt-92" target="QiTi8xb_RrgLeZ87Y-Lt-102" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1078.75" y="936.4" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-92" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;Generate SMTP Credentials&lt;/font&gt;" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://cdn0.iconfinder.com/data/icons/long-shadow-web-icons/512/python-128.png" parent="QiTi8xb_RrgLeZ87Y-Lt-21" vertex="1">
+          <mxGeometry x="1060" y="854.9" width="60" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-98" value="&lt;font style=&quot;color: rgb(0, 0, 0); font-size: 10px;&quot;&gt;General Purpose (gp3)&lt;/font&gt;&lt;div style=&quot;color: rgb(0, 0, 0);&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;30 GB Hard disk&lt;/font&gt;&lt;/div&gt;" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#7AA116;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.elastic_block_store;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" vertex="1">
+          <mxGeometry x="690" y="370.5" width="58" height="58" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-107" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" source="QiTi8xb_RrgLeZ87Y-Lt-101" target="QiTi8xb_RrgLeZ87Y-Lt-106" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-101" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;Save EFS DNS in .env if EFS DNS is provided&lt;/font&gt;" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#7AA116;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.efs_standard;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" vertex="1">
+          <mxGeometry x="1430" y="854.9" width="60" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-105" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" source="QiTi8xb_RrgLeZ87Y-Lt-102" target="QiTi8xb_RrgLeZ87Y-Lt-101" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-102" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;Save SMTP Credentials in .env&lt;/font&gt;" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#DD344C;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.simple_email_service;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" vertex="1">
+          <mxGeometry x="1227" y="853.4" width="63" height="63" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-109" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" source="QiTi8xb_RrgLeZ87Y-Lt-106" target="QiTi8xb_RrgLeZ87Y-Lt-108" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-106" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;Save Route53 Role in .env for proxy container if role is provided&lt;/font&gt;" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#8C4FFF;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.route_53;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" vertex="1">
+          <mxGeometry x="1730" y="854.9" width="60" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-55" value="&lt;span style=&quot;font-family: &amp;quot;Helvetica Neue&amp;quot;; text-align: start;&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;Access Openre&lt;/font&gt;&lt;/span&gt;&lt;span style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255)); background-color: transparent; font-size: 10px; font-family: &amp;quot;Helvetica Neue&amp;quot;; text-align: start;&quot;&gt;mote stack services&lt;/span&gt;" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" vertex="1">
+          <mxGeometry x="29.5" y="590" width="190" height="330" as="geometry">
+            <mxRectangle x="50" y="570" width="50" height="40" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-56" value="&lt;div style=&quot;text-wrap-mode: nowrap;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;Port 80 (HTTP): 0.0.0.0/0&lt;/font&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: center; text-wrap-mode: nowrap;&quot;&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" parent="QiTi8xb_RrgLeZ87Y-Lt-55" vertex="1">
+          <mxGeometry y="30" width="190" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-57" value="&lt;div style=&quot;text-wrap-mode: nowrap;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;Port 80 (HTTP): ::/0&lt;/font&gt;&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" parent="QiTi8xb_RrgLeZ87Y-Lt-55" vertex="1">
+          <mxGeometry y="60" width="190" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-58" value="&lt;div style=&quot;text-wrap-mode: nowrap;&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;Port 443 (HTTPS): 0.0.0.0/0&lt;/font&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" parent="QiTi8xb_RrgLeZ87Y-Lt-55" vertex="1">
+          <mxGeometry y="90" width="190" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-59" value="&lt;div style=&quot;text-wrap-mode: nowrap;&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;Port 443: ::/0&lt;/font&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" parent="QiTi8xb_RrgLeZ87Y-Lt-55" vertex="1">
+          <mxGeometry y="120" width="190" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-64" value="&lt;div style=&quot;text-wrap-mode: nowrap;&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;Port 8883 (MQTT): 0.0.0.0/0&lt;/font&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" parent="QiTi8xb_RrgLeZ87Y-Lt-55" vertex="1">
+          <mxGeometry y="150" width="190" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-63" value="&lt;div style=&quot;text-wrap-mode: nowrap;&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;Port 8883 (MQTT): ::/0&lt;/font&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" parent="QiTi8xb_RrgLeZ87Y-Lt-55" vertex="1">
+          <mxGeometry y="180" width="190" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-62" value="&lt;div style=&quot;text-wrap-mode: nowrap;&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;Port 161-162 (SNMP): 0.0.0.0/0&lt;/font&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" parent="QiTi8xb_RrgLeZ87Y-Lt-55" vertex="1">
+          <mxGeometry y="210" width="190" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-61" value="&lt;div style=&quot;text-wrap-mode: nowrap;&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;Port 161-162 (SNMP): ::/0&lt;/font&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" parent="QiTi8xb_RrgLeZ87Y-Lt-55" vertex="1">
+          <mxGeometry y="240" width="190" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-60" value="&lt;div style=&quot;text-wrap-mode: nowrap;&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;Port 8 - -1 (Ping): 0.0.0.0/0&lt;/font&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" parent="QiTi8xb_RrgLeZ87Y-Lt-55" vertex="1">
+          <mxGeometry y="270" width="190" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-65" value="&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;Port 8 - -1 (Ping): ::/0&lt;/font&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" parent="QiTi8xb_RrgLeZ87Y-Lt-55" vertex="1">
+          <mxGeometry y="300" width="190" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-66" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" source="QiTi8xb_RrgLeZ87Y-Lt-55" target="QiTi8xb_RrgLeZ87Y-Lt-33" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="451" y="765" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-108" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;Save metrics variable for manager container if metrics is enabled&lt;/font&gt;" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#E7157B;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.cloudwatch_2;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" vertex="1">
+          <mxGeometry x="2080" y="858.65" width="52.5" height="52.5" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-111" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;E-mail subscription to support&lt;/font&gt;" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#E7157B;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.sns;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" vertex="1">
+          <mxGeometry x="884" y="90" width="50" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-116" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" source="QiTi8xb_RrgLeZ87Y-Lt-112" target="QiTi8xb_RrgLeZ87Y-Lt-114" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-112" value="&lt;p style=&quot;margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; line-height: normal; font-family: &amp;quot;Helvetica Neue&amp;quot;; color: rgb(0, 0, 0); text-align: start; text-wrap-mode: wrap;&quot; class=&quot;p1&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;Alarm for StatusCheckFailed_System&lt;/font&gt;&lt;/p&gt;" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#E7157B;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.alarm;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" vertex="1">
+          <mxGeometry x="1160" y="20" width="50" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-117" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" source="QiTi8xb_RrgLeZ87Y-Lt-113" target="QiTi8xb_RrgLeZ87Y-Lt-114" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-113" value="&lt;p style=&quot;margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; line-height: normal; font-family: &amp;quot;Helvetica Neue&amp;quot;; color: rgb(0, 0, 0); text-align: start; text-wrap-mode: wrap;&quot; class=&quot;p1&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;Alarm for StatusCheckFailed_Instance&lt;/font&gt;&lt;/p&gt;" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#E7157B;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.alarm;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" vertex="1">
+          <mxGeometry x="1166.5" y="140" width="50" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-115" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" source="QiTi8xb_RrgLeZ87Y-Lt-114" target="QiTi8xb_RrgLeZ87Y-Lt-111" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-114" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;SNS Topic&lt;/font&gt;" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#E7157B;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.topic;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" vertex="1">
+          <mxGeometry x="1040" y="85.75" width="68.1" height="58.5" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-119" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" source="QiTi8xb_RrgLeZ87Y-Lt-118" target="QiTi8xb_RrgLeZ87Y-Lt-114" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1315" y="115" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-118" value="&lt;p style=&quot;margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; line-height: normal; font-family: &amp;quot;Helvetica Neue&amp;quot;; color: rgb(0, 0, 0); text-align: start; text-wrap-mode: wrap;&quot; class=&quot;p1&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;Alarm for&amp;nbsp;&lt;/font&gt;&lt;span style=&quot;background-color: transparent;&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;CPUUtilization&lt;/font&gt;&lt;/span&gt;&lt;/p&gt;" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#E7157B;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.alarm;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" vertex="1">
+          <mxGeometry x="1290" y="140" width="50" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-123" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" source="QiTi8xb_RrgLeZ87Y-Lt-120" target="QiTi8xb_RrgLeZ87Y-Lt-114" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1425" y="115" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-120" value="&lt;p style=&quot;margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; line-height: normal; font-family: &amp;quot;Helvetica Neue&amp;quot;; color: rgb(0, 0, 0); text-align: start; text-wrap-mode: wrap;&quot; class=&quot;p1&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;Alarm for&amp;nbsp;&lt;/font&gt;&lt;span style=&quot;background-color: transparent;&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;disk_used_percent&lt;/font&gt;&lt;/span&gt;&lt;/p&gt;" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#E7157B;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.alarm;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" vertex="1">
+          <mxGeometry x="1410" y="140" width="50" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-125" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" source="QiTi8xb_RrgLeZ87Y-Lt-124" target="QiTi8xb_RrgLeZ87Y-Lt-114" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1555" y="115" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-124" value="&lt;p style=&quot;margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; line-height: normal; font-family: &amp;quot;Helvetica Neue&amp;quot;; color: rgb(0, 0, 0); text-align: start; text-wrap-mode: wrap;&quot; class=&quot;p1&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;Alarm for&amp;nbsp;&lt;/font&gt;&lt;span style=&quot;background-color: transparent;&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;mem_used_percent&lt;/font&gt;&lt;/span&gt;&lt;/p&gt;" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#E7157B;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.alarm;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" vertex="1">
+          <mxGeometry x="1530" y="140" width="50" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-127" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" source="QiTi8xb_RrgLeZ87Y-Lt-126" target="QiTi8xb_RrgLeZ87Y-Lt-114" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1695" y="115" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-126" value="&lt;p style=&quot;margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; line-height: normal; font-family: &amp;quot;Helvetica Neue&amp;quot;; color: rgb(0, 0, 0); text-align: start; text-wrap-mode: wrap;&quot; class=&quot;p1&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;Alarm for&amp;nbsp;&lt;/font&gt;&lt;span style=&quot;background-color: transparent;&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;executor_pool_size_threads&lt;/font&gt;&lt;/span&gt;&lt;/p&gt;" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#E7157B;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.alarm;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" vertex="1">
+          <mxGeometry x="1670" y="140" width="50" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-130" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" source="QiTi8xb_RrgLeZ87Y-Lt-128" target="QiTi8xb_RrgLeZ87Y-Lt-114" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1865" y="115" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-128" value="&lt;p style=&quot;margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; line-height: normal; font-family: &amp;quot;Helvetica Neue&amp;quot;; color: rgb(0, 0, 0); text-align: start; text-wrap-mode: wrap;&quot; class=&quot;p1&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;Alarm for&amp;nbsp;&lt;/font&gt;&lt;span style=&quot;background-color: transparent;&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;executor_pool_size_threads&lt;/font&gt;&lt;/span&gt;&lt;/p&gt;" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#E7157B;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.alarm;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" vertex="1">
+          <mxGeometry x="1840" y="144.25" width="50" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-133" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" source="QiTi8xb_RrgLeZ87Y-Lt-24" target="QiTi8xb_RrgLeZ87Y-Lt-69" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="830" y="335" />
+              <mxPoint x="830" y="403" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-134" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" source="QiTi8xb_RrgLeZ87Y-Lt-24" target="QiTi8xb_RrgLeZ87Y-Lt-73" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="830" y="335" />
+              <mxPoint x="830" y="498" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-135" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" source="QiTi8xb_RrgLeZ87Y-Lt-24" target="QiTi8xb_RrgLeZ87Y-Lt-74" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="830" y="335" />
+              <mxPoint x="830" y="587" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-136" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" source="QiTi8xb_RrgLeZ87Y-Lt-24" target="QiTi8xb_RrgLeZ87Y-Lt-75" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="830" y="335" />
+              <mxPoint x="830" y="677" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-144" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" source="QiTi8xb_RrgLeZ87Y-Lt-98" target="QiTi8xb_RrgLeZ87Y-Lt-24" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="590" y="400" />
+              <mxPoint x="590" y="350" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-146" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" source="QiTi8xb_RrgLeZ87Y-Lt-160" target="QiTi8xb_RrgLeZ87Y-Lt-24" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="685.27" y="498" as="sourcePoint" />
+            <Array as="points">
+              <mxPoint x="590" y="498" />
+              <mxPoint x="590" y="350" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-147" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" source="QiTi8xb_RrgLeZ87Y-Lt-111" target="QiTi8xb_RrgLeZ87Y-Lt-24" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-148" value="&lt;p style=&quot;margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; line-height: normal; font-family: &amp;quot;Helvetica Neue&amp;quot;; text-align: start;&quot; class=&quot;p1&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;SSH access whitelist&lt;/font&gt;&lt;/p&gt;" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" vertex="1">
+          <mxGeometry x="454" y="810" width="190" height="60" as="geometry">
+            <mxRectangle x="50" y="570" width="50" height="40" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-159" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.95;entryY=0.989;entryDx=0;entryDy=0;entryPerimeter=0;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" source="QiTi8xb_RrgLeZ87Y-Lt-148" target="QiTi8xb_RrgLeZ87Y-Lt-51" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-160" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;Elastic IP&lt;/font&gt;" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#ED7100;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.elastic_ip_address;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" vertex="1">
+          <mxGeometry x="690" y="505" width="48" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-162" value="SSH Key Developers" style="shape=rect;fillColor=#FA4D56;aspect=fixed;resizable=0;labelPosition=center;verticalLabelPosition=bottom;align=center;verticalAlign=top;strokeColor=none;fontSize=10;" parent="QiTi8xb_RrgLeZ87Y-Lt-21" vertex="1">
+          <mxGeometry x="102" y="90" width="48" height="48" as="geometry" />
+        </mxCell>
+        <mxCell id="QiTi8xb_RrgLeZ87Y-Lt-163" value="" style="fillColor=#ffffff;strokeColor=none;dashed=0;outlineConnect=0;html=1;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;part=1;movable=0;resizable=0;rotatable=0;shape=mxgraph.ibm_cloud.password" parent="QiTi8xb_RrgLeZ87Y-Lt-162" vertex="1">
+          <mxGeometry width="24" height="24" relative="1" as="geometry">
+            <mxPoint x="12" y="12" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="k49dQEgFSicX2dteUIUj-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="QiTi8xb_RrgLeZ87Y-Lt-21" source="QiTi8xb_RrgLeZ87Y-Lt-162" target="QiTi8xb_RrgLeZ87Y-Lt-24">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="k49dQEgFSicX2dteUIUj-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="QiTi8xb_RrgLeZ87Y-Lt-21" source="k49dQEgFSicX2dteUIUj-9" target="k49dQEgFSicX2dteUIUj-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="k49dQEgFSicX2dteUIUj-9" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;Docker setup&lt;/font&gt;" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#E7157B;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.cloudformation;" vertex="1" parent="QiTi8xb_RrgLeZ87Y-Lt-21">
+          <mxGeometry x="895" y="973" width="54" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="k49dQEgFSicX2dteUIUj-13" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="QiTi8xb_RrgLeZ87Y-Lt-21" source="k49dQEgFSicX2dteUIUj-10" target="k49dQEgFSicX2dteUIUj-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="k49dQEgFSicX2dteUIUj-10" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;Install Docker&lt;/font&gt;" style="image;sketch=0;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/mscae/Docker.svg;" vertex="1" parent="QiTi8xb_RrgLeZ87Y-Lt-21">
+          <mxGeometry x="1024.6699999999998" y="970" width="73.17" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="k49dQEgFSicX2dteUIUj-15" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="QiTi8xb_RrgLeZ87Y-Lt-21" source="k49dQEgFSicX2dteUIUj-12" target="k49dQEgFSicX2dteUIUj-14">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="k49dQEgFSicX2dteUIUj-12" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;Install Docker Compose&lt;/font&gt;" style="image;sketch=0;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/mscae/Docker.svg;" vertex="1" parent="QiTi8xb_RrgLeZ87Y-Lt-21">
+          <mxGeometry x="1174.33" y="970" width="73.17" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="k49dQEgFSicX2dteUIUj-14" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;Create docker systemd process&lt;/font&gt;" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/other/Azure_Cloud_Shell.svg;" vertex="1" parent="QiTi8xb_RrgLeZ87Y-Lt-21">
+          <mxGeometry x="1337" y="976.4000000000001" width="68" height="47.199999999999996" as="geometry" />
+        </mxCell>
+        <mxCell id="k49dQEgFSicX2dteUIUj-18" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="QiTi8xb_RrgLeZ87Y-Lt-21" source="k49dQEgFSicX2dteUIUj-16" target="k49dQEgFSicX2dteUIUj-17">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="k49dQEgFSicX2dteUIUj-16" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;Cronjob setup&lt;/font&gt;" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#E7157B;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.cloudformation;" vertex="1" parent="QiTi8xb_RrgLeZ87Y-Lt-21">
+          <mxGeometry x="897.5799999999999" y="1100" width="54" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="k49dQEgFSicX2dteUIUj-20" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="QiTi8xb_RrgLeZ87Y-Lt-21" source="k49dQEgFSicX2dteUIUj-17" target="k49dQEgFSicX2dteUIUj-19">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="k49dQEgFSicX2dteUIUj-17" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;Install cronie&lt;/font&gt;" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/other/Azure_Cloud_Shell.svg;" vertex="1" parent="QiTi8xb_RrgLeZ87Y-Lt-21">
+          <mxGeometry x="1037.6799999999998" y="1103.4" width="68" height="47.199999999999996" as="geometry" />
+        </mxCell>
+        <mxCell id="k49dQEgFSicX2dteUIUj-19" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;Create cronie systemd process&lt;/font&gt;" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/other/Azure_Cloud_Shell.svg;" vertex="1" parent="QiTi8xb_RrgLeZ87Y-Lt-21">
+          <mxGeometry x="1179.4999999999998" y="1103.4" width="68" height="47.199999999999996" as="geometry" />
+        </mxCell>
+        <mxCell id="k49dQEgFSicX2dteUIUj-41" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="QiTi8xb_RrgLeZ87Y-Lt-21" source="k49dQEgFSicX2dteUIUj-21" target="k49dQEgFSicX2dteUIUj-40">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="k49dQEgFSicX2dteUIUj-21" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;Restart CloudWatch Agent&lt;/font&gt;" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#E7157B;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.cloudwatch_2;" vertex="1" parent="QiTi8xb_RrgLeZ87Y-Lt-21">
+          <mxGeometry x="895" y="1210" width="52.5" height="52.5" as="geometry" />
+        </mxCell>
+        <mxCell id="k49dQEgFSicX2dteUIUj-38" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="QiTi8xb_RrgLeZ87Y-Lt-21" source="k49dQEgFSicX2dteUIUj-23" target="k49dQEgFSicX2dteUIUj-37">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="k49dQEgFSicX2dteUIUj-23" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;Setup cfn-hup helper&lt;/font&gt;" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#E7157B;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.cloudformation;" vertex="1" parent="QiTi8xb_RrgLeZ87Y-Lt-21">
+          <mxGeometry x="895" y="1320" width="54" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="k49dQEgFSicX2dteUIUj-30" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.044;entryY=0.564;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="QiTi8xb_RrgLeZ87Y-Lt-21" source="QiTi8xb_RrgLeZ87Y-Lt-87" target="k49dQEgFSicX2dteUIUj-46">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1580" y="677" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="k49dQEgFSicX2dteUIUj-31" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="QiTi8xb_RrgLeZ87Y-Lt-21" source="QiTi8xb_RrgLeZ87Y-Lt-24" target="QiTi8xb_RrgLeZ87Y-Lt-79">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="830" y="335" />
+              <mxPoint x="830" y="780" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="k49dQEgFSicX2dteUIUj-32" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="QiTi8xb_RrgLeZ87Y-Lt-21" source="QiTi8xb_RrgLeZ87Y-Lt-24" target="QiTi8xb_RrgLeZ87Y-Lt-91">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="830" y="335" />
+              <mxPoint x="830" y="885" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="k49dQEgFSicX2dteUIUj-33" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="QiTi8xb_RrgLeZ87Y-Lt-21" source="QiTi8xb_RrgLeZ87Y-Lt-24" target="k49dQEgFSicX2dteUIUj-9">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="830" y="335" />
+              <mxPoint x="830" y="1000" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="k49dQEgFSicX2dteUIUj-34" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="QiTi8xb_RrgLeZ87Y-Lt-21" source="QiTi8xb_RrgLeZ87Y-Lt-24" target="k49dQEgFSicX2dteUIUj-16">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="830" y="335" />
+              <mxPoint x="830" y="1127" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="k49dQEgFSicX2dteUIUj-35" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="QiTi8xb_RrgLeZ87Y-Lt-21" source="QiTi8xb_RrgLeZ87Y-Lt-24" target="k49dQEgFSicX2dteUIUj-21">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="830" y="335" />
+              <mxPoint x="830" y="1236" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="k49dQEgFSicX2dteUIUj-36" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="QiTi8xb_RrgLeZ87Y-Lt-21" source="QiTi8xb_RrgLeZ87Y-Lt-24" target="k49dQEgFSicX2dteUIUj-23">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="830" y="335" />
+              <mxPoint x="830" y="1347" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="k49dQEgFSicX2dteUIUj-37" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;Create cfn-hup systemd process&lt;/font&gt;" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/other/Azure_Cloud_Shell.svg;" vertex="1" parent="QiTi8xb_RrgLeZ87Y-Lt-21">
+          <mxGeometry x="1037.6799999999998" y="1323.4" width="68" height="47.199999999999996" as="geometry" />
+        </mxCell>
+        <mxCell id="k49dQEgFSicX2dteUIUj-43" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="QiTi8xb_RrgLeZ87Y-Lt-21" source="k49dQEgFSicX2dteUIUj-40" target="k49dQEgFSicX2dteUIUj-42">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="k49dQEgFSicX2dteUIUj-40" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;Stop service&lt;/font&gt;" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/other/Azure_Cloud_Shell.svg;" vertex="1" parent="QiTi8xb_RrgLeZ87Y-Lt-21">
+          <mxGeometry x="1037.6799999999998" y="1212.65" width="68" height="47.199999999999996" as="geometry" />
+        </mxCell>
+        <mxCell id="k49dQEgFSicX2dteUIUj-42" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;Start service&lt;/font&gt;" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/other/Azure_Cloud_Shell.svg;" vertex="1" parent="QiTi8xb_RrgLeZ87Y-Lt-21">
+          <mxGeometry x="1176.9199999999998" y="1212.65" width="68" height="47.199999999999996" as="geometry" />
+        </mxCell>
+        <mxCell id="k49dQEgFSicX2dteUIUj-44" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;Set permissions and start DNS updater systemd process&lt;/font&gt;" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/other/Azure_Cloud_Shell.svg;" vertex="1" parent="QiTi8xb_RrgLeZ87Y-Lt-21">
+          <mxGeometry x="1602" y="756.4000000000001" width="68" height="47.199999999999996" as="geometry" />
+        </mxCell>
+        <mxCell id="k49dQEgFSicX2dteUIUj-46" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;Set permissions and start backup service systemd&lt;/font&gt;" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/other/Azure_Cloud_Shell.svg;" vertex="1" parent="QiTi8xb_RrgLeZ87Y-Lt-21">
+          <mxGeometry x="1630" y="650" width="68" height="47.199999999999996" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

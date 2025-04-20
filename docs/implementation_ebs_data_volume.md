@@ -57,15 +57,15 @@ sudo lsblk -f
 
 It shows that the volume is mounted on `Docker's` default volume location (`/var/lib/docker/volumes`)
 
-<img src="../assets/image/ec2-docker-volume-default-location.png" width="800">
+<img src="./Media/docker_volume_default_location.png" width="800">
 
 After starting OpenRemote with the default `Docker Compose` file, everything booted up properly without any issues.
 
-<img src="../assets/image/ec2-openremote-healthy.png" width="800">
+<img src="./Media/openremote_healthy.png" width="800">
 
 However, after attaching the `EBS` volume to another `EC2` instance running OpenRemote, I encountered permission errors with the `PostgresSQL` container once again.
 
-<img src="../assets/image/ec2-docker-volume-permission-error-postgres.png" width="800">
+<img src="./Media/docker_volume_permission_error_postgres.png" width="800">
 
 Based on the insights of my initial research, I knew that this issue could be resolved by setting the `PGDATA` environment variable in the `Docker Compose` file. \
 Since the `EBS` volume is an external block device, this step is nessecary for `Docker` to properly access the data. It's not possible to `chown` the directory to both the `postgres` and `root` users simultaneously, which makes specifying the `PGDATA` variable essential.
@@ -352,7 +352,7 @@ After the stack is successfully created, we need to check whether the creation w
 
 When the `EBS` data volume is succesfully created, it can be attached to the `EC2` instance. To attach the volume to the instance, you must specify a `Device Name` such as `/dev/sda`, `/dev/sdb` etc. It is not possible to automatically assign a `device name` when attaching the volume. You must specify a specific `device name` upfront. To achieve this, I configured a variable named `EBS_DEVICE_NAME` and set it to `/dev/sdf` as the designated `device name`.
 
-<img src="../assets/image/ebs-volume-virtualization.png" width="800">
+<img src="./Media/ebs_volume_virtualization.png" width="800">
 
 As shown in the image above, for `EC2` instances that are using `HVM` as the virtualization method, it is recommended to choose a `device name` between `/dev/sd[b]` and `/dev/sd[z]`.
 
@@ -456,7 +456,6 @@ prepare_volume:
 The `CloudFormation` template for creating the `EBS` volume looks like this:
 
 ```
-
 AWSTemplateFormatVersion: '2010-09-09'
 Description: 'Creates an EBS Volume for storing the IoT data.'
 Parameters:
@@ -652,7 +651,6 @@ After the `CloudFormation` stack is successfully created, the script checks its 
 The `CloudFormation` template for creating the `DLM` policy looks like this:
 
 ```
-
 Parameters:
   PolicyDescription:
     Description: Lifecycle Policy Description
@@ -688,7 +686,6 @@ Resources:
               - '05:00'
             RetainRule:
               Count: 5
-
 ```
 
 The script creates a `lifecycle policy` with a single schedule that triggers a new snapshot every `24 hours` at `5 AM`. The `RetainRule` is configured to keep the 5 most recent snapshots, automatically deleting older ones beyond that limit. The policy is enabled immediately upon creation.
@@ -961,7 +958,7 @@ while [[ "$STATUS" == 'available' ]] && [ $count -lt 30 ]; do
 done
 ```
 
-<img src="../assets/image/ec2-review-1.png" width="800">
+<img src="./Media/review_1.png" width="800">
 
 ### 3.2. Stop Docker before unmounting/detaching the volume
 The second change I made was to add an extra command in the `create-ssm` `CloudFormation` template to stop `Docker` before unmounting and detaching the volume. Previously, if the volume was unmounted and detached without stopping Docker, OpenRemote would lose access to the data, causing the containers become unhealthy. By stopping `Docker` first, OpenRemote is taken offline safely and can be restarted once the volume is reattached.
@@ -974,7 +971,7 @@ The second change I made was to add an extra command in the `create-ssm` `CloudF
       - systemctl stop docker.socket docker.service
 ```
 
-<img src="../assets/image/ec2-review-2.png" width="800">
+<img src="./Media/review_2.png" width="800">
 
 ### 3.3. Wait until EC2 instance is created before attaching/mounting the volume
 
@@ -1029,7 +1026,7 @@ fi
 With this approach, volume attachment and mounting only occur after the instance has been successfully created. This ensures the volume operations are only execusted on a fully initialized instance, reducing the risks of errors during provisioning when for example the volume is not attached to the instance on time before executing the `cfn-scripts`.
 
 
-<img src="../assets/image/ec2-review-3.png" width="800">
+<img src="./Media/review_3.png" width="800">
 
 ### 3.4. SSM Documents for each account instead of host
 
@@ -1071,7 +1068,7 @@ else
 fi
 ```
 
-<img src="../assets/image/ec2-review-4.png" width="800">
+<img src="./Media/review_4.png" width="800">
 
 ### 3.5. Improve check if filesystem exists
 
@@ -1102,7 +1099,7 @@ fi
 Currently, the implementation is not optimal. When creating the volume for the first time, there is no filesystem present, which causes the script to loop up to 30 times (approxmately 900 seconds) before proceeding with creating a filesystem.
 This delay is too long, so I'm planning to improve the implementation to handle this more efficently.
 
-<img src="../assets/image/ec2-review-5.png" width="800">
+<img src="./Media/review_5.png" width="800">
 
 ### 3.6. Problems with auto-reloader.conf
 
@@ -1121,7 +1118,7 @@ services:
 
 In my new implementation, I moved the volume attachment and mounting logic out of the `cfn-scripts` and into the `SSM` documents. This change ensures the logic isn't re-execued every time the instance is updated.
 
-<img src="../assets/image/ec2-review-6.png" width="800">
+<img src="./Media/review_6.png" width="800">
 
 ### 3.7. Attaching volume within the provision host script
 
@@ -1129,14 +1126,14 @@ Initally, I added the logic for attaching the volume in the `provision host` scr
 To resolve this, I moved the provisioning of the `EBS` data volume to the `create-ec2` `CloudFormation` template and removed it from the `provision host` script. Now, once the `instance` is successfully created and the `cfn-signal` returns a `SUCCESS` status. The volume is attached and mounted using `SSM` documents.
 
 
-<img src="../assets/image/ec2-review-7.png" width="800">
+<img src="./Media/review_7.png" width="800">
 
 ### 3.8. Move provisioning DLM Policy to create-ec2 stack
 
 In my inital approach, I included logic in the `provision host` script to create the `DLM` policy using a separate `CloudFormation` stack. 
 However, since `DLM` is a native part of `EC2`, it made more sense to move the this part into the `create-ec2` `CloudFormation` stack. This change simplifies the `provision host` script and ensures the `DLM` policy is created automatically once the `EBS` data volume is successfully provisioned.
 
-<img src="../assets/image/ec2-review-8.png" width="800">
+<img src="./Media/review_8.png" width="800">
 
 ### 3.9. Move provisioning EBS data volume to create-ec2 stack
 
@@ -1149,4 +1146,4 @@ Because the volume must reside in the same `Availability zone` as the instance, 
 I’ve also removed the steps for creating the filesystem and mounting the volume from the `cfn-script`.
 That logic is now handeled via `SSM` documents, which are executed by the `provision host` script after the stack is successfully created.
 
-<img src="../assets/image/ec2-review-9.png" width="800">
+<img src="./Media/review_9.png" width="800">
