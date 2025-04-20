@@ -179,29 +179,29 @@ There are several methods to create a new Elastic Block Storage (`EBS`) data vol
 Creating a new volume through the Management Console is simple and straightforward. 
 You can configure the following options:
 
-`Volume type` <br/>
+`Volume type`
 Select the type of volume you want to use. The available options are listed [here](#22-volume-types) 
 
-`Size (GB)` <br/>
-The storage capacity in gigabytes available on the drive. The default value is 100 GB, but you can configure `EBS` volumes ranging from 1 GB to 16,384 GB. <br/>
+`Size (GB)`
+The storage capacity in gigabytes available on the drive. The default value is 100 GB, but you can configure `EBS` volumes ranging from 1 GB to 16,384 GB.
 `EBS` costs are based on the amount of storage you provision, not on how much you actually use. For example, if you provision a 30 GB `EBS` volume but only use 5 GB, you'll still being charged for the entire 30 GB.
 
-`IOPS` <br/>
-The number of operations per second (`IOPS`) the volume can support. By default, this value is set to 3,000, which is also the minimum. <br/>
+`IOPS`
+The number of operations per second (`IOPS`) the volume can support. By default, this value is set to 3,000, which is also the minimum.
 You can adjust this up to 16,000 IOPS for `gp3` volumes and up to 64,000 or 256,000 `IOPS` for `io1`/`io2` volumes, depending on the volume size.
 
-`Throughput` <br/>
+`Throughput`
 The throughput performance the volume can handle. The default value is set to 125 MB/s, but you can increase it up to 1,000 MB/s based on the amount of `IOPS` you provision. The throughput rate is 0.25 MB/s for each additional `IOPS`.
 
-`Availability Zone` <br/>
-The Availability Zone where the volume is being created. The number of available AZs depends on the region where you're creating the volume. To ensure data durability and prevent failures, volumes are replicated within their respective `Availability Zone`. <br/>
+`Availability Zone`
+The Availability Zone where the volume is being created. The number of available AZs depends on the region where you're creating the volume. To ensure data durability and prevent failures, volumes are replicated within their respective `Availability Zone`.
 To attach an `EBS` volume to an `EC2` instance, the instance must be located in the same `Availability Zone` as the volume.
 
-`Snapshot ID` <br/>
+`Snapshot ID`
 If you want to create a volume from an existing snapshot, you can select the `Snapshot ID` during volume creation. The data from the snapshot will be available immediately.
 
-`Encryption` <br/>
-You have the option to encrypt the volume. Amazon `EBS` encryption uses the Advanced Encryption Standard (AES-256) algorithm along with Amazon's Key Management Service (`KMS`). <br/>
+`Encryption`
+You have the option to encrypt the volume. Amazon `EBS` encryption uses the Advanced Encryption Standard (AES-256) algorithm along with Amazon's Key Management Service (`KMS`).
 You can either use the default encryption key or create your own. Using your own key provides greater flexibility, including the ability to create, rotate, disable, and define access controls and security audits.
 
 It is also possible to create `EBS` volumes while launching an `EC2` instance. These volumes are automatically attached to the instance.
@@ -212,27 +212,27 @@ It is also possible to create `EBS` volumes while launching an `EC2` instance. T
 
 <img src="./Media/volume_detail.png" width="500">
 
-After creating an `EBS` volume, you can attach it to an `EC2` instance. <br/>
-Data volumes can be attached to either running or stopped instances, while root volumes can only be attached or detached when the instance is fully stopped. <br/>
+After creating an `EBS` volume, you can attach it to an `EC2` instance.
+Data volumes can be attached to either running or stopped instances, while root volumes can only be attached or detached when the instance is fully stopped.
 You can only attach volumes that are in the available state. You can check the status on the details page for each individual volume.
 
 <img src="./Media/volume_attach.png" width="500">
 
 To attach a volume to an instance, you need to configure the following options:
 
-`Instance type` <br/>
+`Instance type`
 Choose the instance to which you want to attach the volume.
 Only instances located in the same availability zone as the `EBS` volume will be displayed.
 
-`Device name` <br/>
-Select a device name for the `EBS` volume. <br/>
+`Device name`
+Select a device name for the `EBS` volume.
 Data volumes typically use names like /dev/sd[a-z], with names between /dev/sd[f-p] being recommended. Root volumes generally use the default `/dev/xvda` name. Each device name can only be used once.
 
 <div style="page-break-after: always;"></div>
 
 #### 2.4.4. Create Filesystem on Volume
 
-Before an `EBS` volume can be used, it must be formatted and have a filesystem on it. <br/>
+Before an `EBS` volume can be used, it must be formatted and have a filesystem on it.
 Start by running the command below to list all existing block devices on the host machine.
 
 ```sh
@@ -249,17 +249,17 @@ To create a filesystem, use the command below.
 sudo mkfs -t xfs /dev/sdb
 ```
 
-This command creates an `XFS` filesystem on the device named `/dev/sdb`. <br/>
+This command creates an `XFS` filesystem on the device named `/dev/sdb`.
 You cannot use the name visible in the `lsblk` output. Instead, you need to use the device name assigned during the `EBS` volume creation. The device names can be found under the storage tab on the details page of the specific `EC2` instance.
 
 <img src="./Media/storage_overview.png" width="500">
 
-`XFS` is one of the filesystems you can use, but you can also choose others like `ext3`, `ext4`, and more. Since the root device is also using the `XFS` filesystem, it's recommended to stick with the same for consistency. <br/>
+`XFS` is one of the filesystems you can use, but you can also choose others like `ext3`, `ext4`, and more. Since the root device is also using the `XFS` filesystem, it's recommended to stick with the same for consistency.
 After creating the filesystem, run the `lsblk` command again to verify if the filesystem appears in the list.
 
 <img src="./Media/lsblk_2.png" width="500">
 
-As shown in the picture above, the filesystem has been created successfully, and the device now has an assigned `UUID`. <br/>
+As shown in the picture above, the filesystem has been created successfully, and the device now has an assigned `UUID`.
 It is recommended to copy the device's `UUID` and store it in a safe place, as you will need it in a later step.
 
 <div style="page-break-after: always;"></div>
@@ -271,7 +271,7 @@ Once you have successfully formatted the volume and created a filesystem, you ca
 sudo mount /dev/sdb /or-data
 ```
 
-You need to specify the device name assigned during `EBS` volume creation. You can mount the volume to any directory of your choice. <br/>
+You need to specify the device name assigned during `EBS` volume creation. You can mount the volume to any directory of your choice.
 The directory must already exist at the root of the host before you can mount the volume. The command will not create the specified directory for you. If the directory does not exist, the command will throw an error.
 
 After mounting the volume, you can check the status with the `lsblk` command. If the device is successfully mounted, you should see the directory in the list, along with the remaining capacity and the amount of storage used.
@@ -279,7 +279,7 @@ After mounting the volume, you can check the status with the `lsblk` command. If
 <img src="./Media/lsblk_3.png" width="500">
 
 #### 2.4.6. Automatically mount volume on system reboot
-To make sure that the volume is mounted after a system reboot. You need to add a line in the `/etc/fstab/` file. This is the `System File Table` and stores information about the drives. <br/>
+To make sure that the volume is mounted after a system reboot. You need to add a line in the `/etc/fstab/` file. This is the `System File Table` and stores information about the drives.
 Making changes in this file is dangerous and can cause boot errors if the file is corrupted or incorrect. Please make a back-up before editing this file.
 
 To create a backup from this file you can enter the following command.
@@ -296,20 +296,20 @@ Once the backup is successfully created, you can add the new volume to the file 
 
 The entry has a few parameters that needs to exists:
 
-`UUID` <br/>
+`UUID`
 The first parameter is the device `UUID`, which is visible when executing the `lsblk` command. You can also retrieve the `UUID` using the following command.
 
 ```sh
 sudo blkid
 ```
 
-`Directory` <br/>
+`Directory`
 The second parameter is the directory where the volume needs to be mounted. This directory must already exist, as the system cannot create directories automatically.
 
-`Filesystem Type` <br/>
+`Filesystem Type`
 The third parameter is the filesystem type. In most cases, this is `XFS`, but the value depends on the filesystem you selected during the initial volume setup.
 
-`Flags` <br/>
+`Flags`
 The fourth parameter consists of device `flags`. While there are many different `flags`, the most commonly used is the `defaults` flag. This includes several options, such as:
 
 - `rw`: Allows reading and writing
@@ -322,10 +322,10 @@ The fourth parameter consists of device `flags`. While there are many different 
 
 The `nofail` flag is also often used to ensure that the system does not fail on boot if a specified device or mountpoint is unavailable.
 
-`Dump` <br/>
+`Dump`
 The fifth parameter determines whether the filesystem should be backed up using the `dump` command. The value can be either `1` (yes) or `0` (no).
 
-`Device type` <br/>
+`Device type`
 The last parameter determines whether the device is a `root` or `non-root` device. The value can be either `1` (for root) or `2` (for non-root).
 
 When you succesfully created the entry in the `/etc/fstab` file, it should look like this
@@ -356,7 +356,7 @@ This section explains how `snapshots` (backups) can be created/restored with the
 You can create snapshots on specific `EBS` volumes and on instance level.
 To create a snapshot via the management console, You need to configure the following options:
 
-<img src="./Media/snapshot_creation.png" width="500"><br/>
+<img src="./Media/snapshot_creation.png" width="500">
 
 - `Source`: You can choose between `Volumes` and `Instances` when creating a snapshot. When creating a snapshot from an instance, you still have the option to exclude the root device or specific data volumes.
 - `Volume/Instance ID`: Depending on the source, you will need to select either the `Volume` or `Instance ID` for which you want to create the snapshot.
@@ -378,7 +378,7 @@ To restore a snapshot, you can choose to either create a new volume or an `AMI (
 
 <img src="./Media/snapshot_restore.png" width="500">
 
-You can configure the volume in the same way as you would when creating a new volume, but by specifying a `Snapshot ID`. <br/>
+You can configure the volume in the same way as you would when creating a new volume, but by specifying a `Snapshot ID`.
 Once the volume is created, you can attach and mount it to an `EC2` instance. The data from the snapshot will be immediately available.
 
 <img src="./Media/volume_creation.png" width="500"><
@@ -445,7 +445,7 @@ Once you have successfully created the policy, it will appear in the list. Based
 In this section I will explain how I configured the OpenRemote software to use the seperate `EBS` volume for storing the IoT data.
 
 ### 3.1. Docker Compose
-OpenRemote uses a `Docker Compose` file to define the `containers` and their settings that need to be started within `Docker`. <br/>
+OpenRemote uses a `Docker Compose` file to define the `containers` and their settings that need to be started within `Docker`.
 The default file looks like this:
 
 ``````
@@ -592,23 +592,23 @@ Unfortunately, this didn't solve the problem. I encountered some inconsistencies
 sudo chmod -R 777 /or-data
 ```
 
-This command grants full permissions (`777`) to the `/or-data` directory for read/write operations. While combining these commands sometimes resolves the issue, the problem reoccurs after rebooting the machine or the containers. <br/>
+This command grants full permissions (`777`) to the `/or-data` directory for read/write operations. While combining these commands sometimes resolves the issue, the problem reoccurs after rebooting the machine or the containers.
 I continued my investigation and found an interesting note in the `PostgreSQL` documentation on `Dockerhub`
 
-<img src="./Media/postgres_dockerhub.png" width="500"><br/>
+<img src="./Media/postgres_dockerhub.png" width="500">
 
 They describe the exact problem I encountered and resolve it by overriding the default `Postgres` data location, using the `PGDATA` `environment` variable within the `container`.
 
-<img src="./Media/pgdata.png" width="200"><br/>
+<img src="./Media/pgdata.png" width="200">
 
 After saving the `Docker Compose` file and rebuilding the containers, all the `containers` started without any issues, and OpenRemote is now accessible via the `Public IP`.
 
-<img src="./Media/docker_ps_healthy.png" width="500"><br/>
+<img src="./Media/docker_ps_healthy.png" width="500">
 
-Unfortunately, after detaching the `volume` and connecting it to a separate instance, the same permissions error occurred, even with the `PGDATA` variable added to the `Docker Compose` file. <br/>
+Unfortunately, after detaching the `volume` and connecting it to a separate instance, the same permissions error occurred, even with the `PGDATA` variable added to the `Docker Compose` file.
 Despite resetting the permissions multiple times, the issue remained unresolved.
 
-<img src="./Media/postgres_error.png" width="500"><br/>
+<img src="./Media/postgres_error.png" width="500">
 
 I continued my investigation and attempted to add `subdirectories` for each `container` in the `Docker Compose` file, as shown below:
 
@@ -974,7 +974,7 @@ services:
 
 The files are now structered in different subfolders
 
-<img src="./Media/ls_folders.png" width="200"><br/>
+<img src="./Media/ls_folders.png" width="200">
 
 Lastly, I added an `environment` variable to make this approach more modular and easily configurable. The environment variable `${OR_EXTERNAL_VOLUME:-false}` is included in the volume block at the top of the file.
 If no value is provided, the default value of `false` is applied, meaning the data will be stored on the same root device. If the value is set to `true`, `Docker` will search for the external volume in the list and use that one if it exists.
@@ -1093,7 +1093,7 @@ services:
       - manager-data:/storage
 ````
 
-In this setup, the named `volumes` are now automatically created by `Docker` with the options I previously specified in the `CLI` command. I added `environment` variables so that each `container` can have its own location for storing data. This approach also eliminates the need for the `PGDATA` variable. <br/>
+In this setup, the named `volumes` are now automatically created by `Docker` with the options I previously specified in the `CLI` command. I added `environment` variables so that each `container` can have its own location for storing data. This approach also eliminates the need for the `PGDATA` variable.
 If no location is provided, `Docker` will use the default location on the root device itself.
 
 The start command looks like this.
@@ -1115,7 +1115,7 @@ The test setup is using the following resources within the `OpenRemote` software
   This agent connects to an [API](https://www.randomnumberapi.com/) that returns a random number between `0` and `100`.
 - `Assets`
   - `Thermostat Asset`
-  This asset is connected to the `HTTP Agent` and polls every `5000` milliseconds to retrieve a new random number and displays this in the `Number` attribute. <br/>
+  This asset is connected to the `HTTP Agent` and polls every `5000` milliseconds to retrieve a new random number and displays this in the `Number` attribute.
   Additionally, an `AttributeLink` is connected to copy the value from the `Number` attribute to the `temperature` attribute.
 - `Dashboard`
   - `Attribute widget`
@@ -1148,7 +1148,7 @@ The following test cases are described and executed:
 | 16. Stop EC2 machine with the newly connected and configured EBS data volume with the newly connected and configured EBS data volume with an active TLS (Let's encrypt) certificate and using the PublicIP.                 | ✅                           | ⚠️                      | ⚠️                     | ⚠️                  | ⚠️                    | ⚠️                 |
 
 The test results indicate that when using a `Public IP`, the OpenRemote software occasionally fails to start properly. 
-When reviewing the logs, it turns out that the `proxy` container sometimes encounters issues while setting the self-signed certificate. <br/>
+When reviewing the logs, it turns out that the `proxy` container sometimes encounters issues while setting the self-signed certificate.
 
 <img src="./Media/certs_error.png" width="1000">
 
