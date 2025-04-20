@@ -704,7 +704,7 @@ DataDiskUtilizationAlarm:
 ### 2.3. Adding support for automatic snapshot creation of the EBS data volume
 
 #### 2.3.1. Provision Host Script
-To ensure that the data on the `EBS` data volume is securely backed up, the `provision host` script creates an `Amazon Data Lifecycle Manager (DLM)` policy for automatic snapshot creation. This policy ensures that snapshots of the `EBS` data volume are automatically created at regular intervals.
+To ensure that the data on the `EBS` data volume is securely backed up, the `provision host` script creates an `Amazon Data Lifecycle Manager (DLM)` policy for automatic `snapshot` creation. This policy ensures that snapshots of the `EBS` data volume are automatically created at regular intervals.
 To maintain consistency throughout the script, I implemented this feature in the same way as the `EBS` data volume creation.
 
 I began by setting the `DLM_STACK_NAME` variable to generate an unique `CloudFormation` stack name for this feature.
@@ -843,7 +843,7 @@ Resources:
               Count: 5
 ```
 
-The script creates a `lifecycle policy` with a single schedule that creates a new snapshot every `24 hours` at `5 AM`. The `RetainRule` is configured to keep the `5` most recent snapshots, automatically deleting older ones beyond that limit. The policy is enabled immediately upon creation.
+The script creates a `lifecycle policy` with a single schedule that creates a new `snapshot` every `24 hours` at `5 AM`. The `RetainRule` is configured to keep the `5` most recent snapshots, automatically deleting older ones beyond that limit. The policy is enabled immediately upon creation.
 To ensure that snapshots are only created for the correct volume, the `TargetTags` parameter uses the `EBS_STACK_ID` value to identify the appropriate volume.
 
 ### 2.4. Adding support for automatic attaching/detaching the EBS data volume
@@ -1227,8 +1227,8 @@ fi
 
 ### 3.5. Improve check if filesystem exists
 
-In my initial implementation, I used the `snapshot` variable to determine whether the script should create a filesystem on the `EBS` data volume or simply mount it. When a snapshot is used, the volume already contains a filesystem, so it only needs to be mounted.
-Creating a new filesystem in this case would overwrite the existing one, resulting in data loss. Therefore, it's important to ensure that a filesystem is only created when no snapshot is provided.
+In my initial implementation, I used the `snapshot` variable to determine whether the script should create a filesystem on the `EBS` data volume or simply mount it. When a `snapshot` is used, the volume already contains a filesystem, so it only needs to be mounted.
+Creating a new filesystem in this case would overwrite the existing one, resulting in data loss. Therefore, it's important to ensure that a filesystem is only created when no `snapshot` is provided.
 
 After improving the implementation, I now use the `blkid` command to check for an existing filesystem. This command also retrieves the volume's `UUID` for generating the `/etc/fstab` entry.
 
@@ -1293,7 +1293,7 @@ However, since `DLM` is a native part of `EC2`, it made more sense to move the t
 
 Initially, I considered splitting the provisioning process to avoid the risk of the volume being detached or modified during `CloudFormation` updates.
 
-However, after moving the volume creation into the `create-ec2` template, I found out that only the `root` volume is affected during updates, while data volumes remain unchanged. To add an extra layer of safety, I’ve applied `DeletionPolicy: Snapshot`, which ensures a final snapshot is taken before the volume is deleted.
+However, after moving the volume creation into the `create-ec2` template, I found out that only the `root` volume is affected during updates, while data volumes remain unchanged. To add an extra layer of safety, I’ve applied `DeletionPolicy: Snapshot`, which ensures a final `snapshot` is taken before the volume is deleted.
 Because the volume must reside in the same `availability zone` as the instance, it is now provisioned only after the instance is fully created and the `cfn-signal` returns a `SUCCESS` status.
 
 I’ve also removed the steps for creating the filesystem and mounting the volume from the `cfn-script` section. Instead, that logic is now handeled via `SSM` documents, which are executed by the `provision host` script after the stack is successfully created.
@@ -1340,7 +1340,7 @@ I will continue investigating the options for this in the upcoming weeks.
 <img src="./Media/review_14.png" width="1000">
 
 ## 5. Tests
-To make sure the implementation is working as expected, I executed several tests by running the script in the `CI/CD` workflow on GitHub Actions.
+To make sure the implementation is working as expected, I executed several tests by running the script in the `CI/CD` workflow on `GitHub Actions`.
 
 <img src="./Media/test_automate_1.png" width="1000">
 
