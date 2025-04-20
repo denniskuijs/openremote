@@ -3,7 +3,7 @@
 ## Implementation: Separate EBS Volume for storing/decoupling the IoT Data  <!-- omit in toc -->
 
 ## Context
-This document provides a detailed overview of how I implemented the creation and mounting of the separate EBS volume within the CI/CD pipeline. It also outlines the decisions I made and the challenges encountered throughout the development process.
+This document provides a detailed overview of how I implemented the creation and mounting of the separate `EBS` data volume within the `CI/CD` workflow. It also outlines the decisions I made and the challenges encountered throughout the development process.
 
 ## Contents <!-- omit in toc -->
 
@@ -35,15 +35,20 @@ This document provides a detailed overview of how I implemented the creation and
   - [3.7. Attaching volume within the provision host script](#37-attaching-volume-within-the-provision-host-script)
   - [3.8. Move provisioning DLM Policy to create-ec2 stack](#38-move-provisioning-dlm-policy-to-create-ec2-stack)
   - [3.9. Move provisioning EBS data volume to create-ec2 stack](#39-move-provisioning-ebs-data-volume-to-create-ec2-stack)
+- [4. Additional changes after second feedback round](#4-additional-changes-after-second-feedback-round)
+- [4.1. Changing variable names and comments](#41-changing-variable-names-and-comments)
+- [4.2. Improving the filesystem check in the SSM document](#42-improving-the-filesystem-check-in-the-ssm-document)
+- [4.3. Replace contents of existing volume](#43-replace-contents-of-existing-volume)
+- [5. Tests](#5-tests)
 
 </div>
 
 ## 1. Research based on feedback
-After completing my initial research, I shared my findings with several team members. Following their feedback, I continued my research on this topic before proceeding with the implementation of my prototype in the CI/CD pipeline.
+After completing my initial research, I shared my findings with several team members. Following their feedback, I continued my research on this topic before proceeding with the implementation of my prototype in the `CI/CD` workflow.
 
 ### 1.1. Mount EBS volume on the Docker volumes directory
-One of the team members suggested mounting the default `Docker` volumes directory (`/var/lib/docker/volumes`) to the newly created `EBS` volume, rather than creating and mounting a custom directory.
-I began investigating this option by mounting the separate `EBS` volume to this directory using the following command:
+One of the team members suggested mounting the default `Docker` volumes directory (`/var/lib/docker/volumes`) to the newly created `EBS` data volume, rather than creating and mounting a custom directory.
+I began investigating this option by mounting the separate `EBS` data volume to this directory using the following command:
 
 ```sh
 sudo mount /dev/sdf /var/lib/docker/volumes
@@ -63,11 +68,11 @@ After starting OpenRemote with the default `Docker Compose` file, everything boo
 
 <img src="./Media/openremote_healthy.png" width="800">
 
-However, after attaching the `EBS` volume to another `EC2` instance running OpenRemote, I encountered permission errors with the `PostgresSQL` container once again.
+However, after attaching the `EBS` data volume to another `EC2` instance running OpenRemote, I encountered permission errors with the `PostgresSQL` container once again.
 
 <img src="./Media/docker_volume_permission_error_postgres.png" width="800">
 
-Based on the insights of my initial research, I knew that this issue could be resolved by setting the `PGDATA` environment variable in the `Docker Compose` file. \
+Based on the insights of my initial research, I knew that this issue could be resolved by setting the `PGDATA` environment variable in the `Docker Compose` file.
 Since the `EBS` volume is an external block device, this step is nessecary for `Docker` to properly access the data. It's not possible to `chown` the directory to both the `postgres` and `root` users simultaneously, which makes specifying the `PGDATA` variable essential.
 
 After adding the `PGDATA` variable the `Docker Compose` file looks like this.
@@ -165,11 +170,11 @@ services:
       - manager-data:/storage
 ```
 
-With this setup, the `EBS` volume can now easily be attached to other `EC2` instances as long as the `PGDATA` variable is configured on both the original and target machine.
+With this setup, the `EBS` data volume can now easily be attached to other `EC2` instances as long as the `PGDATA` variable is configured on both the original and target machine.
 Additionally, the `Docker Compose` file becomes much simpeler, only the `PGDATA` variable needs to be configured, eliminating the need to define different volume paths for each individual container.
 
 ## 2. Implementation in the CI/CD pipeline
-In this section, I will explain how I implemented my prototype into the existing CI/CD pipeline on `Github Actions`. It will be devided into the following topics.
+In this section, I will explain how I implemented my prototype into the existing `CI/CD` workflow on `Github Actions`. It will be devided into the following topics:
   
   - Creating/Mounting the `EBS` data volume
   - Adding CloudWatch metrics/alarms for the `EBS` data volume
@@ -179,8 +184,8 @@ In this section, I will explain how I implemented my prototype into the existing
 ### 2.1. Creating/Mounting the EBS data volume
 
 #### 2.1.1. GitHub Actions Workflow
-I start my implementation in the `GitHub Actions` workflow file. In this file the steps for executing the CI/CD pipeline are defined.
-The workflow is triggered on `workflow dispatch`, meaning it runs on-demand without the need for a pull-request or code push.
+I start my implementation in the `GitHub Actions` workflow file. In this file the steps for executing the `CI/CD` workflow are defined.
+The workflow is triggered on `workflow dispatch`, meaning it runs on-demand without the need for a pull request or code push.
 
 ```
 on:
@@ -198,7 +203,7 @@ DATA_DISK_SIZE:
     required: false
 ```
 
-The `SNAPSHOT_ID` variable allows you to specify a `Snapshot` to create the `EBS` data volume, enabling you to create a volume based on an existing snapshot.
+The `SNAPSHOT_ID` variable allows you to specify a `snapshot`, enabling you to create a volume based off existing data.
 When this variable is specified the `DATA_DISK_SIZE` parameter is ignored. Instead, the volume will be provisioned with the same amount of storage that was assigned before snapshot creation.
 
 ```
@@ -233,7 +238,7 @@ Finally, I passed the newly created variables to the `provision host` script. Th
 ```
 
 #### 2.1.2. Provision Host Script
-In the `provision host` script, I modified the order of the variables passed from the `workflow` to the script. In Bash, you can reference each variable based on the order in which they are passed.
+In the `provision host` script, I modified the order of the variables passed from the `workflow` to the script. In bash, you can reference each variable based on the order in which they are passed.
 
 ```
 AWS_ACCOUNT_NAME=${1,,}
@@ -249,23 +254,22 @@ WAIT_FOR_STACK=${10,,}
 ```
 
 Next, I created the `EBS_STACK_NAME` variable, which generates a unique name for the `CloudFormation` stack by combining the `STACK_NAME` with a predefined text string. The `STACK_NAME` itself is created from the `HOST` variable, where all dots in the `hostname` are replaced with a separator. With this apparoach, the `CloudFormation` stack names are unique for every `host`.
+It is crucial that the `EBS` volume is created in the same `availabilty zone` as the `EC2` instance, as the volume cannot be attached to the instance otherwise. To ensure this, I first investigated how the `EC2` instance is assigned to a specific `availabilty zone`.
 
-It is crucial that the `EBS` volume is created in the same `Availabilty Zone` as the `EC2` instance, as the volume cannot be attached to the instance otherwise. To ensure this, I first investigated how the `EC2` instance is assigned to a specific `Availabilty Zone`.
-
-First, the `SUBNET_NUMBER` variable is set to a random integer between 1 and 3. There are 3 different `public subnets` and this apparoach randomly selects one of them. Each subnet is located in a different `Availabilty Zone` (`1a`, `1b` or `1c`). The subnet name is then generated using the `SUBNET_NUMBER` variable and a predefined text string.
+First, the `SUBNET_NUMBER` variable is set to a random integer between `1` and `3`. There are `3` different `public subnets` and this apparoach randomly selects one of them. Each subnet is located in a different `availabilty zone` (`1a`, `1b` or `1c`). The subnet name is then generated using the `SUBNET_NUMBER` variable and a predefined text string.
 
 ```
 SUBNET_NUMBER=$(( $RANDOM % 3 + 1 ))
 SUBNETNAME="or-subnet-public-$SUBNET_NUMBER"
 ```
 
-I still needed the exact `Availabilty Zone` name that the `EC2` instance will use. The script already includes a line that retrieves the `AvailabiltyZoneId` based on the `SUBNET_NAME` variable. However, this ID cannot be used to to create the `EBS` volume, as the volume requires the `Availabilty Zone` name, not the ID, to resolve this, I added the following line to the script to retrieve the name.
+I still needed the exact `availabilty zone` name that the `EC2` instance will use. The script already includes a line that retrieves the `AvailabiltyZoneId` based on the `SUBNET_NAME` variable. However, this ID cannot be used to to create the `EBS` data volume, as the volume requires the `availabilty zone` name. to resolve this, I added the following line to the script to retrieve the name.
 
 ```
 SUBNET_AZ=$(aws ec2 describe-subnets --filters Name=tag:Name,Values=$SUBNETNAME --query "Subnets[0].AvailabilityZone" --output text $ACCOUNT_PROFILE 2>/dev/null)
 ```
 
-After setting the `Availabilty Zone` name in the `SUBNET_AZ` variable I can begin creating the `EBS` data volume. 
+After setting the `availabilty zone` name to the `SUBNET_AZ` variable I can begin creating the `EBS` data volume. 
 The volume creation is handeled by a seperate `CloudFormation` template to ensure that the `EBS` data volume will not be affected by updates to the `EC2` instance template. 
 
 Before creating the `EBS` data volume, I first check if the stack not already exists.
@@ -303,7 +307,7 @@ PARAMS="$PARAMS ParameterKey=AvailabilityZone,ParameterValue=$SUBNET_AZ"
 PARAMS="$PARAMS ParameterKey=DiskSize,ParameterValue=$DATA_DISK_SIZE"
 ```
 
-When the `SNAPSHOT_ID` variable is provided, this parameter will be configured to ensure that the volume is created based of an existing snapshot.
+When the `SNAPSHOT_ID` variable is provided, this parameter will be configured to ensure that the volume is created based off an existing snapshot.
 
 ```
 if [ -n "$SNAPSHOT_ID" ]; then
@@ -319,7 +323,7 @@ EBS_STACK_ID=$(aws cloudformation create-stack --capabilities CAPABILITY_NAMED_I
 ```
 
 When the stack is successfully created, it returns the `Stack ID`, which is then be stored in the `EBS_STACK_ID` variable. 
-The code below checks whether the stack creation command succeeded. If not, the script will trhow an exit code and stop execution.
+The code below checks whether the stack creation command succeeded. If not, the script will throw an exit code and stop execution.
 
 ```
 if [ $? -ne 0 ]; then
@@ -330,7 +334,7 @@ else
 fi
 ```
 
-After the stack is successfully created, we need to check whether the creation was succesful or failed with an error. The code below retrieves the status from the `CloudFormation` stack based off the `Stack ID`  stored in the previous step. As long as the status returns `CREATE_IN_PROGRESS` the stack is still being created. The script checks the stack status every 30 seconds and stops when the status either returns `CREATE_COMPLETE` (indicating successful stack creation) or when the status is neither `CREATE_IN_PROGRESS` nor `CREATE_COMPLETE` (indicating stack creation failure).
+After the stack is successfully created, we need to check whether the creation was succesful or failed with an error. The code below retrieves the status from the `CloudFormation` stack based off the `Stack ID` stored in the previous step. As long as the status returns `CREATE_IN_PROGRESS` the stack is still being created. The script checks the stack status every `30` seconds and stops when the status either returns `CREATE_COMPLETE` (indicating successful stack creation) or when the status is neither `CREATE_IN_PROGRESS` nor `CREATE_COMPLETE` (indicating stack creation failure).
 
 ```
     echo "Waiting for stack to be created"
@@ -352,7 +356,7 @@ After the stack is successfully created, we need to check whether the creation w
 
 When the `EBS` data volume is succesfully created, it can be attached to the `EC2` instance. To attach the volume to the instance, you must specify a `Device Name` such as `/dev/sda`, `/dev/sdb` etc. It is not possible to automatically assign a `device name` when attaching the volume. You must specify a specific `device name` upfront. To achieve this, I configured a variable named `EBS_DEVICE_NAME` and set it to `/dev/sdf` as the designated `device name`.
 
-<img src="./Media/ebs_volume_virtualization.png" width="800">
+<img src="./Media/ebs_volume_virtualization.png" width="1000">
 
 As shown in the image above, for `EC2` instances that are using `HVM` as the virtualization method, it is recommended to choose a `device name` between `/dev/sd[b]` and `/dev/sd[z]`.
 
@@ -365,7 +369,7 @@ INSTANCE_STATE=$(aws ec2 describe-instances --filters "Name=tag:Name,Values='$HO
 ```
 
 The script checks for an `EC2` instance associated to the `CloudFormation` template by querying the specifc `Stack ID` that was returned when this stack was successfully created. To ensure that we always target the correct instance, a filter is applied to retrieve the instance with the name provided in the `CloudFormation` template.
-The script also retrieves the instance's status, as volume can only be attached to an instance that is in the `running` state.
+The script also retrieves the instance's status, as the volume can only be attached to an instance that is in the `running` state.
 
 ```
 echo "Check if instance is available"
@@ -379,7 +383,7 @@ while [[ -z "$INSTANCE_ID" ]] && [[ "$INSTANCE_STATE" != 'running' ]] && [ $coun
 done
 ```
 
-If the `Instance ID` is not found or the instance status is not `running`, the script waits for 30 seconds before retrying. Each attempt increments a counter, and the script continues checking as long as the counter remains below 30. This counter acts as a safeguard, in case the instance fails to launch successfully. If the counter exceeds 30, the script will stop prevent running indefinitely.
+If the `Instance ID` is not found or the instance status is not `running`, the script waits for `30` seconds before retrying. Each attempt increments a counter, and the script continues checking as long as the counter remains below `30`. This counter acts as a safeguard, in case the instance fails to launch successfully. If the counter exceeds `30`, the script will stop prevent running indefinitely.
 
 ```
 if [ -z "$INSTANCE_ID" ] && [ "$INSTANCE_STATE" != 'running' ]; then
@@ -388,7 +392,7 @@ if [ -z "$INSTANCE_ID" ] && [ "$INSTANCE_STATE" != 'running' ]; then
 fi
 ```
 
-If the `Instance ID` cannot be retrieved or the instance state is not `running` after 30 retry attempts, the script will exit with an error status code.
+If the `Instance ID` cannot be retrieved or the instance state is not `running` after `30` attempts, the script will exit with an error status code.
 
 Once the `Instance ID` is found and the instance is in a `running` state, the script attempts to attach the `EBS` data volume to the `EC2` instance. It's crucial that this step happens immediately after the instance becomes available, as several `cfn-scripts` begin running right after instance creation. One of these scripts automatically creates a filesystem on the volume and mounts it to the `/var/lib/docker/volumes` directory. If the volume isn’t attached in time, this step will fail, which then fails instance creation and therefore automatic rollbacks the `CloudFormation` stack.
 
@@ -398,13 +402,13 @@ After retrieving the `Instance ID` the script is trying to retrieve the `Volume 
 VOLUME_ID=$(aws ec2 describe-volumes --filters "Name=tag:Name,Values='$HOST/data'" --query "Volumes[?Tags[?Value=='$EBS_STACK_ID']].VolumeId" --output text $ACCOUNT_PROFILE 2>/dev/null)
 ```
 
-Once the `Volume ID` is found, the system attempts to attach the volume using the following command. 
+Once the `Volume ID` is found, the system attempts to attach the volume using the following command: 
 
 ```
 VOLUME=$(aws ec2 attach-volume --device $DEVICE_NAME --instance-id $INSTANCE_ID --volume-id $VOLUME_ID --output text $ACCOUNT_PROFILE 2>/dev/null)
 ```
 The command includes the configured `device name` from the previous step, the `Instance ID` to which the volume will be attached, and the ID of the volume itself.
-Immediately after, the status of the volume is retrieved to check if it has been successfully attached. If the volume is not attached, the script waits for 30 seconds before retrying.
+Immediately after, the status of the volume is retrieved to check if it has been successfully attached. If the volume is not attached, the script waits for `30` seconds before retrying.
 
 ```
 while [[ "$STATUS" == 'attaching' ]]; do
@@ -426,7 +430,7 @@ fi
 
 ```
 
-After the `EBS` data volume is successfully attached to the `EC2` instance, the script waits for all `cfn-scripts` to complete execution on the instance. These scripts handle several tasks, including creating a filesystem on the attached volume and mounting it to `Docker's` default directory at `/var/lib/docker/volumes`. Additionally, the script update the `/etc/fstab` file to ensure that the volume is automatically mounted on reboot using the device's `UUID` instead of the `device name`. This approach also prevents issues when attaching the same volume to an other `EC2` instance.
+After the `EBS` data volume is successfully attached to the `EC2` instance, the script waits for all `cfn-scripts` to complete execution on the instance. These scripts handle several tasks, including creating a filesystem on the attached volume and mounting it to `Docker's` default directory at `/var/lib/docker/volumes`. Additionally, the script updates the `/etc/fstab` file to ensure that the volume is automatically mounted on reboot using the device's `UUID` instead of the `device name`. This approach also prevents issues when attaching the same volume to an other `EC2` instance.
 
 ```
 prepare_volume:
@@ -491,20 +495,171 @@ Resources:
 ```
 
 The script will create aan `EBS` volume based on the parameters that are passed from the `provision host` script. To easily identify each volume, a tag will be added with the host's name.
-If the condition `IsSnapshotProvided` is true, the `Snapshot ID` will be configured and the volume will based off an existing snaphost. Otherwise, an empty volume will be created.
+If the condition `IsSnapshotProvided` is true, the `Snapshot ID` will be configured and the volume will be created based off an existing snaphost. Otherwise, an empty volume will be created.
 
 ### 2.2. Adding CloudWatch metrics/alarms for the EBS data volume
 
 #### 2.2.1. CloudFormation Template
 To monitor the performance and health of the `EBS` data volume, I added `CloudWatch` metrics and alarms for this device. 
-
 As part of the `cfn-scripts` the `Cloudwatch Agent` will be configured to collect various metrics from the `EC2` machine such as `CPU utilization`, `memory usage`, `disk usage` and more. The script looks like this:
 
 ```
-
+                  {
+                    "agent":{
+                      "metrics_collection_interval": 300
+                    },
+                    "metrics": {
+                      "append_dimensions": {
+                        "InstanceId": "${aws:InstanceId}"
+                      },
+                      "metrics_collected": {
+                        "mem": {
+                          "measurement": [
+                            "mem_used_percent"
+                          ],
+                          "metrics_collection_interval": 900
+                        },
+                        "disk": {
+                          "drop_device": true,
+                          "measurement": [
+                            "used_percent"
+                          ],
+                          "resources": [
+                            "/",
+                            "/var/lib/docker/volumes"
+                          ],
+                          "metrics_collection_interval": 900
+                        }
+                      }
+                    },
+                    "logs": {
+                      "metrics_collected": {
+                        "prometheus": {
+                          "log_group_name": "Prometheus",
+                          "prometheus_config_path": "/opt/aws/amazon-cloudwatch-agent/var/prometheus.yaml",
+                          "emf_processor": {
+                            "metric_declaration_dedup": true,
+                            "metric_namespace": "CWAgent-Prometheus",
+                            "metric_unit": {
+                              "artemis_message_count": "Count",
+                              "artemis_messages_added": "Count",
+                              "or_rules_seconds_max": "Seconds",
+                              "or_rules_seconds_sum": "Seconds",
+                              "or_rules_seconds_count": "Count",
+                              "or_attributes_seconds_max": "Seconds",
+                              "or_attributes_seconds_sum": "Seconds",
+                              "or_attributes_seconds_count": "Count",
+                              "or_attributes_total": "Count",
+                              "or_provisioning_seconds_max": "Seconds",
+                              "or_provisioning_seconds_sum": "Seconds",
+                              "or_provisioning_seconds_count": "Count",
+                              "executor_pool_size_threads": "Count",
+                              "executor_pool_core_threads": "Count",
+                              "executor_pool_max_threads": "Count",
+                              "executor_seconds_count": "Count",
+                              "executor_seconds_sum": "Seconds",
+                              "haproxy_server_current_sessions": "Count",
+                              "haproxy_server_bytes_in_total": "Bytes",
+                              "haproxy_server_bytes_out_total": "Bytes",
+                              "haproxy_server_status": "Count",
+                              "haproxy_server_http_responses_total": "Count",
+                              "haproxy_server_max_session_rate": "Count/Second",
+                              "haproxy_server_total_time_average_seconds": "Seconds"
+                            },
+                            "metric_declaration": [
+                              {
+                                "source_labels": [ "job" ],
+                                "label_matcher": "^manager$",
+                                "dimensions": [
+                                  [ "InstanceName" ]
+                                ],
+                                "metric_selectors": [
+                                  "^or_rules_seconds_count$",
+                                  "^or_rules_seconds_sum$",
+                                  "^or_rules_seconds_max$",
+                                  "^or_attributes_seconds_count$",
+                                  "^or_attributes_seconds_sum$",
+                                  "^or_attributes_seconds_max$",
+                                  "^or_provisioning_seconds_count$",
+                                  "^or_provisioning_seconds_sum$",
+                                  "^or_provisioning_seconds_max$"
+                                ]
+                              },
+                              {
+                                "source_labels": [ "job", "source" ],
+                                "label_matcher": "manager;(RulesEngine|AgentService|DefaultMQTTHandler|AssetResource|WebsocketClient)",
+                                "dimensions": [
+                                  [ "InstanceName", "source" ]
+                                ],
+                                "metric_selectors": [
+                                  "^or_attributes_total$"
+                                ]
+                              },
+                              {
+                                "source_labels": [ "job", "name" ],
+                                "label_matcher": "^manager;ContainerExecutor$",
+                                "dimensions": [
+                                  [ "InstanceName","name" ]
+                                ],
+                                "metric_selectors": [
+                                  "^executor_pool_",
+                                  "^executor_seconds_count$",
+                                  "^executor_seconds_sum$"
+                                ]
+                              },
+                              {
+                                "source_labels": [ "job" ],
+                                "label_matcher": "^manager$",
+                                "dimensions": [
+                                  [ "InstanceName","queue" ]
+                                ],
+                                "metric_selectors": [
+                                  "^artemis_message_count$",
+                                  "^artemis_messages_added$"
+                                ]
+                              },
+                              {
+                                "source_labels": [ "job" ],
+                                "label_matcher": "^proxy$",
+                                "dimensions": [
+                                  [ "InstanceName", "proxy", "server" ]
+                                ],
+                                "metric_selectors": [
+                                  "^haproxy_server_total_time_average_seconds$",
+                                  "^haproxy_server_max_session_rate$",
+                                  "^haproxy_server_bytes",
+                                  "^haproxy_server_current_sessions$"
+                                ]
+                              },
+                              {
+                                "source_labels": [ "job" ],
+                                "label_matcher": "^proxy$",
+                                "dimensions": [
+                                  [ "InstanceName", "proxy", "server", "code" ]
+                                ],
+                                "metric_selectors": [
+                                  "^haproxy_server_http_responses_total$"
+                                ]
+                              },
+                              {
+                                "source_labels": [ "job" ],
+                                "label_matcher": "^proxy$",
+                                "dimensions": [
+                                  [ "InstanceName", "proxy", "server", "state" ]
+                                ],
+                                "metric_selectors": [
+                                  "^haproxy_server_status$"
+                                ]
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
 ```
 
-To monitor disk usage, I added the mount point for the new `EBS` volume to the `resources` block. 
+To monitor disk usage, I added the mount point for the new `EBS` data volume to the `resources` block. 
 This ensures that the `CloudWatch Agent` retrieves metrics for this specific mount point.
 
 ```
@@ -518,8 +673,8 @@ This ensures that the `CloudWatch Agent` retrieves metrics for this specific mou
 ],
 ```
 
-Next, I added a new `CloudWatch Alarm` to the same `CloudFormation` template. This alarm is set to trigger if disk usage exceeds `90%` within a one-hour period. When the alarm is triggered, Amazon sends a notification to the configured `SNS` topic, which in turn sends an email alert to the topic's subscribers.
-To connect the newly added metric to this alarm, I configured the `Dimensions` block with the required details, including the `Instance ID`, the path that is referring to the mount point in the metrics and the `Volume Type`.
+Next, I added a new `CloudWatch Alarm` to the same `CloudFormation` template. This alarm is set to trigger if disk usage exceeds `90%` within a `one-hour` period. When the alarm is triggered, Amazon sends a notification to the configured `SNS` topic, which in turn sends an email alert to the topic's subscribers.
+To connect the newly added metric to this alarm, I configured the `Dimensions` block with the required details, including the `Instance ID`, the `path` that is referring to the `mount point` in the metrics and the `Filesystem type`.
 
 ```
 DataDiskUtilizationAlarm:
@@ -549,7 +704,7 @@ DataDiskUtilizationAlarm:
 ### 2.3. Adding support for automatic snapshot creation of the EBS data volume
 
 #### 2.3.1. Provision Host Script
-To ensure that the data on the `EBS` data volume is securely backed up, the `provision host` script creates an `Amazon Data Lifecycle Manager (DLM)` policy for automatic snapshot creation. This policy ensures that snapshots of the `EBS` data volume is automatically created at regular intervals.
+To ensure that the data on the `EBS` data volume is securely backed up, the `provision host` script creates an `Amazon Data Lifecycle Manager (DLM)` policy for automatic snapshot creation. This policy ensures that snapshots of the `EBS` data volume are automatically created at regular intervals.
 To maintain consistency throughout the script, I implemented this feature in the same way as the `EBS` data volume creation.
 
 I began by setting the `DLM_STACK_NAME` variable to generate an unique `CloudFormation` stack name for this feature.
@@ -582,7 +737,7 @@ If the `CloudFormation` stack does not exists, the script will attempt to create
   fi
 ```
 
-Before the stack can be created, the script first checks if the required `IAM` role is already created in the AWS account. This role is necessary for the `DLM` policy to perform snapshot creation tasks on behalf of the `IAM` user.
+Before the stack can be created, the script first checks if the required `IAM` role is already created in the AWS account. This role is required for the `DLM` policy to perform snapshot creation tasks on behalf of the `IAM` user.
 If the role doesn't exists, the system will create the default role and set the `ROLE_ARN` variable with the `Amazon Resource Name` (ARN). This variable will then be passed to the `CloudFormation` template in the next step.
 
 ```
@@ -623,7 +778,7 @@ if [ $? -ne 0 ]; then
 fi
 ```
 
-After the `CloudFormation` stack is successfully created, the script checks its status every 30 seconds. If the status returns `CREATE_COMPLETE`, the stack was created successfully, and the script proceeds to the next steps. However, if the status is neither `CREATE_IN_PROGRESS` nor `CREATE_COMPLETE`, it indicates an error, and the script will exit with an error code and stop execution.
+After the `CloudFormation` stack is successfully created, the script checks its status every `30` seconds. If the status returns `CREATE_COMPLETE`, the stack was created successfully, and the script proceeds to the next steps. However, if the status is neither `CREATE_IN_PROGRESS` nor `CREATE_COMPLETE`, it indicates an error, and the script will exit with an error code and stop execution.
 
 ```
   if [ "$WAIT_FOR_STACK" != 'false' ]; then
@@ -688,13 +843,13 @@ Resources:
               Count: 5
 ```
 
-The script creates a `lifecycle policy` with a single schedule that triggers a new snapshot every `24 hours` at `5 AM`. The `RetainRule` is configured to keep the 5 most recent snapshots, automatically deleting older ones beyond that limit. The policy is enabled immediately upon creation.
+The script creates a `lifecycle policy` with a single schedule that creates a new snapshot every `24 hours` at `5 AM`. The `RetainRule` is configured to keep the `5` most recent snapshots, automatically deleting older ones beyond that limit. The policy is enabled immediately upon creation.
 To ensure that snapshots are only created for the correct volume, the `TargetTags` parameter uses the `EBS_STACK_ID` value to identify the appropriate volume.
 
 ### 2.4. Adding support for automatic attaching/detaching the EBS data volume
 
 #### 2.4.1. Provision Host Script
-The final step in the process is to create two scripts for automatically attaching and detaching the `EBS` data volume. These scripts are stored in `Amazon Systems Manager` and can be executed either manually through the AWS Management Console or via the AWS `CLI`.
+The final step in the process is to create two scripts for automatically `attaching` and `detaching` the `EBS` data volume. These scripts are stored in `Amazon Systems Manager` and can be executed either manually through the AWS Management Console or via the AWS `CLI`.
 To provision the `SSM` scripts, I reused the same logic applied when provisioning the `EBS` data volume and `DLM` policy in the `provision host` script.
 
 First, I added a new variable at the beginning of the script to generate the `CloudFormation` stack name.
@@ -756,7 +911,7 @@ if [ $? -ne 0 ]; then
 fi
 ```
 
-After the stack is successfully created, the script waits for the stack creation process to complete if the `WAIT_FOR_STACK` variable is set to true. During this time, it checks the stack status every 30 seconds and returns a success once the status changes to `CREATE_COMPLETE`. If the status is neither `CREATE_IN_PROGESS` nor `CREATE_COMPLETE`, it indicates that the stack creation has failed. In that case, the script exits with an error code and stops execution.
+After the stack is successfully created, the script waits for the stack creation process to complete if the `WAIT_FOR_STACK` variable is set to true. During this time, it checks the stack status every `30` seconds and returns a success once the status changes to `CREATE_COMPLETE`. If the status is neither `CREATE_IN_PROGESS` nor `CREATE_COMPLETE`, it indicates that the stack creation has failed. In that case, the script exits with an error code and stops execution.
 
 ```
 if [ "$WAIT_FOR_STACK" != 'false' ]; then
@@ -939,7 +1094,7 @@ Resources:
          Name: !Sub ${Host}_attach
 ```
 
-It creates two seperate documents, one for attaching and another for detaching the `EBS` data volume. 
+It creates two seperate documents, one for `attaching` and another for `detaching` the `EBS` data volume. 
 When these documents are executed, `SSM` runs the commands defined in the `runCommand` block on the targeted `EC2` instance.
 
 ## 3. Improved implementation based on feedback
@@ -947,7 +1102,7 @@ When these documents are executed, `SSM` runs the commands defined in the `runCo
 After my initial implementation, I reviewed it with an team member and received valuable feedback to improve it further.
 
 ### 3.1. Add counter when attaching volume
-In the first version, I added logic in the `create-ssm` `CloudFormation` template to attach and mount the volume, and to create a filesystem if it doesn't already exist. However, since volume attachment can sometimes fail or take longer than expected, the while loop I used could potentially run idefinitely. To address this issue, I added a counter to limit the number of attempts. With this change, the loop will exit after 30 attempts (approxmately 900 seconds).
+In the first version, I added logic in the `create-ssm` `CloudFormation` template to `attach` and `mount` the volume, and to create a filesystem if it doesn't already exist. However, since volume attachment can sometimes fail or take longer than expected, the while loop I used could potentially run idefinitely. To address this issue, I added a counter to limit the number of attempts. With this change, the loop will exit after `30` attempts (approxmately 900 seconds).
 
 ```
 while [[ "$STATUS" == 'available' ]] && [ $count -lt 30 ]; do
@@ -958,10 +1113,10 @@ while [[ "$STATUS" == 'available' ]] && [ $count -lt 30 ]; do
 done
 ```
 
-<img src="./Media/review_1.png" width="800">
+<img src="./Media/review_1.png" width="1000">
 
 ### 3.2. Stop Docker before unmounting/detaching the volume
-The second change I made was to add an extra command in the `create-ssm` `CloudFormation` template to stop `Docker` before unmounting and detaching the volume. Previously, if the volume was unmounted and detached without stopping Docker, OpenRemote would lose access to the data, causing the containers become unhealthy. By stopping `Docker` first, OpenRemote is taken offline safely and can be restarted once the volume is reattached.
+The second change I made was to add an extra command in the `create-ssm` `CloudFormation` template to stop `Docker` before `unmounting` and `detaching` the volume. Previously, if the volume was `unmounted`and `detached` without stopping `Docker`, OpenRemote would lose access to the data, causing the containers become unhealthy. By stopping `Docker` first, OpenRemote is taken offline safely and can be restarted once the volume is reattached.
 
 ```
 - name: StopDocker
@@ -971,15 +1126,15 @@ The second change I made was to add an extra command in the `create-ssm` `CloudF
       - systemctl stop docker.socket docker.service
 ```
 
-<img src="./Media/review_2.png" width="800">
+<img src="./Media/review_2.png" width="1000">
 
 ### 3.3. Wait until EC2 instance is created before attaching/mounting the volume
 
-In my initial attempt, I added logic to provision the `EBS` data volume using a seperate `CloudFormation` template. Once the instance was created by the `create-ec2` stack, I attached the volume immediately. The goal with this approach was to ensure the volume would be mounted in time before the `cfn-scripts` responsible for formatting and mounting the volume were executed.
+In my initial attempt, I added logic to provision the `EBS` data volume using a separate `CloudFormation` template. Once the instance was created by the `create-ec2` stack, I attached the volume immediately. The goal with this approach was to ensure the volume would be mounted in time before the `cfn-scripts` responsible for formatting and mounting the volume were executed.
 
 However, the creation of the `EC2` instance is only considered complete once all `cfn-scripts` have been successfully executed and `cfn-signal` returns a `SUCCESS` status. Since volume creation and mounting were part of the `cfn-scripts`, It wasn't possible to wait for the instance to be initalized beforehand. As a result, if the volume couldn't be attached or mounted successfully or in time, the `cfn-scripts` would fail, and the `CloudFormation` stack will be rolled back.
 
-To address this issue, I moved the provisioning of the `EBS` data volume into the `create-ec2` stack. Since the volume must reside in the same availibilty zone as the instance, it is now created immediately after the instance is successfully launched.
+To address this issue, I moved the provisioning of the `EBS` data volume into the `create-ec2` stack. Since the volume must reside in the same `availibilty zone` as the instance, it is now created immediately after the instance is successfully launched.
 
 ```
 EBSDataVolume:
@@ -994,7 +1149,7 @@ EBSDataVolume:
         Value: !Sub ${Host}/data
 ```
 
-After the instance is successfully created, I added logic in the `provision host` script to execute the `SSM` document responsible for attaching and mounting the `EBS` data volume.
+After the instance is successfully created, I added logic in the `provision host` script to execute the `SSM` document responsible for `attaching` and `mounting` the `EBS` data volume.
 As part of this change, the previous logic for handling volume attachment and mounting was removed from the `cfn-scripts` section within the `create-ec2` `CloudFormation` template.
 
 ```
@@ -1023,10 +1178,10 @@ else
 fi
 ```
 
-With this approach, volume attachment and mounting only occur after the instance has been successfully created. This ensures the volume operations are only execusted on a fully initialized instance, reducing the risks of errors during provisioning when for example the volume is not attached to the instance on time before executing the `cfn-scripts`.
+With this approach, volume attachment and mounting only occur after the instance has been successfully created. This ensures the volume operations are only executed on a fully initialized instance, reducing the risks of errors during provisioning when for example the volume is not attached to the instance on time before executing the `cfn-scripts`.
 
 
-<img src="./Media/review_3.png" width="800">
+<img src="./Media/review_3.png" width="1000">
 
 ### 3.4. SSM Documents for each account instead of host
 
@@ -1068,11 +1223,11 @@ else
 fi
 ```
 
-<img src="./Media/review_4.png" width="800">
+<img src="./Media/review_4.png" width="1000">
 
 ### 3.5. Improve check if filesystem exists
 
-In my initial implementation, I used the `Snapshot` variable to determine whether the script should create a filesystem on the `EBS` data volume or simply mount it. When a snapshot is used, the volume already contains a filesystem, so it only needs to be mounted.
+In my initial implementation, I used the `snapshot` variable to determine whether the script should create a filesystem on the `EBS` data volume or simply mount it. When a snapshot is used, the volume already contains a filesystem, so it only needs to be mounted.
 Creating a new filesystem in this case would overwrite the existing one, resulting in data loss. Therefore, it's important to ensure that a filesystem is only created when no snapshot is provided.
 
 After improving the implementation, I now use the `blkid` command to check for an existing filesystem. This command also retrieves the volume's `UUID` for generating the `/etc/fstab` entry.
@@ -1096,10 +1251,10 @@ else
 fi
 ```
 
-Currently, the implementation is not optimal. When creating the volume for the first time, there is no filesystem present, which causes the script to loop up to 30 times (approxmately 900 seconds) before proceeding with creating a filesystem.
+Currently, the implementation is not optimal. When creating the volume for the first time, there is no filesystem present, which causes the script to loop up to `30` times (approxmately 900 seconds) before proceeding with creating a filesystem.
 This delay is too long, so I'm planning to improve the implementation to handle this more efficently.
 
-<img src="./Media/review_5.png" width="800">
+<img src="./Media/review_5.png" width="1000">
 
 ### 3.6. Problems with auto-reloader.conf
 
@@ -1118,32 +1273,82 @@ services:
 
 In my new implementation, I moved the volume attachment and mounting logic out of the `cfn-scripts` and into the `SSM` documents. This change ensures the logic isn't re-execued every time the instance is updated.
 
-<img src="./Media/review_6.png" width="800">
+<img src="./Media/review_6.png" width="1000">
 
 ### 3.7. Attaching volume within the provision host script
 
 Initally, I added the logic for attaching the volume in the `provision host` script. However, As previously mentioned, this approach could lead to errors if the volume wasn't created on time when the script ran.
-To resolve this, I moved the provisioning of the `EBS` data volume to the `create-ec2` `CloudFormation` template and removed it from the `provision host` script. Now, once the `instance` is successfully created and the `cfn-signal` returns a `SUCCESS` status. The volume is attached and mounted using `SSM` documents.
+To resolve this, I moved the provisioning of the `EBS` data volume to the `create-ec2` `CloudFormation` template and removed it from the `provision host` script. Now, once the `instance` is successfully created and the `cfn-signal` returns a `SUCCESS` status. The volume is `attached` and `mounted` using `SSM` documents.
 
-
-<img src="./Media/review_7.png" width="800">
+<img src="./Media/review_7.png" width="1000">
 
 ### 3.8. Move provisioning DLM Policy to create-ec2 stack
 
 In my inital approach, I included logic in the `provision host` script to create the `DLM` policy using a separate `CloudFormation` stack. 
 However, since `DLM` is a native part of `EC2`, it made more sense to move the this part into the `create-ec2` `CloudFormation` stack. This change simplifies the `provision host` script and ensures the `DLM` policy is created automatically once the `EBS` data volume is successfully provisioned.
 
-<img src="./Media/review_8.png" width="800">
+<img src="./Media/review_8.png" width="1000">
 
 ### 3.9. Move provisioning EBS data volume to create-ec2 stack
 
 Initially, I considered splitting the provisioning process to avoid the risk of the volume being detached or modified during `CloudFormation` updates.
 
-However, after moving the volume creation into the `create-ec2` template, I found out that only the root volume is affected during updates, while data volumes remain unchanged. To add an extra layer of safety, I’ve applied `DeletionPolicy: Snapshot`, which ensures a final snapshot is taken before the volume is deleted.
+However, after moving the volume creation into the `create-ec2` template, I found out that only the `root` volume is affected during updates, while data volumes remain unchanged. To add an extra layer of safety, I’ve applied `DeletionPolicy: Snapshot`, which ensures a final snapshot is taken before the volume is deleted.
+Because the volume must reside in the same `availability zone` as the instance, it is now provisioned only after the instance is fully created and the `cfn-signal` returns a `SUCCESS` status.
 
-Because the volume must reside in the same `Availability zone` as the instance, it is now provisioned only after the instance is fully created and the `cfn-signal` returns a `SUCCESS` status.
+I’ve also removed the steps for creating the filesystem and mounting the volume from the `cfn-script` section. Instead, that logic is now handeled via `SSM` documents, which are executed by the `provision host` script after the stack is successfully created.
 
-I’ve also removed the steps for creating the filesystem and mounting the volume from the `cfn-script`.
-That logic is now handeled via `SSM` documents, which are executed by the `provision host` script after the stack is successfully created.
+<img src="./Media/review_9.png" width="1000">
 
-<img src="./Media/review_9.png" width="800">
+## 4. Additional changes after second feedback round
+After refining my implementation based on the initial feedback, I requested another review. This time only a few minor changes were suggested.
+
+## 4.1. Changing variable names and comments
+
+To mantain consistency in naming, I replaced the slash with a hyphen in the `EBS` data volume name. This name appears in the AWS management console to make it easier to identify each volume.
+
+<img src="./Media/review_10.png" width="1000">
+
+With this name change it also needs to be updated in the `provision host` script to correctly retrieve the `VolumeId`, which is then passed to the `SSM` documents for `attaching` and `mounting` the volume.
+
+<img src="./Media/review_11.png" width="1000">
+
+I also corrected a few comments to fix spelling errors.
+
+<img src="./Media/review_12.png" width="1000">
+
+## 4.2. Improving the filesystem check in the SSM document
+As mentioned [here](#35-improve-check-if-filesystem-exists) I previously explained that the current implementation isn't ideal. When the volume is attached for the first time, there is no filesystem yet. which results in a 900 second wait loop before the initial filesystem is created.
+I’ve improved this by combining the volume attachment and filesystem check into a single command. Since the filesystem check depends on the volume being attached, running them separately can cause issues since these commands are running asynchronous and don’t wait for each other to finish.
+
+<img src="./Media/review_13.png" width="1000">
+
+## 4.3. Replace contents of existing volume
+One of my colleagues is wondering if we could replace the contents of the existing volume with a `snapshot`.
+Unfortunately, this is not possible as snapshots can only be specified during the initial creation of the volume. Additionally, accessing the contents of the `snapshot` directly is difficult because snapshots are stored in a hidden `S3` bucket managed by Amazon.
+
+The only way to retrieve data from a `snapshot` is to create a new volume from it, then attach and mount that volume to an `EC2` instance to inspect and access the data via the filesystem.
+
+To improve flexibility, we could extend our implementation to also support provisioning a host based on an existing data volume using its `VolumeId`. This would give us three different options:
+
+- No `SnapshotId` or `VolumeId` specified: An empty data volume is created, `attached` and `mounted`.
+- `SnapshotId` specified: a new data volume is created, attached and mounted from the given `snapshot`.
+- `VolumeId` specified: the existing volume is used directly, no new volume is created.
+
+I will continue investigating the options for this in the upcoming weeks.
+
+<img src="./Media/review_14.png" width="1000">
+
+## 5. Tests
+To make sure the implementation is working as expected, I executed several tests by running the script in the `CI/CD` workflow on GitHub Actions.
+
+<img src="./Media/test_automate_1.png" width="1000">
+
+I also performed a manual test with a fellow student by testing his changes from the OpenRemote software with my implementation.
+
+<img src="./Media/map_test_1.png" width="1000">
+
+In the image above, you can see that custom `maptiles` can be uploaded through the OpenRemote Manager. These `maptiles` are stored on a `Docker` volume, which is stored on the separate `EBS` data volume.
+When attaching this `EBS` data volume to another `EC2` instance, the image below shows that the `maptiles` are still available. This confirms that the implementation is working as expected. The data is correctly stored on the separate `EBS` volume and remains accessible when attached to other `EC2` instances.
+
+<img src="./Media/map_test_2.png" width="1000">

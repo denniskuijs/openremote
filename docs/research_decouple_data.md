@@ -18,7 +18,7 @@ Therefore, OpenRemote is looking for ways to further automate this process. This
 
 <div style="page-break-after: always;"></div>
 
-## DOT-Framework
+## DOT Framework
 For this research, the following methods from the [DOT Framework](https://ictresearchmethods.nl/) are used:
 
 - `Literature Study` (To investigate how Amazon EBS and the Lifecycle Policy Manager function, as well as to understand how the filesystem works within Linux and can be used for setting up external block devices)
@@ -34,7 +34,7 @@ For this research, the following methods from the [DOT Framework](https://ictres
 <div class="toc">
 
 - [Context](#context)
-- [DOT-Framework](#dot-framework)
+- [DOT Framework](#dot-framework)
 - [1. Situation](#1-situation)
   - [1.1. Current Situation](#11-current-situation)
   - [1.2. Desired Situation](#12-desired-situation)
@@ -128,10 +128,10 @@ Amazon `EBS` offers the following features:
 - `Archiving`: Snapshots can be archived for a minimum of 90 days at a low cost, making it ideal for storing backups that are rarely accessed or for meeting compliance requirements.
 
 ### 2.2. Volume Types
-There are several volume types to choose from. Since OpenRemote exclusively uses SSD drives, HDD drives will not be included in this list.
+There are several volume types to choose from. Since OpenRemote exclusively uses `SSD` drives, `HDD` drives will not be included in this list.
 
 - `General Purpose gp2/3`: The SSD volume is ideal for a wide range of workloads, including virtual desktops and boot volumes. The minimum volume size is 1 GB, and it can be expanded up to 16 TB. However, this drive does not support multi-attach, meaning it can only be attached to one `EC2` instance at the same time.
-- `iO Block Express io1/io2`: The SSD volume is optimized for higher IOPS, with a minimum size of 4 GB and the ability to scale up to 64 TB. In addition to its high performance, the drive supports multi-attach, allowing it to be attached to multiple `EC2` instances simultaneously.
+- `iO Block Express io1/io2`: The SSD volume is optimized for higher `IOPS`, with a minimum size of 4 GB and the ability to scale up to 64 TB. In addition to its high performance, the drive supports multi-attach, allowing it to be attached to multiple `EC2` instances simultaneously.
 
 This feature can be particularly useful in OpenRemote's use case for creating test instances or updating a specific instance without downtime.
 
@@ -143,9 +143,9 @@ Pricing varies based on the region where the resources are deployed. Since OpenR
 - `General Purpose gp3`: $0,088/GB per month 
 - `General Purpose gp2`: $0,11/GB per month 
 - `iO Block Express io2`: $0,138/GB per month
-- `iO Block Express io1`: $0,138/GB per month with an additional charge of $0.072 per provisioned IOPS per month
+- `iO Block Express io1`: $0,138/GB per month with an additional charge of $0.072 per provisioned `IOPS` per month
 
-The prices above only reflect storage costs. Additional charges apply for the amount of IOPS and throughput provisioned. Since OpenRemote is not modifying these values and the default values are free of charge, they are not included in the list.
+The prices above only reflect storage costs. Additional charges apply for the amount of `IOPS` and `throughput` provisioned. Since OpenRemote is not modifying these values and the default values are free of charge, they are not included in the list.
 
 Based on the values that are provided in the `CloudFormation` template, OpenRemote is currently using `30 GB` of `gp3` storage.
 The calculation below gives an estimated of their montly storage costs for a single `EC2` instance using `30 GB` of  `gp3` storage .
@@ -188,13 +188,13 @@ The storage capacity in gigabytes available on the drive. The default value is 1
 
 `IOPS`
 The number of operations per second (`IOPS`) the volume can support. By default, this value is set to 3,000, which is also the minimum.
-You can adjust this up to 16,000 IOPS for `gp3` volumes and up to 64,000 or 256,000 `IOPS` for `io1`/`io2` volumes, depending on the volume size.
+You can adjust this up to 16,000 `IOPS` for `gp3` volumes and up to 64,000 or 256,000 `IOPS` for `io1`/`io2` volumes, depending on the volume size.
 
 `Throughput`
 The throughput performance the volume can handle. The default value is set to 125 MB/s, but you can increase it up to 1,000 MB/s based on the amount of `IOPS` you provision. The throughput rate is 0.25 MB/s for each additional `IOPS`.
 
 `Availability Zone`
-The Availability Zone where the volume is being created. The number of available AZs depends on the region where you're creating the volume. To ensure data durability and prevent failures, volumes are replicated within their respective `Availability Zone`.
+The `availability zone` where the volume is being created. The number of available AZs depends on the region where you're creating the volume. To ensure data durability and prevent failures, volumes are replicated within their respective `Availability Zone`.
 To attach an `EBS` volume to an `EC2` instance, the instance must be located in the same `Availability Zone` as the volume.
 
 `Snapshot ID`
@@ -226,7 +226,7 @@ Only instances located in the same availability zone as the `EBS` volume will be
 
 `Device name`
 Select a device name for the `EBS` volume.
-Data volumes typically use names like /dev/sd[a-z], with names between /dev/sd[f-p] being recommended. Root volumes generally use the default `/dev/xvda` name. Each device name can only be used once.
+Data volumes typically use names like `/dev/sd[a-z]`, with names between `/dev/sd[f-p]` being recommended. Root volumes generally use the default `/dev/xvda` name. Each device name can only be used once.
 
 <div style="page-break-after: always;"></div>
 
@@ -358,8 +358,8 @@ To create a snapshot via the management console, You need to configure the follo
 
 <img src="./Media/snapshot_creation.png" width="1000">
 
-- `Source`: You can choose between `Volumes` and `Instances` when creating a snapshot. When creating a snapshot from an instance, you still have the option to exclude the root device or specific data volumes.
-- `Volume/Instance ID`: Depending on the source, you will need to select either the `Volume` or `Instance ID` for which you want to create the snapshot.
+- `Source`: You can choose between `volumes` and `instances` when creating a snapshot. When creating a snapshot from an instance, you still have the option to exclude the root device or specific data volumes.
+- `Volume/Instance ID`: Depending on the source, you will need to select either the `Volume ID` or `Instance ID` for which you want to create the snapshot.
 - `Description`: You have the option to provide a description for the snapshot to make it easier to recognize.
 
 When the snapshot is being created, It will show the `pending` status on the overview page. Creating snapshots can take between 5 min and several hours depending on the volume size.
@@ -374,7 +374,7 @@ After the snaphot is successfully created you will see the `complete` status on 
 
 #### 2.5.2. Restoring snapshots
 
-To restore a snapshot, you can choose to either create a new volume or an `AMI (Amazon Machine Image)`, which can then be used to launch a new instance.
+To restore a snapshot, you can choose to either create a new volume or an `AMI` (Amazon Machine Image), which can then be used to launch a new instance.
 
 <img src="./Media/snapshot_restore.png" width="1000">
 
@@ -407,9 +407,9 @@ To automate snapshot creation, retention, and deletion, you can use `Amazon Data
 
 To create a policy you can either choose between two different options:
 
-- `Default Policy`: The default policy is simple and can only be used to create snapshots from volumes. Customization options are limited. it’s not possible to target specific volumes or instances. Retention settings can only be configured with a maximum of 14 days, and snapshot creation can be scheduled between 1 and 7 days. 
-   Additional features such as fast snapshot restore, archiving, and sharing are not available when using this policy.
-- `Custom Policy`: With a custom policy, there are no limits. You can target volumes and instances based on tags. It allows up to 4 different schedules, which can run at any time using a cron expression. Advanced features such as archiving, deletion, sharing, and running scripts are also available with this option.
+- `Default Policy`: The default policy is simple and can only be used to create snapshots from volumes. Customization options are limited. it’s not possible to target specific volumes or instances. Retention settings can only be configured with a maximum of `14` days, and snapshot creation can be scheduled between `1` and `7` days. 
+   Additional features such as `fast snapshot restore`, `archiving`, and `sharing` are not available when using this policy.
+- `Custom Policy`: With a custom policy, there are no limits. You can target volumes and instances based on tags. It allows up to `4` different schedules, which can run at any time using a cron expression. Advanced features such as `archiving`, `deletion`, `sharing`, and `running scripts` are also available with this option.
 
 <img src="./Media/lifecycle_policy.png" width="1000">
 
@@ -424,14 +424,14 @@ To create an `Custom Policy` within the management console, you need to configur
 
 <img src="./Media/lifecycle_policy_schedule.png" width="1000">
 
-After that, you can create a schedule to specify how often the snapshots should be created. With a `Custom Policy`, you can configure up to 4 different schedules. At this stage, you can also set the retention period, determining how long the snapshots will persist. This can be specified either as a number of days or based on the number of recurring snapshots.
+After that, you can create a schedule to specify how often the snapshots should be created. With a `Custom Policy`, you can configure up to `4` different schedules. At this stage, you can also set the retention period, determining how long the snapshots will persist. This can be specified either as a number of days or based on the number of recurring snapshots.
 
 Optionally, You can configure a few advanced settings such as:
 
 - `Tags`: You can specify tags that need to apply on a specifc snapshot, or you can simply copy the tags from the resource.
-- `Snapshot archiving`: You can specify if the snapshot needs to be archived, this setting is only available when the schedule creates an snapshot at least every 28 days.
+- `Snapshot archiving`: You can specify if the snapshot needs to be archived, this setting is only available when the schedule creates an snapshot at least every `28` days.
 - `Fast Snapshot Restore`: You can specify if fast snapshot restore needs to be enabled for the snapshots that are being created by this policy. Fast Snapshot restore is expensive, so only enable this feature when it's really necessary
-- `Cross Region Copy`: You can specify if the snapshot needs to be copied to other regions. You can copy snapshots up to three different regions.
+- `Cross Region Copy`: You can specify if the snapshot needs to be copied to other regions. You can copy snapshots up to `3` different regions.
 - `Cross Account Copy`: You can specify the AWS Account IDS with who you want to share the snapshots created with this policy.
 - `Pre/post scripts`: If you have selected instance as an resource type, you can specify which scripts need to be executed on the `EC2` machine before and after snapshot creation.
 
@@ -579,7 +579,7 @@ Unfortunately, this approach wasn't successful as I encountered various issues r
 
 <img src="./Media/postgres_error.png" width="1000">
 
-After investigating the issue I tried to give the `postgres` user the required permissions with the following command
+After investigating the issue I tried to give the `postgres` user the required permissions with the following command:
 
 ```sh
 sudo chown -R 999:999 /or-data
@@ -727,8 +727,8 @@ After the first succesful attempt, I continued my investigation by examining the
 These volumes are automatically created by Docker during the execution of the `Docker Compose` file. However, by adding the `external: true` property, `Docker` will not create the volume but instead look for an existing one.
 
 ```
-  postgresql-data:
-   external: true
+postgresql-data:
+  external: true
 ```
 
 The volume must exist with the exact name as described before the script runs as `Docker` will not create `external` volumes.
@@ -869,7 +869,7 @@ The second approach is working, but to improve this setup further, I made some a
 
 <img src="./Media/ls_unordered.png" width="1000">
 
-To solve this issue, I created multiple `named` volumes using the `Docker CLI` command and pointed them to subdirectories within the main directory. I also assigned them the same names currently used in the `Docker Compose` file. This ensures that no seperate volume needs to be added and we're only using the existing ones.
+To solve this issue, I created multiple `named` volumes using the `Docker CLI` command and pointed them to subdirectories within the main directory. I also assigned them the same names currently used in the `Docker Compose` file. This ensures that no separate volume needs to be added and we're only using the existing ones.
 
 ```sh
 sudo docker volume create -d local -o type=block -o device=/or-data/proxy -o o=bind proxy-data
@@ -977,7 +977,7 @@ The files are now structered in different subfolders
 <img src="./Media/ls_folders.png" width="1000">
 
 Lastly, I added an `environment` variable to make this approach more modular and easily configurable. The environment variable `${OR_EXTERNAL_VOLUME:-false}` is included in the volume block at the top of the file.
-If no value is provided, the default value of `false` is applied, meaning the data will be stored on the same root device. If the value is set to `true`, `Docker` will search for the external volume in the list and use that one if it exists.
+If no value is provided, the default value of `false` is applied, meaning the data will be stored on the same `root` device. If the value is set to `true`, `Docker` will search for the external volume in the list and use that one if it exists.
 
 The user can change the `environment` variable be adding it to the `Docker Compose` start command like so:
 
@@ -1094,7 +1094,7 @@ services:
 ````
 
 In this setup, the named `volumes` are now automatically created by `Docker` with the options I previously specified in the `CLI` command. I added `environment` variables so that each `container` can have its own location for storing data. This approach also eliminates the need for the `PGDATA` variable.
-If no location is provided, `Docker` will use the default location on the root device itself.
+If no location is provided, `Docker` will use the default location on the `root` device itself.
 
 The start command looks like this.
 
@@ -1128,24 +1128,24 @@ The test setup is using the following resources within the `OpenRemote` software
 #### 3.6.2. Test Cases
 The following test cases are described and executed:
 
-| Test cases                                                                                                                                                                                                                  | Machine is booting properly | OpenRemote is starting | The data is available | No data is missing | Agents are connected | No errors occured |
-| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------- | ---------------------- | --------------------- | ------------------ | -------------------- | ----------------- |
-| 1. Connect the EBS data volume to a new EC2 instance while the OpenRemote software is active.                                                                                                                               | ✅                           | ✅                      | ✅                     | ✅                  | ✅                    | ✅                 |
-| 2. Connect the EBS data volume to a new EC2 instance while the OpenRemote software is inactive.                                                                                                                             | ✅                           | ⚠️                      | ⚠️                     | ⚠️                  | ⚠️                    | ⚠️                 |
-| 3. Disconnect the EBS data volume from a running EC2 instance with the OpenRemote software active.                                                                                                                          | ✅                           | ✅                      | ✅                     | ✅                  | ✅                    | ✅                 |
-| 4. Disconnect the EBS data volume from a running EC2 instance while the OpenRemote software is inactive.                                                                                                                    | ✅                           | ✅                      | ✅                     | ✅                  | ✅                    | ✅                 |
-| 5. Start OpenRemote with the newly connected and configured EBS data volume with an active TLS (Let's encrypt) certificate and TLD (Domain) using Amazon Route53.                                                           | ✅                           | ✅                      | ✅                     | ✅                  | ✅                    | ✅                 |
-| 6. Restart OpenRemote with the newly connected and configured EBS data volume with the newly connected and configured EBS data volume with an active TLS (Let's encrypt) certificate and TLD (Domain) using Amazon Route53. | ✅                           | ✅                      | ✅                     | ✅                  | ✅                    | ✅                 |
-| 7. Reboot EC2 machine with the newly connected and configured EBS data volume with the newly connected and configured EBS data volume with an active TLS (Let's encrypt) certificate and TLD (Domain) using Amazon Route53. | ✅                           | ✅                      | ✅                     | ✅                  | ✅                    | ✅                 |
-| 8. Stop EC2 machine with the newly connected and configured EBS data volume with the newly connected and configured EBS data volume with an active TLS (Let's encrypt) certificate and TLD (Domain) using Amazon Route53.   | ✅                           | ✅                      | ✅                     | ✅                  | ✅                    | ✅                 |
-| 9. Start OpenRemote with the newly connected and configured EBS data volume with an active TLS (Let's encrypt) certificate and without an connected TLD (Domain) using Amazon Route53.                                      | ✅                           | ✅                      | ✅                     | ✅                  | ✅                    | ✅                 |
-| 10. Restart OpenRemote with the newly connected and configured EBS data volume with an active TLS (Let's encrypt) certificate and without an connected TLD (Domain) using Amazon Route53.                                   | ✅                           | ✅                      | ✅                     | ✅                  | ✅                    | ✅                 |
-| 11. Reboot OpenRemote with the newly connected and configured EBS data volume with an active TLS (Let's encrypt) certificate and without an connected TLD (Domain) using Amazon Route53.                                    | ✅                           | ✅                      | ✅                     | ✅                  | ✅                    | ✅                 |
-| 12. Stop OpenRemote with the newly connected and configured EBS data volume with an active TLS (Let's encrypt) certificate and without an connected TLD (Domain) using Amazon Route53.                                      | ✅                           | ✅                      | ✅                     | ✅                  | ✅                    | ✅                 |
-| 13. Start OpenRemote with the newly connected and configured EBS data volume with the newly connected and configured EBS data volume with an active TLS (Let's encrypt) certificate and using the PublicIP.                 | ✅                           | ✅                      | ✅                     | ✅                  | ✅                    | ✅                 |
-| 14. Restart OpenRemote with the newly connected and configured EBS data volume with the newly connected and configured EBS data volume with an active TLS (Let's encrypt) certificate and using the PublicIP.               | ✅                           | ⚠️                      | ⚠️                     | ⚠️                  | ⚠️                    | ⚠️                 |
-| 15. Reboot EC2 machine with the newly connected and configured EBS data volume with the newly connected and configured EBS data volume with an active TLS (Let's encrypt) certificate and using the PublicIP.               | ✅                           | ⚠️                      | ⚠️                     | ⚠️                  | ⚠️                    | ⚠️                 |
-| 16. Stop EC2 machine with the newly connected and configured EBS data volume with the newly connected and configured EBS data volume with an active TLS (Let's encrypt) certificate and using the PublicIP.                 | ✅                           | ⚠️                      | ⚠️                     | ⚠️                  | ⚠️                    | ⚠️                 |
+| Test cases                                                                                                                                                                                                                           | Machine is booting properly | OpenRemote is starting | The data is available | No data is missing | Agents are connected | No errors occured |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------- | ---------------------- | --------------------- | ------------------ | -------------------- | ----------------- |
+| 1. Connect the `EBS` data volume to a new `EC2` instance while the OpenRemote software is active.                                                                                                                                    | ✅                           | ✅                      | ✅                     | ✅                  | ✅                    | ✅                 |
+| 2. Connect the `EBS` data volume to a new `EC2` instance while the OpenRemote software is inactive.                                                                                                                                  | ✅                           | ⚠️                      | ⚠️                     | ⚠️                  | ⚠️                    | ⚠️                 |
+| 3. Disconnect the `EBS` data volume from a running `EC2` instance with the OpenRemote software active.                                                                                                                               | ✅                           | ✅                      | ✅                     | ✅                  | ✅                    | ✅                 |
+| 4. Disconnect the `EBS` data volume from a running `EC2` instance while the OpenRemote software is inactive.                                                                                                                         | ✅                           | ✅                      | ✅                     | ✅                  | ✅                    | ✅                 |
+| 5. Start OpenRemote with the newly connected and configured `EBS` data volume with an active TLS (Let's encrypt) certificate and FQDN (Domain) using Amazon `Route53`.                                                               | ✅                           | ✅                      | ✅                     | ✅                  | ✅                    | ✅                 |
+| 6. Restart OpenRemote with the newly connected and configured `EBS` data volume with the newly connected and configured `EBS` data volume with an active TLS (Let's encrypt) certificate and FQDN (Domain) using Amazon `Route53`.   | ✅                           | ✅                      | ✅                     | ✅                  | ✅                    | ✅                 |
+| 7. Reboot `EC2` machine with the newly connected and configured `EBS` data volume with the newly connected and configured `EBS` data volume with an active TLS (Let's encrypt) certificate and FQDN (Domain) using Amazon `Route53`. | ✅                           | ✅                      | ✅                     | ✅                  | ✅                    | ✅                 |
+| 8. Stop `EC2` machine with the newly connected and configured `EBS` data volume with the newly connected and configured `EBS` data volume with an active TLS (Let's encrypt) certificate and FQDN (Domain) using Amazon `Route53`.   | ✅                           | ✅                      | ✅                     | ✅                  | ✅                    | ✅                 |
+| 9. Start OpenRemote with the newly connected and configured `EBS` data volume with an active TLS (Let's encrypt) certificate and without an connected FQDN (Domain) using Amazon `Route53`.                                          | ✅                           | ✅                      | ✅                     | ✅                  | ✅                    | ✅                 |
+| 10. Restart OpenRemote with the newly connected and configured `EBS` data volume with an active TLS (Let's encrypt) certificate and without an connected FQDN (Domain) using Amazon `Route53`.                                       | ✅                           | ✅                      | ✅                     | ✅                  | ✅                    | ✅                 |
+| 11. Reboot OpenRemote with the newly connected and configured `EBS` data volume with an active TLS (Let's encrypt) certificate and without an connected FQDN (Domain) using Amazon `Route53`.                                        | ✅                           | ✅                      | ✅                     | ✅                  | ✅                    | ✅                 |
+| 12. Stop OpenRemote with the newly connected and configured `EBS` data volume with an active TLS (Let's encrypt) certificate and without an connected FQDN (Domain) using Amazon `Route53`.                                          | ✅                           | ✅                      | ✅                     | ✅                  | ✅                    | ✅                 |
+| 13. Start OpenRemote with the newly connected and configured `EBS` data volume with the newly connected and configured `EBS` data volume with an active TLS (Let's encrypt) certificate and using the `Public IP`.                   | ✅                           | ✅                      | ✅                     | ✅                  | ✅                    | ✅                 |
+| 14. Restart OpenRemote with the newly connected and configured `EBS` data volume with the newly connected and configured `EBS` data volume with an active TLS (Let's encrypt) certificate and using the `Public IP`.                 | ✅                           | ⚠️                      | ⚠️                     | ⚠️                  | ⚠️                    | ⚠️                 |
+| 15. Reboot `EC2` machine with the newly connected and configured `EBS` data volume with the newly connected and configured `EBS` data volume with an active TLS (Let's encrypt) certificate and using the `Public IP`.               | ✅                           | ⚠️                      | ⚠️                     | ⚠️                  | ⚠️                    | ⚠️                 |
+| 16. Stop `EC2` machine with the newly connected and configured `EBS` data volume with the newly connected and configured `EBS` data volume with an active TLS (Let's encrypt) certificate and using the `Public IP`.                 | ✅                           | ⚠️                      | ⚠️                     | ⚠️                  | ⚠️                    | ⚠️                 |
 
 The test results indicate that when using a `Public IP`, the OpenRemote software occasionally fails to start properly. 
 When reviewing the logs, it turns out that the `proxy` container sometimes encounters issues while setting the self-signed certificate.
@@ -1165,7 +1165,7 @@ docker-compose up
 <div style="page-break-after: always;"></div>
 
 ## 4. Advise & Summary
-In this section, I will outline the final results of this research and the next steps, as discussed.
+In this section, I will outline the final results of this research and the next steps as discussed.
 
 ### 4.1. Advise
 After exploring the possibilities of decoupling the IoT data and storing it on a separate `EBS` data volume, I conclude that several approaches are effective.
@@ -1176,7 +1176,7 @@ Based on the feedback from various team members, I've received several keypoints
 
   - Investigate the possibilities to mount the seperate `EBS` data volume to the existing `Docker` directory on the root volume instead of creating an new directory.
   - Re-create the prototype in the existing CI/CD pipeline (`provision host`) including features such as automatic `create/mount` volume, `attach/detach` volume script, `CloudWatch` metrics and automate the `snapshot` creation process.
-  - Investigate the possibilities for `blue/green deployments` and multi-attach `EBS` volumes.
+  - Investigate the possibilities for `blue/green deployments` and multi-attach `EBS` data volumes.
 
 ### 4.3. Next Steps
 In the coming weeks, I will integrate and test my prototype within the `provision host` CI/CD workflow.
@@ -1191,4 +1191,4 @@ The following sources are used for this research:
 - Amazon EBS snapshots - Amazon EBS. (n.d.). https://docs.aws.amazon.com/ebs/latest/userguide/ebs-snapshots.html
 - Automate backups with Amazon Data Lifecycle Manager - Amazon EBS. (n.d.). https://docs.aws.amazon.com/ebs/latest/userguide/snapshot-lifecycle.html
 - High-Performance Block Storage– Amazon EBS Pricing – Amazon Web Services. (n.d.). Amazon Web Services, Inc. https://aws.amazon.com/ebs/pricing/
-- Several StackOverflow posts for debugging problems while creating prototypes.
+- Several Stackoverflow posts for debugging problems while creating prototypes.
