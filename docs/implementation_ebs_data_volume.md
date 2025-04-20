@@ -36,9 +36,9 @@ This document provides a detailed overview of how I implemented the creation and
   - [3.8. Move provisioning DLM Policy to create-ec2 stack](#38-move-provisioning-dlm-policy-to-create-ec2-stack)
   - [3.9. Move provisioning EBS data volume to create-ec2 stack](#39-move-provisioning-ebs-data-volume-to-create-ec2-stack)
 - [4. Additional changes after second feedback round](#4-additional-changes-after-second-feedback-round)
-- [4.1. Changing variable names and comments](#41-changing-variable-names-and-comments)
-- [4.2. Improving the filesystem check in the SSM document](#42-improving-the-filesystem-check-in-the-ssm-document)
-- [4.3. Replace contents of existing volume](#43-replace-contents-of-existing-volume)
+  - [4.1. Changing variable names and comments](#41-changing-variable-names-and-comments)
+  - [4.2. Improving the filesystem check in the SSM document](#42-improving-the-filesystem-check-in-the-ssm-document)
+  - [4.3. Replace contents of existing volume](#43-replace-contents-of-existing-volume)
 - [5. Tests](#5-tests)
 
 </div>
@@ -1303,7 +1303,7 @@ I’ve also removed the steps for creating the filesystem and mounting the volum
 ## 4. Additional changes after second feedback round
 After refining my implementation based on the initial feedback, I requested another review. This time only a few minor changes were suggested.
 
-## 4.1. Changing variable names and comments
+### 4.1. Changing variable names and comments
 
 To mantain consistency in naming, I replaced the slash with a hyphen in the `EBS` data volume name. This name appears in the AWS management console to make it easier to identify each volume.
 
@@ -1317,13 +1317,13 @@ I also corrected a few comments to fix spelling errors.
 
 <img src="./Media/review_12.png" width="1000">
 
-## 4.2. Improving the filesystem check in the SSM document
+### 4.2. Improving the filesystem check in the SSM document
 As mentioned [here](#35-improve-check-if-filesystem-exists) I previously explained that the current implementation isn't ideal. When the volume is attached for the first time, there is no filesystem yet. which results in a 900 second wait loop before the initial filesystem is created.
 I’ve improved this by combining the volume attachment and filesystem check into a single command. Since the filesystem check depends on the volume being attached, running them separately can cause issues since these commands are running asynchronous and don’t wait for each other to finish.
 
 <img src="./Media/review_13.png" width="1000">
 
-## 4.3. Replace contents of existing volume
+### 4.3. Replace contents of existing volume
 One of my colleagues is wondering if we could replace the contents of the existing volume with a `snapshot`.
 Unfortunately, this is not possible as snapshots can only be specified during the initial creation of the volume. Additionally, accessing the contents of the `snapshot` directly is difficult because snapshots are stored in a hidden `S3` bucket managed by Amazon.
 
