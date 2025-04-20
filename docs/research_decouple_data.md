@@ -118,7 +118,7 @@ Additionally, by detaching the data from the root volume, there is no risk of da
 In this section, I will discuss both the opportunities and challenges I have encountered during my research on Amazon Elastic Block Storage (`EBS`).
 
 ### 2.1. What is Amazon Elastic Block Storage (EBS)?
-Amazon Block Storage provides scalable, high-performance block storage that integrates seamlessly with Amazon Elastic Compute Cloud (EC2). You can create volumes that attach to `EC2` instances, enabling you to store files and install applications just like on a traditional hard drive. Additionally, you can create snapshots, which are point-in-time backups of your volumes. These snapshots allow for quick data recovery and you can easily create new volumes from a snapshot.
+Amazon Block Storage provides scalable, high-performance block storage that integrates seamlessly with Amazon Elastic Compute Cloud (`EC2`). You can create volumes that attach to `EC2` instances, enabling you to store files and install applications just like on a traditional hard drive. Additionally, you can create snapshots, which are point-in-time backups of your volumes. These snapshots allow for quick data recovery and you can easily create new volumes from a snapshot.
 
 Amazon `EBS` offers the following features:
 
@@ -131,7 +131,7 @@ Amazon `EBS` offers the following features:
 There are several volume types to choose from. Since OpenRemote exclusively uses SSD drives, HDD drives will not be included in this list.
 
 - `General Purpose gp2/3`: The SSD volume is ideal for a wide range of workloads, including virtual desktops and boot volumes. The minimum volume size is 1 GB, and it can be expanded up to 16 TB. However, this drive does not support multi-attach, meaning it can only be attached to one `EC2` instance at the same time.
-- `iO Block Express io1/io2`: The SSD volume is optimized for higher IOPS, with a minimum size of 4 GB and the ability to scale up to 64 TB. In addition to its high performance, the drive supports multi-attach, allowing it to be attached to multiple `EC2` instances simultaneously. <br/>
+- `iO Block Express io1/io2`: The SSD volume is optimized for higher IOPS, with a minimum size of 4 GB and the ability to scale up to 64 TB. In addition to its high performance, the drive supports multi-attach, allowing it to be attached to multiple `EC2` instances simultaneously.
 
 This feature can be particularly useful in OpenRemote's use case for creating test instances or updating a specific instance without downtime.
 
@@ -158,9 +158,9 @@ $0,138/GB * 30 GB = $4.14 per month.
 When switching to the `io1` volume, the costs would be as follows:
 $0,138/GB * 30 GB = $4.14 per month.
 
-As you can see, the prices for both `io1` and `io2` are the same, despite the additional `IOPS` charge. This is because there is a free baseline of 3000 IOPS, and OpenRemote is not changing these values.
+As you can see, the prices for both `io1` and `io2` are the same, despite the additional `IOPS` charge. This is because there is a free baseline of 3000 `IOPS`, and OpenRemote is not changing these values.
 
-The price difference between `io` drives and `gp` drives is minimal. When creating an additional volume for storing (IoT) data, the root device can easily be scaled down to reduce costs, as it doesn't require much space. In this case, the costs would be approximately the same.
+The price difference between `io` drives and `gp` drives is minimal. When creating an additional volume for storing IoT data, the root device can easily be scaled down to reduce costs, as it doesn't require much space. In this case, the costs would be approximately the same.
 To further reduce costs, OpenRemote can consider auto-scaling the volumes based on the actual amount of storage needed. Since `EBS` pricing is based on the amount of GB provisioned, not the amount used, this approach can help lower the bill even further.
 
 <div style="page-break-after: always;"></div>
@@ -172,7 +172,7 @@ To further reduce costs, OpenRemote can consider auto-scaling the volumes based 
  - You have an existing Elastic Compute (`EC2`) instance, to attach the new volume.
 
 #### 2.4.2. Creating a new EBS Volume
-There are several methods to create a new Elastic Block Storage (`EBS`) volume, including using the `AWS CLI`, `AWS CloudFormation`, or the Management Console.
+There are several methods to create a new Elastic Block Storage (`EBS`) data volume, including using the `AWS CLI`, `AWS CloudFormation`, or the Management Console.
 
 <img src="./Media/volume_creation.png" width="500">
 
@@ -183,25 +183,25 @@ You can configure the following options:
 Select the type of volume you want to use. The available options are listed [here](#22-volume-types) 
 
 `Size (GB)` <br/>
-The storage capacity in gigabytes available on the drive. The default value is 100 GB, but you can configure EBS volumes ranging from 1 GB to 16,384 GB. <br/>
+The storage capacity in gigabytes available on the drive. The default value is 100 GB, but you can configure `EBS` volumes ranging from 1 GB to 16,384 GB. <br/>
 `EBS` costs are based on the amount of storage you provision, not on how much you actually use. For example, if you provision a 30 GB `EBS` volume but only use 5 GB, you'll still being charged for the entire 30 GB.
 
 `IOPS` <br/>
-The number of operations per second (IOPS) the volume can support. By default, this value is set to 3,000, which is also the minimum. <br/>
-You can adjust this up to 16,000 IOPS for gp3 volumes and up to 64,000 or 256,000 IOPS for io1/io2 volumes, depending on the volume size.
+The number of operations per second (`IOPS`) the volume can support. By default, this value is set to 3,000, which is also the minimum. <br/>
+You can adjust this up to 16,000 IOPS for `gp3` volumes and up to 64,000 or 256,000 `IOPS` for `io1`/`io2` volumes, depending on the volume size.
 
 `Throughput` <br/>
 The throughput performance the volume can handle. The default value is set to 125 MB/s, but you can increase it up to 1,000 MB/s based on the amount of `IOPS` you provision. The throughput rate is 0.25 MB/s for each additional `IOPS`.
 
 `Availability Zone` <br/>
-The Availability Zone where the volume is being created. The number of available AZs depends on the region where you're creating the volume. To ensure data durability and prevent failures, volumes are replicated within their respective Availability Zone. <br/>
-To attach an `EBS` volume to an `EC2` instance, the instance must be located in the same Availability Zone as the volume.
+The Availability Zone where the volume is being created. The number of available AZs depends on the region where you're creating the volume. To ensure data durability and prevent failures, volumes are replicated within their respective `Availability Zone`. <br/>
+To attach an `EBS` volume to an `EC2` instance, the instance must be located in the same `Availability Zone` as the volume.
 
 `Snapshot ID` <br/>
 If you want to create a volume from an existing snapshot, you can select the `Snapshot ID` during volume creation. The data from the snapshot will be available immediately.
 
 `Encryption` <br/>
-You have the option to encrypt the volume. Amazon `EBS` encryption uses the Advanced Encryption Standard (AES-256) algorithm along with Amazon's Key Management Service (KMS). <br/>
+You have the option to encrypt the volume. Amazon `EBS` encryption uses the Advanced Encryption Standard (AES-256) algorithm along with Amazon's Key Management Service (`KMS`). <br/>
 You can either use the default encryption key or create your own. Using your own key provides greater flexibility, including the ability to create, rotate, disable, and define access controls and security audits.
 
 It is also possible to create `EBS` volumes while launching an `EC2` instance. These volumes are automatically attached to the instance.
@@ -226,7 +226,7 @@ Only instances located in the same availability zone as the `EBS` volume will be
 
 `Device name` <br/>
 Select a device name for the `EBS` volume. <br/>
-Data volumes typically use names like /dev/sd[a-z], with names between /dev/sd[f-p] being recommended. Root volumes generally use the default /dev/xvda name. Each device name can only be used once.
+Data volumes typically use names like /dev/sd[a-z], with names between /dev/sd[f-p] being recommended. Root volumes generally use the default `/dev/xvda` name. Each device name can only be used once.
 
 <div style="page-break-after: always;"></div>
 
@@ -332,8 +332,8 @@ When you succesfully created the entry in the `/etc/fstab` file, it should look 
 
 <img src="./Media/fstab_complete.png" width="1000">
 
-If this entry is not created, the system will not only skip mounting the volume on reboot, but it can also result in mount errors when the volume is attached to another `EC2` instance. <br/>
-This happens because device names can change depending on the machine, but the `UUID` remains consistent throughout the volume's lifespan. <br/><br/>
+If this entry is not created, the system will not only skip mounting the volume on reboot, but it can also result in mount errors when the volume is attached to another `EC2` instance.
+This happens because device names can change depending on the machine, but the `UUID` remains consistent throughout the volume's lifespan.
 If the system detects that you are attempting to mount the volume that was previously mounted to a different device name, the following error will be thrown:
 
 <img src="./Media/mount_nouuid.png" width="1000">
@@ -349,7 +349,7 @@ Creating the `fstab` entry ensures that the device is mounted using its `UUID`, 
 <div style="page-break-after: always;"></div>
 
 ### 2.5. EBS Snapshots
-This section explains how snapshots (backups) can be created/restored with the built-in snapshot functionality.
+This section explains how `snapshots` (backups) can be created/restored with the built-in snapshot functionality.
 
 #### 2.5.1. Manually creating snapshots
 
@@ -362,11 +362,11 @@ To create a snapshot via the management console, You need to configure the follo
 - `Volume/Instance ID`: Depending on the source, you will need to select either the `Volume` or `Instance ID` for which you want to create the snapshot.
 - `Description`: You have the option to provide a description for the snapshot to make it easier to recognize.
 
-When the snapshot is being created, It will show the `Pending` status on the overview page. Creating snapshots can take between 5 min and several hours depending on the volume size.
+When the snapshot is being created, It will show the `pending` status on the overview page. Creating snapshots can take between 5 min and several hours depending on the volume size.
 
 <img src="./Media/snapshot_progress.png" width="1000">
 
-After the snaphot is successfully created you will see the `Complete` status on the overview page.
+After the snaphot is successfully created you will see the `complete` status on the overview page.
 
 <img src="./Media/snapshot_complete.png" width="1000">
 
@@ -376,16 +376,16 @@ After the snaphot is successfully created you will see the `Complete` status on 
 
 To restore a snapshot, you can choose to either create a new volume or an `AMI (Amazon Machine Image)`, which can then be used to launch a new instance.
 
-<img src="./Media/snapshot_restore.png" width="500"><br/>
+<img src="./Media/snapshot_restore.png" width="500">
 
 You can configure the volume in the same way as you would when creating a new volume, but by specifying a `Snapshot ID`. <br/>
 Once the volume is created, you can attach and mount it to an `EC2` instance. The data from the snapshot will be immediately available.
 
-<img src="./Media/volume_creation.png" width="500"><br/>
+<img src="./Media/volume_creation.png" width="500"><
 
 #### 2.5.3. Pricing
 Pricing varies based on the region where the resources are deployed. Since OpenRemote uses `eu-west-1` as their primary region, the prices listed below will apply on this. 
-`EBS` Snapshot pricing is very simple and only has a few different options:
+`EBS` snapshot pricing is very simple and only has a few different options:
 
 - `Standard Pricing`: $0,05/GB per month 
 - `Archive Pricing`: $0,0125/GB per month 
@@ -393,8 +393,7 @@ Pricing varies based on the region where the resources are deployed. Since OpenR
 The pricing above reflects storage costs. There are no charges for restoring snapshots. However, restoring data from archive will incur a cost of $0.03 per GB of data retrieved.
 
 If snapshots are created with the `Fast Snapshot Restore` option enabled, you are charged in `Data Service Units (DSU)` with a minimum charge of one hour. These charges continue as long as the option remains enabled for the snapshot, which can increase your bill quickly. Therefore, it's recommended to enable this feature only when absolutely necessary.
-
-The DSU pricing for `eu-west-1` is $0.83 per 1 DSU hour for each snapshot with this feature enabled in a specific availability zone.
+The DSU pricing for `eu-west-1` is $0.83 per 1 DSU hour for each snapshot with this feature enabled in a specific `availability zone`.
 
 When creating a volume from a snapshot with `Fast Snapshot Restore` enabled, it will immediately deliver all its provisioned performance `(IOPS)`, eliminating the latency usually associated with I/O operations when accessing the volume for the first time. This ensures that the volume is fully initialized upon creation.
 
@@ -408,21 +407,22 @@ To automate snapshot creation, retention, and deletion, you can use `Amazon Data
 
 To create a policy you can either choose between two different options:
 
-- `Default Policy`: The default policy is simple and can only be used to create snapshots from volumes. Customization options are limited. it’s not possible to target specific volumes or instances. Retention settings can only be configured with a maximum of 14 days, and snapshot creation can be scheduled between 1 and 7 days. <br/> Additional features such as fast snapshot restore, archiving, and sharing are not available when using this policy. <br/> <br/>
+- `Default Policy`: The default policy is simple and can only be used to create snapshots from volumes. Customization options are limited. it’s not possible to target specific volumes or instances. Retention settings can only be configured with a maximum of 14 days, and snapshot creation can be scheduled between 1 and 7 days. 
+   Additional features such as fast snapshot restore, archiving, and sharing are not available when using this policy.
 - `Custom Policy`: With a custom policy, there are no limits. You can target volumes and instances based on tags. It allows up to 4 different schedules, which can run at any time using a cron expression. Advanced features such as archiving, deletion, sharing, and running scripts are also available with this option.
 
-<img src="./Media/lifecycle_policy.png" width="500"><br/>
+<img src="./Media/lifecycle_policy.png" width="500">
 
 In this example, I have created a `Custom Policy` because it offers more flexibility and is better suited to the needs of OpenRemote.
 To create an `Custom Policy` within the management console, you need to configure the following options:
 
 - `Target resource types`: You can either choose between volumes or instances. You can then specify which resource you want to select based on different tags such as name and id.
 - `Description`: You can enter a description to easy identify the policy.
-- `IAM Role`: To create snapshots, Lifecycle manager must have the approriate permissions. You can either select an existing `IAM` role or use the default one. If Lifecycle manager has insufficient permissions, the snapshot process will throw an error.
-- `Policy status`: You can specify if you want to enable this policy after creation. By doing so, Lifecycle manager wil start the creation of snapshots inmmediately according to the configured schedule.
+- `IAM Role`: To create snapshots, Lifecycle Manager must have the approriate permissions. You can either select an existing `IAM` role or use the default one. If Lifecycle Manager has insufficient permissions, the snapshot process will throw an error.
+- `Policy status`: You can specify if you want to enable this policy after creation. By doing so, Lifecycle Manager wil start the creation of snapshots inmmediately according to the configured schedule.
 - `Exclude devices`: If you have selected the instance as an resource type, you have additionaly the option to exclude the root volume or specfic data volumes that are attached to the `EC2` instance.
 
-<img src="./Media/lifecycle_policy_schedule.png" width="500"><br/>
+<img src="./Media/lifecycle_policy_schedule.png" width="500">
 
 After that, you can create a schedule to specify how often the snapshots should be created. With a `Custom Policy`, you can configure up to 4 different schedules. At this stage, you can also set the retention period, determining how long the snapshots will persist. This can be specified either as a number of days or based on the number of recurring snapshots.
 
@@ -432,12 +432,12 @@ Optionally, You can configure a few advanced settings such as:
 - `Snapshot archiving`: You can specify if the snapshot needs to be archived, this setting is only available when the schedule creates an snapshot at least every 28 days.
 - `Fast Snapshot Restore`: You can specify if fast snapshot restore needs to be enabled for the snapshots that are being created by this policy. Fast Snapshot restore is expensive, so only enable this feature when it's really necessary
 - `Cross Region Copy`: You can specify if the snapshot needs to be copied to other regions. You can copy snapshots up to three different regions.
-- `Cross Account Copy`: You can specify the `AWS Account IDS` with who you want to share the snapshots created with this policy.
-- `Pre/post scripts`: If you have selected Instance as an resource type, you can specify which scripts need to be executed on the `EC2` machine before and after snapshot creation.
+- `Cross Account Copy`: You can specify the AWS Account IDS with who you want to share the snapshots created with this policy.
+- `Pre/post scripts`: If you have selected instance as an resource type, you can specify which scripts need to be executed on the `EC2` machine before and after snapshot creation.
 
 Once you have successfully created the policy, it will appear in the list. Based on the policy status, it will immediately begin executing according to the schedule you provided. 
 
-<img src="./Media/lifecycle_policy_list.png" width="500"><br/>
+<img src="./Media/lifecycle_policy_list.png" width="500">
 
 <div style="page-break-after: always;"></div>
 
@@ -568,7 +568,7 @@ In my approach, I aim to make the solution as modular as possible, ensuring that
 
 ### 3.2. Approach 1 (Bind Mount)
 
-In my first approach, I tried to replace the `named` volumes with the directory that is mounted on the seperate `EBS` volume. This way, the data will be stored directly on the (seperate) block device.
+In my first approach, I tried to replace the `named` volumes with the directory that is mounted on the seperate `EBS` volume. This way, the data will be stored directly on the seperate block device.
 
 ```sh
     volumes:
@@ -577,7 +577,7 @@ In my first approach, I tried to replace the `named` volumes with the directory 
 
 Unfortunately, this approach wasn't successful as I encountered various issues related to permissions. The `PostgresSQL` `container` couldn't start because it has insuficcient permissions. 
 
-<img src="./Media/postgres_error.png" width="500"><br/>
+<img src="./Media/postgres_error.png" width="500">
 
 After investigating the issue I tried to give the `postgres` user the required permissions with the following command
 
@@ -593,7 +593,7 @@ sudo chmod -R 777 /or-data
 ```
 
 This command grants full permissions (`777`) to the `/or-data` directory for read/write operations. While combining these commands sometimes resolves the issue, the problem reoccurs after rebooting the machine or the containers. <br/>
-I continued my investigation and found an interesting note in the `PostgreSQL` documentation on `DockerHub`
+I continued my investigation and found an interesting note in the `PostgreSQL` documentation on `Dockerhub`
 
 <img src="./Media/postgres_dockerhub.png" width="500"><br/>
 
@@ -718,12 +718,12 @@ By adding these `variables`, you can define the storage location for each `conta
 OR_HOSTNAME=<PUBLIC IP> OR_PROXY_PATH=/or-data/proxy OR_MANAGER_PATH=/or-data/manager OR_POSTGRES_PATH=/or-data/postgres OR_KEYCLOAK_PATH=/or-data/keycloak docker-compose -p openremote up -d
 ```
 
-If no value is provided, `Docker` will use the default `named` volumes declared at the top and stores the information on the `root` device. <br/>
+If no value is provided, `Docker` will use the default `named` volumes declared at the top and stores the information on the `root` device.
 
 <div style="page-break-after: always;"></div>
 
 ### 3.3. Approach 2 (Named volumes)
-After the first succesful attempt, I continued my investigation by examining the existing `named` volumes in the `Docker Compose` file. <br/>
+After the first succesful attempt, I continued my investigation by examining the existing `named` volumes in the `Docker Compose` file.
 These volumes are automatically created by Docker during the execution of the `Docker Compose` file. However, by adding the `external: true` property, `Docker` will not create the volume but instead look for an existing one.
 
 ```
@@ -740,13 +740,13 @@ sudo docker volume create -d local -o type=block -o device=/or-data -o o=bind or
 
 With the `-d` flag, you can specify the driver that `Docker` uses for the volume. The default driver is `local`, which I have used for this approach. While there are some AWS `EBS` volume drivers available online, I found out that they are either no longer maintained or rarely updated.
 
-<img src="./Media/docker_plugin_1.png" width="500"><br/>
-<img src="./Media/docker_plugin_2.png" width="200"><br/>
+<img src="./Media/docker_plugin_1.png" width="500">
+<img src="./Media/docker_plugin_2.png" width="200">
 
 The `o` flag allows you to configure various settings for the drive. I have configured the following settings:
 
 - `type=block`: This informs Docker that the drive is a `block` device (such as a hard disk).
-- `device=/or-data`: This tells Docker that the volume directory will be set to `/or-data`. The location of the EBS volume.
+- `device=/or-data`: This tells Docker that the volume directory will be set to `/or-data`. The location of the `EBS` volume.
 - `o=bind`: This option is crucial! It ensures that the data for this volume is mapped to the `device` location. Without this option, the folder will remain empty, and the data will not be available on the device.
 
 Lastly, the name of the volume will be set to `or-data`. This name must be used within the `Docker Compose` file so Docker can recognize the volume.
@@ -757,7 +757,7 @@ After succesful creating the `Docker` volume you can see them in the `volume` li
 sudo docker volume list.
 ```
 
-<img src="./Media/docker_volume_list.png" width="200"><br/>
+<img src="./Media/docker_volume_list.png" width="200">
 
 The `Docker Compose` file should now look like this.
 
@@ -858,16 +858,16 @@ services:
 In this situation, there is a single `named` volume created using the `Docker CLI`. The exact name is attached to the `Docker Compose` file, and the value `external: true` ensures that this volume is not automatically created. instead, the existing one will be used.
 With this setup, the `Docker` `containers` are spinning up and OpenRemote is available on the `Public IP`
 
-<img src="./Media/docker-ps_success.png" width="500"><br/>
-<img src="./Media/openremote_working.png" width="500"><br/>
+<img src="./Media/docker-ps_success.png" width="500">
+<img src="./Media/openremote_working.png" width="500">
 
-<div style="page-break-after: always;"></div>
+<div style="page-break-after: always;">
 
 ### 3.4. Approach 3 (Named volumes)
 
 The second approach is working, but to improve this setup further, I made some additional changes. Currently, all the data is stored in a single `volume/directory` without subfolders, leading to a large mess.
 
-<img src="./Media/ls_unordered.png" width="200"><br/>
+<img src="./Media/ls_unordered.png" width="200">
 
 To solve this issue, I created multiple `named` volumes using the `Docker CLI` command and pointed them to subdirectories within the main directory. I also assigned them the same names currently used in the `Docker Compose` file. This ensures that no seperate volume needs to be added and we're only using the existing ones.
 
@@ -976,7 +976,7 @@ The files are now structered in different subfolders
 
 <img src="./Media/ls_folders.png" width="200"><br/>
 
-Lastly, I added an `environment` variable to make this approach more modular and easily configurable. The environment variable `${OR_EXTERNAL_VOLUME:-false}` is included in the volume block at the top of the file. <br/>
+Lastly, I added an `environment` variable to make this approach more modular and easily configurable. The environment variable `${OR_EXTERNAL_VOLUME:-false}` is included in the volume block at the top of the file.
 If no value is provided, the default value of `false` is applied, meaning the data will be stored on the same root device. If the value is set to `true`, `Docker` will search for the external volume in the list and use that one if it exists.
 
 The user can change the `environment` variable be adding it to the `Docker Compose` start command like so:
@@ -1168,14 +1168,14 @@ docker-compose up
 In this section, I will outline the final results of this research and the next steps, as discussed.
 
 ### 4.1. Advise
-After exploring the possibilities of decoupling the IoT data and storing it on a separate `EBS` data volume, I conclude that several approaches are effective. <br/>
+After exploring the possibilities of decoupling the IoT data and storing it on a separate `EBS` data volume, I conclude that several approaches are effective.
 Based on the prototype, I recommend using the first approach, as it is the simplest option and requires minimal changes to the `Docker Compose` file.
 
 ### 4.2. Feedback from Team Members
 Based on the feedback from various team members, I've received several keypoints for further development.
 
   - Investigate the possibilities to mount the seperate `EBS` data volume to the existing `Docker` directory on the root volume instead of creating an new directory.
-  - Re-create the prototype in the existing CI/CD pipeline (`provision host`) including features such as automatic `create/mount volume`, `detach volume script`, `CloudWatch metrics` and `automate the snapshot process`.
+  - Re-create the prototype in the existing CI/CD pipeline (`provision host`) including features such as automatic `create/mount` volume, `attach/detach` volume script, `CloudWatch` metrics and automate the `snapshot` creation process.
   - Investigate the possibilities for `blue/green deployments` and multi-attach `EBS` volumes.
 
 ### 4.3. Next Steps
