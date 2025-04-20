@@ -78,7 +78,7 @@ For this research, the following methods from the [DOT Framework](https://ictres
 In this section, I will discuss the current situation and the desired outcome. Additionally, it will provide an overview of the bridges that need to be built to reach the new situation.
 
 ### 1.1. Current Situation
-The picture below gives an overview of the current situation. The `EC2` machine is created with an `CloudFormation` template. The machine is using the default `Amazon Linux 2023 AMI` (Amazon Machine Image) and is provisoned with 30 GB of `gp3` (General Purpose) block storage. Optionally there will be a `Elastic IP` assigned to the `EC2` instance.
+The picture below gives an overview of the current situation. The `EC2` machine is created with an `CloudFormation` template. The machine is using the default `Amazon Linux 2023` `AMI` (Amazon Machine Image) and is provisoned with 30 GB of `gp3` (General Purpose) block storage. Optionally there will be a `Elastic IP` assigned to the `EC2` instance.
 The `EBS` volume is used for both the operating system and data storage and no additional volumes or partitions are being created.
 
 During the execution of the `CloudFormation` template `cfn-init` runs several scripts after the machine is booted. These scripts setup the following services on the `EC2` instance.
@@ -174,7 +174,7 @@ To further reduce costs, OpenRemote can consider auto-scaling the volumes based 
 #### 2.4.2. Creating a new EBS Volume
 There are several methods to create a new Elastic Block Storage (`EBS`) data volume, including using the `AWS CLI`, `AWS CloudFormation`, or the Management Console.
 
-<img src="./Media/volume_creation.png" width="500">
+<img src="./Media/volume_creation.png" width="1000">
 
 Creating a new volume through the Management Console is simple and straightforward. 
 You can configure the following options:
@@ -210,13 +210,13 @@ It is also possible to create `EBS` volumes while launching an `EC2` instance. T
 
 #### 2.4.3. Attach Volume to an EC2 Instance
 
-<img src="./Media/volume_detail.png" width="500">
+<img src="./Media/volume_detail.png" width="1000">
 
 After creating an `EBS` volume, you can attach it to an `EC2` instance.
 Data volumes can be attached to either running or stopped instances, while root volumes can only be attached or detached when the instance is fully stopped.
 You can only attach volumes that are in the available state. You can check the status on the details page for each individual volume.
 
-<img src="./Media/volume_attach.png" width="500">
+<img src="./Media/volume_attach.png" width="1000">
 
 To attach a volume to an instance, you need to configure the following options:
 
