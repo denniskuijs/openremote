@@ -241,7 +241,7 @@ sudo lsblk -f
 
 As shown in the image below, the device is recognized, but it does not yet have a filesystem or a mountpoint.
 
-<img src="./Media/lsblk.png" width="2000">
+<img src="./Media/lsblk.png" width="1000">
 
 To create a filesystem, use the command below.
 
