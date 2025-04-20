@@ -110,7 +110,7 @@ To solve this issue, I suggest decoupling the IoT data from the root volume and 
 
 Additionally, by detaching the data from the root volume, there is no risk of data loss during `CloudFormation` updates. This opens up new possibilities, such as creating test instances with specific data or enabling `blue/green deployments`. With this setup, a new instance can be launched with the necessary data while the existing instances are being updated.
 
-<img src="./Media/new_situation_ebs.png" width="500">
+<img src="./Media/new_situation_ebs.png" width="1000">
 
 <div style="page-break-after: always;"></div>
 
