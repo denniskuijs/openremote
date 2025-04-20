@@ -241,7 +241,7 @@ sudo lsblk -f
 
 As shown in the image below, the device is recognized, but it does not yet have a filesystem or a mountpoint.
 
-<img src="./Media/lsblk.png" width="500">
+<img src="./Media/lsblk.png" width="2000">
 
 To create a filesystem, use the command below.
 
@@ -252,12 +252,12 @@ sudo mkfs -t xfs /dev/sdb
 This command creates an `XFS` filesystem on the device named `/dev/sdb`.
 You cannot use the name visible in the `lsblk` output. Instead, you need to use the device name assigned during the `EBS` volume creation. The device names can be found under the storage tab on the details page of the specific `EC2` instance.
 
-<img src="./Media/storage_overview.png" width="500">
+<img src="./Media/storage_overview.png" width="1000">
 
 `XFS` is one of the filesystems you can use, but you can also choose others like `ext3`, `ext4`, and more. Since the root device is also using the `XFS` filesystem, it's recommended to stick with the same for consistency.
 After creating the filesystem, run the `lsblk` command again to verify if the filesystem appears in the list.
 
-<img src="./Media/lsblk_2.png" width="500">
+<img src="./Media/lsblk_2.png" width="1000">
 
 As shown in the picture above, the filesystem has been created successfully, and the device now has an assigned `UUID`.
 It is recommended to copy the device's `UUID` and store it in a safe place, as you will need it in a later step.
@@ -276,7 +276,7 @@ The directory must already exist at the root of the host before you can mount th
 
 After mounting the volume, you can check the status with the `lsblk` command. If the device is successfully mounted, you should see the directory in the list, along with the remaining capacity and the amount of storage used.
 
-<img src="./Media/lsblk_3.png" width="500">
+<img src="./Media/lsblk_3.png" width="1000">
 
 #### 2.4.6. Automatically mount volume on system reboot
 To make sure that the volume is mounted after a system reboot. You need to add a line in the `/etc/fstab/` file. This is the `System File Table` and stores information about the drives.
@@ -356,7 +356,7 @@ This section explains how `snapshots` (backups) can be created/restored with the
 You can create snapshots on specific `EBS` volumes and on instance level.
 To create a snapshot via the management console, You need to configure the following options:
 
-<img src="./Media/snapshot_creation.png" width="500">
+<img src="./Media/snapshot_creation.png" width="1000">
 
 - `Source`: You can choose between `Volumes` and `Instances` when creating a snapshot. When creating a snapshot from an instance, you still have the option to exclude the root device or specific data volumes.
 - `Volume/Instance ID`: Depending on the source, you will need to select either the `Volume` or `Instance ID` for which you want to create the snapshot.
@@ -376,12 +376,12 @@ After the snaphot is successfully created you will see the `complete` status on 
 
 To restore a snapshot, you can choose to either create a new volume or an `AMI (Amazon Machine Image)`, which can then be used to launch a new instance.
 
-<img src="./Media/snapshot_restore.png" width="500">
+<img src="./Media/snapshot_restore.png" width="1000">
 
 You can configure the volume in the same way as you would when creating a new volume, but by specifying a `Snapshot ID`.
 Once the volume is created, you can attach and mount it to an `EC2` instance. The data from the snapshot will be immediately available.
 
-<img src="./Media/volume_creation.png" width="500"><
+<img src="./Media/volume_creation.png" width="1000"><
 
 #### 2.5.3. Pricing
 Pricing varies based on the region where the resources are deployed. Since OpenRemote uses `eu-west-1` as their primary region, the prices listed below will apply on this. 
@@ -411,7 +411,7 @@ To create a policy you can either choose between two different options:
    Additional features such as fast snapshot restore, archiving, and sharing are not available when using this policy.
 - `Custom Policy`: With a custom policy, there are no limits. You can target volumes and instances based on tags. It allows up to 4 different schedules, which can run at any time using a cron expression. Advanced features such as archiving, deletion, sharing, and running scripts are also available with this option.
 
-<img src="./Media/lifecycle_policy.png" width="500">
+<img src="./Media/lifecycle_policy.png" width="1000">
 
 In this example, I have created a `Custom Policy` because it offers more flexibility and is better suited to the needs of OpenRemote.
 To create an `Custom Policy` within the management console, you need to configure the following options:
@@ -422,7 +422,7 @@ To create an `Custom Policy` within the management console, you need to configur
 - `Policy status`: You can specify if you want to enable this policy after creation. By doing so, Lifecycle Manager wil start the creation of snapshots inmmediately according to the configured schedule.
 - `Exclude devices`: If you have selected the instance as an resource type, you have additionaly the option to exclude the root volume or specfic data volumes that are attached to the `EC2` instance.
 
-<img src="./Media/lifecycle_policy_schedule.png" width="500">
+<img src="./Media/lifecycle_policy_schedule.png" width="1000">
 
 After that, you can create a schedule to specify how often the snapshots should be created. With a `Custom Policy`, you can configure up to 4 different schedules. At this stage, you can also set the retention period, determining how long the snapshots will persist. This can be specified either as a number of days or based on the number of recurring snapshots.
 
@@ -437,7 +437,7 @@ Optionally, You can configure a few advanced settings such as:
 
 Once you have successfully created the policy, it will appear in the list. Based on the policy status, it will immediately begin executing according to the schedule you provided. 
 
-<img src="./Media/lifecycle_policy_list.png" width="500">
+<img src="./Media/lifecycle_policy_list.png" width="1000">
 
 <div style="page-break-after: always;"></div>
 
@@ -577,7 +577,7 @@ In my first approach, I tried to replace the `named` volumes with the directory 
 
 Unfortunately, this approach wasn't successful as I encountered various issues related to permissions. The `PostgresSQL` `container` couldn't start because it has insuficcient permissions. 
 
-<img src="./Media/postgres_error.png" width="500">
+<img src="./Media/postgres_error.png" width="1000">
 
 After investigating the issue I tried to give the `postgres` user the required permissions with the following command
 
@@ -595,7 +595,7 @@ sudo chmod -R 777 /or-data
 This command grants full permissions (`777`) to the `/or-data` directory for read/write operations. While combining these commands sometimes resolves the issue, the problem reoccurs after rebooting the machine or the containers.
 I continued my investigation and found an interesting note in the `PostgreSQL` documentation on `Dockerhub`
 
-<img src="./Media/postgres_dockerhub.png" width="500">
+<img src="./Media/postgres_dockerhub.png" width="1000">
 
 They describe the exact problem I encountered and resolve it by overriding the default `Postgres` data location, using the `PGDATA` `environment` variable within the `container`.
 
@@ -603,12 +603,12 @@ They describe the exact problem I encountered and resolve it by overriding the d
 
 After saving the `Docker Compose` file and rebuilding the containers, all the `containers` started without any issues, and OpenRemote is now accessible via the `Public IP`.
 
-<img src="./Media/docker_ps_healthy.png" width="500">
+<img src="./Media/docker_ps_healthy.png" width="1000">
 
 Unfortunately, after detaching the `volume` and connecting it to a separate instance, the same permissions error occurred, even with the `PGDATA` variable added to the `Docker Compose` file.
 Despite resetting the permissions multiple times, the issue remained unresolved.
 
-<img src="./Media/postgres_error.png" width="500">
+<img src="./Media/postgres_error.png" width="1000">
 
 I continued my investigation and attempted to add `subdirectories` for each `container` in the `Docker Compose` file, as shown below:
 
@@ -740,8 +740,8 @@ sudo docker volume create -d local -o type=block -o device=/or-data -o o=bind or
 
 With the `-d` flag, you can specify the driver that `Docker` uses for the volume. The default driver is `local`, which I have used for this approach. While there are some AWS `EBS` volume drivers available online, I found out that they are either no longer maintained or rarely updated.
 
-<img src="./Media/docker_plugin_1.png" width="500">
-<img src="./Media/docker_plugin_2.png" width="200">
+<img src="./Media/docker_plugin_1.png" width="1000">
+<img src="./Media/docker_plugin_2.png" width="1000">
 
 The `o` flag allows you to configure various settings for the drive. I have configured the following settings:
 
@@ -757,7 +757,7 @@ After succesful creating the `Docker` volume you can see them in the `volume` li
 sudo docker volume list.
 ```
 
-<img src="./Media/docker_volume_list.png" width="200">
+<img src="./Media/docker_volume_list.png" width="1000">
 
 The `Docker Compose` file should now look like this.
 
@@ -858,8 +858,8 @@ services:
 In this situation, there is a single `named` volume created using the `Docker CLI`. The exact name is attached to the `Docker Compose` file, and the value `external: true` ensures that this volume is not automatically created. instead, the existing one will be used.
 With this setup, the `Docker` `containers` are spinning up and OpenRemote is available on the `Public IP`
 
-<img src="./Media/docker_ps_success.png" width="500">
-<img src="./Media/openremote_working.png" width="500">
+<img src="./Media/docker_ps_success.png" width="1000">
+<img src="./Media/openremote_working.png" width="1000">
 
 <div style="page-break-after: always;">
 
@@ -867,7 +867,7 @@ With this setup, the `Docker` `containers` are spinning up and OpenRemote is ava
 
 The second approach is working, but to improve this setup further, I made some additional changes. Currently, all the data is stored in a single `volume/directory` without subfolders, leading to a large mess.
 
-<img src="./Media/ls_unordered.png" width="200">
+<img src="./Media/ls_unordered.png" width="1000">
 
 To solve this issue, I created multiple `named` volumes using the `Docker CLI` command and pointed them to subdirectories within the main directory. I also assigned them the same names currently used in the `Docker Compose` file. This ensures that no seperate volume needs to be added and we're only using the existing ones.
 
@@ -974,7 +974,7 @@ services:
 
 The files are now structered in different subfolders
 
-<img src="./Media/ls_folders.png" width="200">
+<img src="./Media/ls_folders.png" width="1000">
 
 Lastly, I added an `environment` variable to make this approach more modular and easily configurable. The environment variable `${OR_EXTERNAL_VOLUME:-false}` is included in the volume block at the top of the file.
 If no value is provided, the default value of `false` is applied, meaning the data will be stored on the same root device. If the value is set to `true`, `Docker` will search for the external volume in the list and use that one if it exists.
