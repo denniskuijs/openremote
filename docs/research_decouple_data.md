@@ -858,7 +858,7 @@ services:
 In this situation, there is a single `named` volume created using the `Docker CLI`. The exact name is attached to the `Docker Compose` file, and the value `external: true` ensures that this volume is not automatically created. instead, the existing one will be used.
 With this setup, the `Docker` `containers` are spinning up and OpenRemote is available on the `Public IP`
 
-<img src="./Media/docker-ps_success.png" width="500">
+<img src="./Media/docker_ps_success.png" width="500">
 <img src="./Media/openremote_working.png" width="500">
 
 <div style="page-break-after: always;">
