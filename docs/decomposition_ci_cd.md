@@ -1,6 +1,6 @@
-<!-- title: Decomposition CI/CD pipeline -->
+<!-- title: Decomposition CI/CD workflow -->
 
-## Decomposition CI/CD pipeline  <!-- omit in toc -->
+## Decomposition CI/CD workflow  <!-- omit in toc -->
 
 ## Context
 This document provides an overview of the flowcharts I created to decomposite the`CI/CD` workflow. By visualizing this into a flowchart I've got a better understanding how the `CI/CD` workflow is functioning.
@@ -18,6 +18,7 @@ This document provides an overview of the flowcharts I created to decomposite th
 ## 1. Flowchart: Provision Account
 
 The picture below visualizes the working of the `provision account` bash script. The bash script will be executed when the `provision account` workflow get triggered by a manual `workflow dispatch`.
+
 This script creates an AWS account for the customer within the AWS account from OpenRemote using AWS `Organizations`. After the account is created the script will provision and configure several components such as the `VPC`, `SSH Key`, `CloudWatch` Dashboards and `Route53` for domain management.
 
 <img src="./Media/provision_account_script.png" width="1000">
