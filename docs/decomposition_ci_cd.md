@@ -26,6 +26,7 @@ This script creates an AWS account for the customer within the AWS account from 
 ## 2. Flowchart: Provision Host
 
 The picture below visualizes the working of the `provision host` bash script. The bash script will be executed when the `provision host` workflow get triggered by a manual `workflow dispatch`
+
 This script provisions an `EC2` instance within the customers AWS account. The instance will be used for running OpenRemote on AWS.
 
 <img src="./Media/provision_host_script.png" width="1000">
