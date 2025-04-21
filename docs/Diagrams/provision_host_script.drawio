@@ -1,0 +1,1387 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36" version="26.0.16">
+  <diagram name="Page-1" id="GQ67vk549_AMt6aL0ahb">
+    <mxGraphModel dx="3180" dy="940" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1200" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-1" target="Z5Rv9_4MmNpo2kXM76Gp-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-1" value="Start" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="320" y="450" width="90" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-6" value="No?" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-2" target="Z5Rv9_4MmNpo2kXM76Gp-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-9" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-2" target="Z5Rv9_4MmNpo2kXM76Gp-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-2" value="Is the hostname set?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="450" y="421.25" width="210" height="87.5" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-4" value="End" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="510" y="690" width="90" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-7" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-5" target="Z5Rv9_4MmNpo2kXM76Gp-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-5" value="Show error message&amp;nbsp;&lt;div&gt;&lt;p style=&quot;margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; line-height: normal; font-family: &amp;quot;Helvetica Neue&amp;quot;; text-align: start;&quot; class=&quot;p1&quot;&gt;&lt;font&gt;&quot;Host must be set&quot;&lt;/font&gt;&lt;/p&gt;&lt;/div&gt;" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="415" y="561" width="280" height="59" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-11" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-8">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="865" y="561" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-15" value="No?" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Z5Rv9_4MmNpo2kXM76Gp-11">
+          <mxGeometry x="-0.3119" y="3" relative="1" as="geometry">
+            <mxPoint x="-3" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-17" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-8" target="Z5Rv9_4MmNpo2kXM76Gp-16">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-8" value="Does the EC2 CloudFormation Template exists?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="750" y="415" width="230" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-12" target="Z5Rv9_4MmNpo2kXM76Gp-4">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="865" y="705" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-12" value="Show error message&amp;nbsp;&lt;div&gt;&lt;p style=&quot;margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; line-height: normal; font-family: &amp;quot;Helvetica Neue&amp;quot;; text-align: start;&quot; class=&quot;p1&quot;&gt;&lt;font&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&quot;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Cannot determine location of cloudformation-create-ec2.yml&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&quot;&lt;/span&gt;&lt;/font&gt;&lt;/p&gt;&lt;/div&gt;" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="725" y="561" width="280" height="59" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-19" value="No?" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-16" target="Z5Rv9_4MmNpo2kXM76Gp-18">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-21" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-16" target="Z5Rv9_4MmNpo2kXM76Gp-20">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-22" value="Yes?" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Z5Rv9_4MmNpo2kXM76Gp-21">
+          <mxGeometry x="-0.1333" y="-2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-16" value="Is the user logged into AWS" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1060" y="421.25" width="210" height="87.5" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-23" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-18" target="Z5Rv9_4MmNpo2kXM76Gp-20">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-18" value="Login to AWS" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1105" y="260" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-20" target="Z5Rv9_4MmNpo2kXM76Gp-25">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1435" y="559" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-27" value="Yes?" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Z5Rv9_4MmNpo2kXM76Gp-26">
+          <mxGeometry x="-0.3913" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-416" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-20" target="Z5Rv9_4MmNpo2kXM76Gp-29">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1570" y="790" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="1660" y="465" />
+              <mxPoint x="1660" y="780" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-417" value="No?" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Z5Rv9_4MmNpo2kXM76Gp-416">
+          <mxGeometry x="-0.9118" y="-1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-20" value="Is AWS Account name set?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1330" y="421.25" width="210" height="87.5" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-421" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-25" target="Z5Rv9_4MmNpo2kXM76Gp-420">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-25" value="" style="dashed=0;outlineConnect=0;html=1;align=center;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;shape=mxgraph.weblogos.github" vertex="1" parent="1">
+          <mxGeometry x="1397" y="563" width="75" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-28" value="Update Github DA profile" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="1465.5" y="585" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-32" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-29" target="Z5Rv9_4MmNpo2kXM76Gp-31">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-29" value="Create CloudFormation Stack names" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1375.5" y="750" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-34" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-31" target="Z5Rv9_4MmNpo2kXM76Gp-33">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-31" value="Show message&amp;nbsp;&lt;div&gt;&lt;p style=&quot;margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; line-height: normal; font-family: &amp;quot;Helvetica Neue&amp;quot;; text-align: start;&quot; class=&quot;p1&quot;&gt;&lt;font&gt;&quot;Provisioning SMTP user&quot;&lt;/font&gt;&lt;/p&gt;&lt;/div&gt;" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1296.25" y="860" width="280" height="59" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-37" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-33" target="Z5Rv9_4MmNpo2kXM76Gp-36">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-33" value="" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#E7157B;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.cloudformation;" vertex="1" parent="1">
+          <mxGeometry x="1398" y="1010" width="78" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-35" value="&lt;span style=&quot;color: rgb(0, 0, 0); font-family: Helvetica; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(251, 251, 251); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; float: none; display: inline !important;&quot;&gt;Retrieve status from SMTP CloudFormation Stack&lt;/span&gt;" style="text;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1490" y="1029" width="180" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-39" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-36" target="Z5Rv9_4MmNpo2kXM76Gp-38">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-40" value="Yes?" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Z5Rv9_4MmNpo2kXM76Gp-39">
+          <mxGeometry y="1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-47" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-36" target="Z5Rv9_4MmNpo2kXM76Gp-46">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-36" value="Can the CloudFormation status being retrieved?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1333" y="1120" width="210" height="87.5" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-42" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-38" target="Z5Rv9_4MmNpo2kXM76Gp-41">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-38" value="Is the status not &#39;delete-complete&#39;?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1676.5" y="1120" width="210" height="87.5" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-44" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-41" target="Z5Rv9_4MmNpo2kXM76Gp-43">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-41" value="Show message&amp;nbsp;&lt;div&gt;&lt;p style=&quot;margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; line-height: normal; font-family: &amp;quot;Helvetica Neue&amp;quot;; text-align: start;&quot; class=&quot;p1&quot;&gt;&lt;font&gt;&quot;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Stack already exists for this host&#39;s SMTP user&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&quot;&lt;/span&gt;&lt;/font&gt;&lt;/p&gt;&lt;/div&gt;" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1950" y="1134.25" width="280" height="59" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-43" value="" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#E7157B;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.cloudformation;" vertex="1" parent="1">
+          <mxGeometry x="2340" y="1124.75" width="78" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-45" value="&lt;span style=&quot;color: rgb(0, 0, 0); font-family: Helvetica; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(251, 251, 251); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; float: none; display: inline !important;&quot;&gt;Retrieve Stack ID for SMTP User&lt;/span&gt;" style="text;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2440" y="1153.25" width="180" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-49" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-46" target="Z5Rv9_4MmNpo2kXM76Gp-48">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-51" value="No?" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Z5Rv9_4MmNpo2kXM76Gp-49">
+          <mxGeometry x="-0.32" y="1" relative="1" as="geometry">
+            <mxPoint x="-8" y="-1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-55" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-46" target="Z5Rv9_4MmNpo2kXM76Gp-54">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-56" value="Yes?" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Z5Rv9_4MmNpo2kXM76Gp-55">
+          <mxGeometry x="-0.3334" y="4" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-46" value="Does the SMTP User CloudFormation Template exists?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1323" y="1260" width="230" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-53" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-48" target="Z5Rv9_4MmNpo2kXM76Gp-52">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-48" value="Show error message&amp;nbsp;&lt;div&gt;&lt;p style=&quot;margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; line-height: normal; font-family: &amp;quot;Helvetica Neue&amp;quot;; text-align: start;&quot; class=&quot;p1&quot;&gt;&lt;font&gt;&lt;font&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&quot;&lt;/font&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Cannot determine location of cloudformation-create-smtp-user.yml&quot;&lt;/span&gt;&lt;/font&gt;&lt;/p&gt;&lt;/div&gt;" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="960" y="1280.5" width="280" height="59" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-52" value="End" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="755" y="1295" width="90" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-58" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-54" target="Z5Rv9_4MmNpo2kXM76Gp-57">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-54" value="Configure SMTP Parameters" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1377" y="1420.005" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-61" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-57" target="Z5Rv9_4MmNpo2kXM76Gp-60">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-57" value="" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#E7157B;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.cloudformation;" vertex="1" parent="1">
+          <mxGeometry x="1398" y="1520" width="78" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-59" value="Run CloudFormation Stack for creating SMTP User" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="1470" y="1544" width="300" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-63" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-60" target="Z5Rv9_4MmNpo2kXM76Gp-62">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-64" value="No?" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Z5Rv9_4MmNpo2kXM76Gp-63">
+          <mxGeometry x="0.2" y="2" relative="1" as="geometry">
+            <mxPoint x="11" y="-2" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-68" value="Yes?" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-60" target="Z5Rv9_4MmNpo2kXM76Gp-67">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-60" value="Is the Stack creation succesfully initialised?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1320" y="1650" width="230" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-82" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-62" target="Z5Rv9_4MmNpo2kXM76Gp-65">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-62" value="Show error message&amp;nbsp;&lt;div&gt;&lt;p style=&quot;margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; line-height: normal; font-family: &amp;quot;Helvetica Neue&amp;quot;; text-align: start;&quot; class=&quot;p1&quot;&gt;&lt;font&gt;&quot;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Create stack failed&quot;&lt;/span&gt;&lt;/font&gt;&lt;/p&gt;&lt;/div&gt;" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="970" y="1670.5" width="280" height="59" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-65" value="End" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1065" y="1574" width="90" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-70" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-67" target="Z5Rv9_4MmNpo2kXM76Gp-69">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-71" value="Yes?" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Z5Rv9_4MmNpo2kXM76Gp-70">
+          <mxGeometry x="-0.0744" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-98" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-67" target="Z5Rv9_4MmNpo2kXM76Gp-97">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-442" value="No?" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Z5Rv9_4MmNpo2kXM76Gp-98">
+          <mxGeometry x="-0.3959" y="3" relative="1" as="geometry">
+            <mxPoint y="1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-67" value="Does the script need to wait for CloudFormation Stack to be created?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1320" y="1810" width="230" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-73" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-69" target="Z5Rv9_4MmNpo2kXM76Gp-72">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-69" value="Show message&amp;nbsp;&lt;div&gt;&lt;p style=&quot;margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; line-height: normal; font-family: &amp;quot;Helvetica Neue&amp;quot;; text-align: start;&quot; class=&quot;p1&quot;&gt;&lt;font&gt;&quot;Waiting for stack to be created&quot;&lt;/font&gt;&lt;/p&gt;&lt;/div&gt;" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="980" y="1830" width="280" height="59" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-76" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-72" target="Z5Rv9_4MmNpo2kXM76Gp-75">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-72" value="" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#E7157B;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.cloudformation;" vertex="1" parent="1">
+          <mxGeometry x="792" y="1821" width="78" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-74" value="&lt;span style=&quot;color: rgb(0, 0, 0); font-family: Helvetica; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(251, 251, 251); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; float: none; display: inline !important;&quot;&gt;Retrieve status from SMTP User CloudFormation Stack&lt;/span&gt;" style="text;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="770" y="1920" width="180" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-83" value="Yes?" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-75" target="Z5Rv9_4MmNpo2kXM76Gp-77">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-87" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-75" target="Z5Rv9_4MmNpo2kXM76Gp-86">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-88" value="No?" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Z5Rv9_4MmNpo2kXM76Gp-87">
+          <mxGeometry x="-0.441" y="3" relative="1" as="geometry">
+            <mxPoint x="-3" y="1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-75" value="Is the stack creation still in progress?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="505" y="1809.5" width="230" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-84" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-77" target="Z5Rv9_4MmNpo2kXM76Gp-80">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-77" value="Show message&amp;nbsp;&lt;div&gt;&lt;p style=&quot;margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; line-height: normal; font-family: &amp;quot;Helvetica Neue&amp;quot;; text-align: start;&quot; class=&quot;p1&quot;&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&quot;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Stack creation is still in progress .. &lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;Sleeping&amp;nbsp;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;30 seconds&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&quot;&lt;/span&gt;&lt;/p&gt;&lt;/div&gt;" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="160" y="1830" width="280" height="59" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-85" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-80" target="Z5Rv9_4MmNpo2kXM76Gp-72">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-80" value="Wait for 30 seconds" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="240" y="1669.5049999999999" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-90" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-86" target="Z5Rv9_4MmNpo2kXM76Gp-89">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-93" value="Yes?" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Z5Rv9_4MmNpo2kXM76Gp-90">
+          <mxGeometry x="-0.4623" y="1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-92" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-86" target="Z5Rv9_4MmNpo2kXM76Gp-91">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-94" value="No?" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Z5Rv9_4MmNpo2kXM76Gp-92">
+          <mxGeometry x="0.0991" y="-2" relative="1" as="geometry">
+            <mxPoint x="6" y="2" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-86" value="Is the stack creation complete?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="505" y="1990" width="230" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-89" value="Show message&amp;nbsp;&lt;div&gt;&lt;p style=&quot;margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; line-height: normal; font-family: &amp;quot;Helvetica Neue&amp;quot;; text-align: start;&quot; class=&quot;p1&quot;&gt;&lt;font&gt;&quot;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Stack creation is complete&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&quot;&lt;/span&gt;&lt;/font&gt;&lt;/p&gt;&lt;/div&gt;" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="980" y="2010" width="280" height="59" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-96" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-91" target="Z5Rv9_4MmNpo2kXM76Gp-95">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-91" value="Show error message&amp;nbsp;&lt;div&gt;&lt;p style=&quot;margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; line-height: normal; font-family: &amp;quot;Helvetica Neue&amp;quot;; text-align: start;&quot; class=&quot;p1&quot;&gt;&lt;font&gt;&quot;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Stack creation has failed status&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&quot;&lt;/span&gt;&lt;/font&gt;&lt;/p&gt;&lt;/div&gt;" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="170" y="2010" width="280" height="59" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-95" value="End" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="20" y="2025" width="90" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-104" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-97" target="Z5Rv9_4MmNpo2kXM76Gp-103">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-97" value="" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#E7157B;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.cloudformation;" vertex="1" parent="1">
+          <mxGeometry x="1396" y="2000.5" width="78" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-101" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-89" target="Z5Rv9_4MmNpo2kXM76Gp-97">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-102" value="&lt;span style=&quot;color: rgb(0, 0, 0); font-family: Helvetica; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(251, 251, 251); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; float: none; display: inline !important;&quot;&gt;Retrieve status from EC2 CloudFormation Stack&lt;/span&gt;" style="text;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1460.5" y="1930" width="180" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-106" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-103" target="Z5Rv9_4MmNpo2kXM76Gp-105">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-109" value="Yes?" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Z5Rv9_4MmNpo2kXM76Gp-106">
+          <mxGeometry x="-0.0444" y="3" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-115" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-103" target="Z5Rv9_4MmNpo2kXM76Gp-114">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-423" value="No?" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Z5Rv9_4MmNpo2kXM76Gp-115">
+          <mxGeometry x="-0.2953" y="-1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-103" value="Can the CloudFormation status being retrieved?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1330" y="2110" width="210" height="87.5" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-108" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-105" target="Z5Rv9_4MmNpo2kXM76Gp-107">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-110" value="Yes?" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Z5Rv9_4MmNpo2kXM76Gp-108">
+          <mxGeometry x="-0.0839" y="1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-105" value="Is the status not &#39;delete-complete&#39;?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1690" y="2110" width="210" height="87.5" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-112" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-107" target="Z5Rv9_4MmNpo2kXM76Gp-111">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-107" value="Show message&amp;nbsp;&lt;div&gt;&lt;p style=&quot;margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; line-height: normal; font-family: &amp;quot;Helvetica Neue&amp;quot;; text-align: start;&quot; class=&quot;p1&quot;&gt;&lt;font&gt;&quot;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Stack already exists for this host&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&quot;&lt;/span&gt;&lt;/font&gt;&lt;/p&gt;&lt;/div&gt;" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2100" y="2124.25" width="280" height="59" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-111" value="" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#E7157B;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.cloudformation;" vertex="1" parent="1">
+          <mxGeometry x="2542" y="2114.75" width="78" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-113" value="&lt;span style=&quot;color: rgb(0, 0, 0); font-family: Helvetica; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(251, 251, 251); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; float: none; display: inline !important;&quot;&gt;Retrieve Stack ID for EC2 CloudFormation Stack&lt;/span&gt;" style="text;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2640" y="2133.75" width="180" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-117" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-114" target="Z5Rv9_4MmNpo2kXM76Gp-116">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-114" value="Configure Host Parameters" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1375" y="2250.005" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-119" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-116" target="Z5Rv9_4MmNpo2kXM76Gp-118">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-120" value="Yes?" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Z5Rv9_4MmNpo2kXM76Gp-119">
+          <mxGeometry x="-0.1669" y="1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-122" value="No?" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-116" target="Z5Rv9_4MmNpo2kXM76Gp-121">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-116" value="Is the instance type variable set?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1330" y="2380" width="210" height="87.5" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-425" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-118" target="Z5Rv9_4MmNpo2kXM76Gp-142">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="980" y="2424" />
+              <mxPoint x="980" y="2880" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-118" value="Add Instance Type to parameters" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1085" y="2393.75" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-124" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-121" target="Z5Rv9_4MmNpo2kXM76Gp-123">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-125" value="Yes?" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Z5Rv9_4MmNpo2kXM76Gp-124">
+          <mxGeometry x="-0.1189" y="1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-127" value="No?" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-121" target="Z5Rv9_4MmNpo2kXM76Gp-126">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-121" value="Is the disk size variable&amp;nbsp;set?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1330" y="2500" width="210" height="87.5" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-426" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-123" target="Z5Rv9_4MmNpo2kXM76Gp-142">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="980" y="2544" />
+              <mxPoint x="980" y="2880" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-123" value="Add Disk Size to parameters" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1085" y="2513.75" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-129" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-126" target="Z5Rv9_4MmNpo2kXM76Gp-128">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-130" value="Yes?" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Z5Rv9_4MmNpo2kXM76Gp-129">
+          <mxGeometry x="-0.1655" y="1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-132" value="No?" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-126" target="Z5Rv9_4MmNpo2kXM76Gp-131">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-126" value="Is the elastic ip variable&amp;nbsp;set to true?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1330" y="2630" width="210" height="87.5" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-427" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-128" target="Z5Rv9_4MmNpo2kXM76Gp-142">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="980" y="2674" />
+              <mxPoint x="980" y="2880" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-128" value="Add Elastic IP to parameters" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1090" y="2643.75" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-134" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-131" target="Z5Rv9_4MmNpo2kXM76Gp-133">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-135" value="Yes?" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Z5Rv9_4MmNpo2kXM76Gp-134">
+          <mxGeometry x="-0.0157" y="-1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-424" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-131" target="Z5Rv9_4MmNpo2kXM76Gp-142">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-131" value="Is the metrics variable set to true?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1330" y="2750" width="210" height="87.5" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-428" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-133" target="Z5Rv9_4MmNpo2kXM76Gp-142">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="980" y="2794" />
+              <mxPoint x="980" y="2880" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-133" value="Add Metrics to parameters" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1090" y="2763.75" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-140" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-136" target="Z5Rv9_4MmNpo2kXM76Gp-139">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-136" value="" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#E7157B;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.cloudformation;" vertex="1" parent="1">
+          <mxGeometry x="1397.5" y="2941" width="78" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-138" value="&lt;span style=&quot;color: rgb(0, 0, 0); font-family: Helvetica; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(251, 251, 251); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; float: none; display: inline !important;&quot;&gt;Retrieve SMTP Username from CloudFormation Stack&lt;/span&gt;" style="text;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1495" y="2960" width="180" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-145" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-139" target="Z5Rv9_4MmNpo2kXM76Gp-144">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-139" value="" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#E7157B;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.cloudformation;" vertex="1" parent="1">
+          <mxGeometry x="1397.5" y="3089" width="78" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-141" value="&lt;span style=&quot;color: rgb(0, 0, 0); font-family: Helvetica; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(251, 251, 251); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; float: none; display: inline !important;&quot;&gt;Retrieve SMTP Secret from CloudFormation Stack&lt;/span&gt;" style="text;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1495" y="3108" width="180" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-143" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-142" target="Z5Rv9_4MmNpo2kXM76Gp-136">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-142" value="Get SMTP Host" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1376.5" y="2849.995" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-147" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-144" target="Z5Rv9_4MmNpo2kXM76Gp-146">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-144" value="Configure SMTP Parameters" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1376.5" y="3209.995" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-149" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-146" target="Z5Rv9_4MmNpo2kXM76Gp-148">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-151" value="Yes?" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Z5Rv9_4MmNpo2kXM76Gp-149">
+          <mxGeometry x="-0.1351" y="-3" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-152" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-146" target="Z5Rv9_4MmNpo2kXM76Gp-150">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-153" value="No?" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Z5Rv9_4MmNpo2kXM76Gp-152">
+          <mxGeometry x="-0.0353" y="1" relative="1" as="geometry">
+            <mxPoint y="1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-146" value="Is SMTP User set?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1331.5" y="3290" width="210" height="87.5" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-429" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-148" target="Z5Rv9_4MmNpo2kXM76Gp-157">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1070" y="3334" />
+              <mxPoint x="1070" y="3570" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-148" value="Add SMTP User to parameters" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1120" y="3303.75" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-155" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-150" target="Z5Rv9_4MmNpo2kXM76Gp-154">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-156" value="Yes?" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Z5Rv9_4MmNpo2kXM76Gp-155">
+          <mxGeometry x="-0.0047" y="1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-158" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-150" target="Z5Rv9_4MmNpo2kXM76Gp-157">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-150" value="Is SMTP Secret set?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1331.5" y="3420" width="210" height="87.5" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-431" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-154" target="Z5Rv9_4MmNpo2kXM76Gp-157">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1070" y="3464" />
+              <mxPoint x="1070" y="3570" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-154" value="Add SMTP Secret to parameters" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1120" y="3433.75" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-160" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-157" target="Z5Rv9_4MmNpo2kXM76Gp-159">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-157" value="Show message&amp;nbsp;&lt;div&gt;&lt;p style=&quot;margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; line-height: normal; font-family: &amp;quot;Helvetica Neue&amp;quot;; text-align: start;&quot; class=&quot;p1&quot;&gt;&lt;font&gt;&quot;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Determining DNS parameters&quot;&lt;/span&gt;&lt;/font&gt;&lt;/p&gt;&lt;/div&gt;" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1296.5" y="3541" width="280" height="59" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-163" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-159" target="Z5Rv9_4MmNpo2kXM76Gp-162">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-159" value="Configure TLD Name" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1376.5" y="3649.995" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-166" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-162" target="Z5Rv9_4MmNpo2kXM76Gp-165">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-162" value="" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#8C4FFF;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.route_53;" vertex="1" parent="1">
+          <mxGeometry x="1397.5" y="3760" width="78" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-164" value="Retrieve Hosted Zones" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="1230" y="3784" width="150" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-168" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-165" target="Z5Rv9_4MmNpo2kXM76Gp-167">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-169" value="Yes?" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Z5Rv9_4MmNpo2kXM76Gp-168">
+          <mxGeometry x="-0.0047" y="1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-250" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-165" target="Z5Rv9_4MmNpo2kXM76Gp-247">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-165" value="Is Account Profile set?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1331.5" y="3870" width="210" height="87.5" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-171" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-167" target="Z5Rv9_4MmNpo2kXM76Gp-214">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1050" y="3913.7" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-167" value="" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#8C4FFF;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.route_53;" vertex="1" parent="1">
+          <mxGeometry x="1172" y="3874.75" width="78" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-175" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.923;entryY=0.452;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-172" target="Z5Rv9_4MmNpo2kXM76Gp-176">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="523" y="3913.7" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-222" value="Yes?" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Z5Rv9_4MmNpo2kXM76Gp-175">
+          <mxGeometry x="-0.1952" y="-1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-235" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-172" target="Z5Rv9_4MmNpo2kXM76Gp-196">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="225" y="3990" />
+              <mxPoint x="900" y="3990" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-432" value="No?" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Z5Rv9_4MmNpo2kXM76Gp-235">
+          <mxGeometry x="-0.9731" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-172" value="Is the counter less than the amount of hosted zones?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="120" y="3870" width="210" height="87.5" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-228" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-176" target="Z5Rv9_4MmNpo2kXM76Gp-177">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-176" value="" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#8C4FFF;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.route_53;" vertex="1" parent="1">
+          <mxGeometry x="-24" y="3879.4999999999995" width="78" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-230" value="Yes?" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-177" target="Z5Rv9_4MmNpo2kXM76Gp-178">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-233" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-177" target="Z5Rv9_4MmNpo2kXM76Gp-196">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="790" y="4075.25" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-234" value="No?" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Z5Rv9_4MmNpo2kXM76Gp-233">
+          <mxGeometry x="-0.9758" y="-4" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-177" value="Is the name of the hosted zone the same as the TLD name?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-90" y="4031.5" width="210" height="87.5" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-182" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-178" target="Z5Rv9_4MmNpo2kXM76Gp-181">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-178" value="Show message&amp;nbsp;&lt;div&gt;&lt;p style=&quot;margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; line-height: normal; font-family: &amp;quot;Helvetica Neue&amp;quot;; text-align: start;&quot; class=&quot;p1&quot;&gt;&lt;font&gt;&quot;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Found hosted zone for this host&quot;&lt;/span&gt;&lt;/font&gt;&lt;/p&gt;&lt;/div&gt;" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-125" y="4150" width="280" height="59" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-185" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-181" target="Z5Rv9_4MmNpo2kXM76Gp-184">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-181" value="Set DNSHostedZoneName variable" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-45" y="4249.995" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-187" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-184" target="Z5Rv9_4MmNpo2kXM76Gp-186">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-188" value="Yes?" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Z5Rv9_4MmNpo2kXM76Gp-187">
+          <mxGeometry x="-0.1732" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-236" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.071;entryY=0.486;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-184" target="Z5Rv9_4MmNpo2kXM76Gp-196">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="15" y="4560" />
+              <mxPoint x="795" y="4560" />
+              <mxPoint x="795" y="4420" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-237" value="No?" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Z5Rv9_4MmNpo2kXM76Gp-236">
+          <mxGeometry x="-0.9442" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-184" value="Is the callerAccount variable set to true?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-90" y="4377.5" width="210" height="87.5" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-191" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-186" target="Z5Rv9_4MmNpo2kXM76Gp-190">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-186" value="AWS Systems Manager" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;strokeColor=#ffffff;fillColor=#232F3E;dashed=0;verticalLabelPosition=middle;verticalAlign=bottom;align=center;html=1;whiteSpace=wrap;fontSize=10;fontStyle=1;spacing=3;shape=mxgraph.aws4.productIcon;prIcon=mxgraph.aws4.systems_manager;" vertex="1" parent="1">
+          <mxGeometry x="230" y="4366.25" width="80" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-189" value="Get Role ARN for DNS record update in newly created account" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="75" y="4318.75" width="360" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-193" value="No?" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-190" target="Z5Rv9_4MmNpo2kXM76Gp-192">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-190" value="Role ARN succesfully retrieved?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="440" y="4377.5" width="210" height="87.5" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-195" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-192" target="Z5Rv9_4MmNpo2kXM76Gp-194">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-192" value="Show error message&amp;nbsp;&lt;blockquote style=&quot;margin: 0 0 0 40px; border: none; padding: 0px;&quot;&gt;&lt;div&gt;&lt;p style=&quot;margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; line-height: normal; font-family: &amp;quot;Helvetica Neue&amp;quot;; text-align: start;&quot; class=&quot;p1&quot;&gt;&lt;font&gt;&quot;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Failed to get &#39;Hosted-Zone-Access-Role-Arn&#39; from parameter store this must be set for cross account DNS support&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&quot;&lt;/span&gt;&lt;/font&gt;&lt;/p&gt;&lt;/div&gt;&lt;/blockquote&gt;" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="350" y="4200" width="385" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-194" value="End" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="497.5" y="4110" width="90" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-241" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-196" target="Z5Rv9_4MmNpo2kXM76Gp-205">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-242" value="Yes?" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Z5Rv9_4MmNpo2kXM76Gp-241">
+          <mxGeometry x="-0.1226" y="-1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-243" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-196" target="Z5Rv9_4MmNpo2kXM76Gp-209">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-246" value="No?" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Z5Rv9_4MmNpo2kXM76Gp-243">
+          <mxGeometry x="-0.4305" y="-3" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-196" value="DNS Hosted Zone Name set?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="795" y="4377.5" width="210" height="87.5" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-197" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.057;entryY=0.491;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-190" target="Z5Rv9_4MmNpo2kXM76Gp-196">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-198" value="Yes?" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Z5Rv9_4MmNpo2kXM76Gp-197">
+          <mxGeometry x="0.0824" y="-2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-204" value="&lt;span style=&quot;color: rgb(35, 47, 62); font-family: Helvetica; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: nowrap; background-color: rgb(251, 251, 251); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;&quot;&gt;Retrieve Hosted Zones from newly created account&lt;/span&gt;" style="text;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1087.5" y="3834.75" width="310" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-205" value="Add DNS Hosted Zone Name to parameters" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="840" y="4620" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-244" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-209" target="Z5Rv9_4MmNpo2kXM76Gp-211">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-245" value="Yes?" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Z5Rv9_4MmNpo2kXM76Gp-244">
+          <mxGeometry x="-0.0194" y="4" relative="1" as="geometry">
+            <mxPoint x="-4" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-248" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-209" target="Z5Rv9_4MmNpo2kXM76Gp-247">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1390" y="4421.25" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-209" value="Is DNS Role ARN Set?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1065" y="4377.5" width="210" height="87.5" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-433" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-211" target="Z5Rv9_4MmNpo2kXM76Gp-247">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1240" y="4550" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-211" value="Add DNS Role ARN to parameters" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1110" y="4620" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-223" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-214" target="Z5Rv9_4MmNpo2kXM76Gp-216">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-214" value="" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#8C4FFF;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.route_53;" vertex="1" parent="1">
+          <mxGeometry x="960" y="3874.75" width="78" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-215" value="&lt;span style=&quot;color: rgb(35, 47, 62); font-family: Helvetica; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: nowrap; background-color: rgb(251, 251, 251); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; float: none; display: inline !important;&quot;&gt;List Hosted Zones&lt;/span&gt;" style="text;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="950" y="3838" width="102" height="30.01" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-226" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-216" target="Z5Rv9_4MmNpo2kXM76Gp-219">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-227" value="Yes?" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Z5Rv9_4MmNpo2kXM76Gp-226">
+          <mxGeometry x="-0.2729" y="-2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-231" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="786" y="3957.5" as="sourcePoint" />
+            <mxPoint x="901" y="4377.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-232" value="No?" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Z5Rv9_4MmNpo2kXM76Gp-231">
+          <mxGeometry x="-0.7888" y="-3" relative="1" as="geometry">
+            <mxPoint y="1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-216" value="Are there Hosted Zones available?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="680" y="3870" width="210" height="87.5" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-221" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-219" target="Z5Rv9_4MmNpo2kXM76Gp-172">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-219" value="Set counter to 1" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="420" y="3883.75" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-229" value="&lt;span style=&quot;color: rgb(0, 0, 0); font-family: Helvetica; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(251, 251, 251); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;&quot;&gt;Get hosted zone details&lt;/span&gt;" style="text;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-50" y="3839.5" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-252" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-247" target="Z5Rv9_4MmNpo2kXM76Gp-251">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-247" value="" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#8C4FFF;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.vpc;" vertex="1" parent="1">
+          <mxGeometry x="1396.5" y="4382.25" width="78" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-249" value="Retrieve VPC ID" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="1475.5" y="4406.25" width="110" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-254" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-251" target="Z5Rv9_4MmNpo2kXM76Gp-253">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-251" value="Generate Subnet number" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1376.5" y="4520" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-256" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-253" target="Z5Rv9_4MmNpo2kXM76Gp-255">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-253" value="Generate Subnet name" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1376.5" y="4610" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-259" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-255" target="Z5Rv9_4MmNpo2kXM76Gp-258">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-255" value="" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#8C4FFF;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.vpc;" vertex="1" parent="1">
+          <mxGeometry x="1397.5" y="4710" width="78" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-257" value="Retrieve Subnet ID" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="1480.5" y="4730" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-262" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-258" target="Z5Rv9_4MmNpo2kXM76Gp-261">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-258" value="" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#8C4FFF;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.vpc;" vertex="1" parent="1">
+          <mxGeometry x="1397.5" y="4820" width="78" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-260" value="Retrieve Subnet AZ" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="1480.5" y="4844" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-265" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-261" target="Z5Rv9_4MmNpo2kXM76Gp-264">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-261" value="" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#8C4FFF;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.vpc;" vertex="1" parent="1">
+          <mxGeometry x="1397.5" y="4930" width="78" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-263" value="Retrieve Security Group ID" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="1474" y="4954" width="170" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-268" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-264" target="Z5Rv9_4MmNpo2kXM76Gp-267">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-264" value="" style="outlineConnect=0;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;shape=mxgraph.aws3.efs;fillColor=#E05243;gradientColor=none;" vertex="1" parent="1">
+          <mxGeometry x="1399" y="5060" width="76.5" height="93" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-266" value="Retrieve EFS ID" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="1485.5" y="5091.5" width="110" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-271" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-267" target="Z5Rv9_4MmNpo2kXM76Gp-270">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-267" value="" style="outlineConnect=0;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;shape=mxgraph.aws3.efs;fillColor=#E05243;gradientColor=none;" vertex="1" parent="1">
+          <mxGeometry x="1399" y="5200" width="76.5" height="93" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-269" value="Retrieve EFS Mount Targets" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="1475.5" y="5231.5" width="170" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-273" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-270" target="Z5Rv9_4MmNpo2kXM76Gp-272">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-270" value="Set parameters with above details" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1377.25" y="5370" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-276" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-272" target="Z5Rv9_4MmNpo2kXM76Gp-277">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1437.25" y="5640" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-272" value="" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#E7157B;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.cloudformation;" vertex="1" parent="1">
+          <mxGeometry x="1398.25" y="5510" width="78" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-274" value="Run CloudFormation Stack for creating EC2 Machine" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="1475.5" y="5534" width="310" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-279" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-277" target="Z5Rv9_4MmNpo2kXM76Gp-278">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-280" value="No?" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Z5Rv9_4MmNpo2kXM76Gp-279">
+          <mxGeometry x="0.0091" y="-1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-282" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-277" target="Z5Rv9_4MmNpo2kXM76Gp-281">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-283" value="Yes?" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Z5Rv9_4MmNpo2kXM76Gp-282">
+          <mxGeometry x="-0.05" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-277" value="Is the Stack creation succesfully initialised?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1322.25" y="5650" width="230" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-278" value="Show error message&amp;nbsp;&lt;div&gt;&lt;p style=&quot;margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; line-height: normal; font-family: &amp;quot;Helvetica Neue&amp;quot;; text-align: start;&quot; class=&quot;p1&quot;&gt;&lt;font&gt;&quot;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Create stack failed&quot;&lt;/span&gt;&lt;/font&gt;&lt;/p&gt;&lt;/div&gt;" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="960" y="5670" width="280" height="59" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-285" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-281" target="Z5Rv9_4MmNpo2kXM76Gp-284">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-281" value="Show message&amp;nbsp;&lt;div&gt;&lt;p style=&quot;margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; line-height: normal; font-family: &amp;quot;Helvetica Neue&amp;quot;; text-align: start;&quot; class=&quot;p1&quot;&gt;&quot;Create stack in progress&quot;&lt;/p&gt;&lt;/div&gt;" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1297.25" y="5790" width="280" height="59" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-287" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-284" target="Z5Rv9_4MmNpo2kXM76Gp-286">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-288" value="Yes?" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Z5Rv9_4MmNpo2kXM76Gp-287">
+          <mxGeometry x="-0.1185" y="2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-310" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-284" target="Z5Rv9_4MmNpo2kXM76Gp-309">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-284" value="Does the script need to wait for CloudFormation Stack to be created?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1322.25" y="5900" width="230" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-290" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-286" target="Z5Rv9_4MmNpo2kXM76Gp-289">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-286" value="Show message&amp;nbsp;&lt;div&gt;&lt;p style=&quot;margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; line-height: normal; font-family: &amp;quot;Helvetica Neue&amp;quot;; text-align: start;&quot; class=&quot;p1&quot;&gt;&lt;font&gt;&quot;Waiting for stack to be created&quot;&lt;/font&gt;&lt;/p&gt;&lt;/div&gt;" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="960" y="5920.5" width="280" height="59" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-293" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-289" target="Z5Rv9_4MmNpo2kXM76Gp-292">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-289" value="" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#E7157B;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.cloudformation;" vertex="1" parent="1">
+          <mxGeometry x="795" y="5911" width="78" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-291" value="&lt;span style=&quot;color: rgb(0, 0, 0); font-family: Helvetica; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(251, 251, 251); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; float: none; display: inline !important;&quot;&gt;Retrieve status from CloudFormation Stack&lt;/span&gt;" style="text;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="760" y="6000" width="180" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-295" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-292" target="Z5Rv9_4MmNpo2kXM76Gp-294">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-299" value="Yes?" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Z5Rv9_4MmNpo2kXM76Gp-295">
+          <mxGeometry x="-0.1707" y="-1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-301" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-292" target="Z5Rv9_4MmNpo2kXM76Gp-300">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-292" value="Is the stack creation still in progress?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="520" y="5900" width="230" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-298" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-294" target="Z5Rv9_4MmNpo2kXM76Gp-296">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-294" value="Show message&amp;nbsp;&lt;div&gt;&lt;p style=&quot;margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; line-height: normal; font-family: &amp;quot;Helvetica Neue&amp;quot;; text-align: start;&quot; class=&quot;p1&quot;&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&quot;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Stack creation is still in progress .. &lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;Sleeping&amp;nbsp;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;30 seconds&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&quot;&lt;/span&gt;&lt;/p&gt;&lt;/div&gt;" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="495" y="5800" width="280" height="59" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-297" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-296" target="Z5Rv9_4MmNpo2kXM76Gp-289">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-296" value="Wait for 30 seconds" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="575" y="5700.005" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-303" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-300" target="Z5Rv9_4MmNpo2kXM76Gp-302">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-304" value="No?" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Z5Rv9_4MmNpo2kXM76Gp-303">
+          <mxGeometry x="-0.1667" y="2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-308" value="Yes?" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-300" target="Z5Rv9_4MmNpo2kXM76Gp-307">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-300" value="Is the stack creation and update complete?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="520" y="6070" width="230" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-306" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-302" target="Z5Rv9_4MmNpo2kXM76Gp-305">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-302" value="Show error message&amp;nbsp;&lt;div&gt;&lt;p style=&quot;margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; line-height: normal; font-family: &amp;quot;Helvetica Neue&amp;quot;; text-align: start;&quot; class=&quot;p1&quot;&gt;&lt;font&gt;&quot;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Stack creation has failed status&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&quot;&lt;/span&gt;&lt;/font&gt;&lt;/p&gt;&lt;/div&gt;" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="180" y="6090.5" width="280" height="59" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-305" value="End" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="50" y="6105" width="90" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-311" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-307">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1320" y="6120" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-307" value="Show message&amp;nbsp;&lt;div&gt;&lt;p style=&quot;margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; line-height: normal; font-family: &amp;quot;Helvetica Neue&amp;quot;; text-align: start;&quot; class=&quot;p1&quot;&gt;&lt;font&gt;&quot;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Stack creation is complete&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&quot;&lt;/span&gt;&lt;/font&gt;&lt;/p&gt;&lt;/div&gt;" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="795" y="6090.5" width="280" height="59" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-313" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-309" target="Z5Rv9_4MmNpo2kXM76Gp-312">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-314" value="Yes?" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Z5Rv9_4MmNpo2kXM76Gp-313">
+          <mxGeometry x="-0.0804" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-342" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-309" target="Z5Rv9_4MmNpo2kXM76Gp-341">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-343" value="No?" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Z5Rv9_4MmNpo2kXM76Gp-342">
+          <mxGeometry x="-0.4255" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-309" value="S3 Bucket creation required?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1322.25" y="6070" width="230" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-316" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-312" target="Z5Rv9_4MmNpo2kXM76Gp-315">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-312" value="Show message&amp;nbsp;&lt;div&gt;&lt;p style=&quot;margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; line-height: normal; font-family: &amp;quot;Helvetica Neue&amp;quot;; text-align: start;&quot; class=&quot;p1&quot;&gt;&lt;span style=&quot;font-size: 13px; background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&quot;Provisioning S3 bucket for host&lt;/span&gt;&quot;&lt;/p&gt;&lt;/div&gt;" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1630" y="6090.5" width="280" height="59" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-319" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-315" target="Z5Rv9_4MmNpo2kXM76Gp-318">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-315" value="" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#7AA116;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.bucket;" vertex="1" parent="1">
+          <mxGeometry x="1990" y="6081" width="75" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-317" value="Retrieve s3 buckets in newly created account" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="1910" y="6040" width="260" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-321" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-318" target="Z5Rv9_4MmNpo2kXM76Gp-320">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-322" value="Yes?" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Z5Rv9_4MmNpo2kXM76Gp-321">
+          <mxGeometry x="-0.1707" y="-2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-324" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-318" target="Z5Rv9_4MmNpo2kXM76Gp-323">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-325" value="No?" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Z5Rv9_4MmNpo2kXM76Gp-324">
+          <mxGeometry x="-0.1751" y="-3" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-318" value="Does the bucket already exists?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2140" y="6070" width="230" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-350" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-320" target="Z5Rv9_4MmNpo2kXM76Gp-341">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2255" y="6294" />
+              <mxPoint x="1846" y="6294" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-320" value="Show message&amp;nbsp;&lt;div&gt;&lt;p style=&quot;margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; line-height: normal; font-family: &amp;quot;Helvetica Neue&amp;quot;; text-align: start;&quot; class=&quot;p1&quot;&gt;&lt;span style=&quot;font-size: 13px;&quot;&gt;&quot;&lt;/span&gt;&lt;span style=&quot;font-size: 13px; background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Bucket for this host already exists&lt;/span&gt;&lt;span style=&quot;font-size: 13px; background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&quot;&lt;/span&gt;&lt;/p&gt;&lt;/div&gt;" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2115" y="6229" width="280" height="59" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-328" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-323" target="Z5Rv9_4MmNpo2kXM76Gp-327">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-323" value="" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#7AA116;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.bucket;" vertex="1" parent="1">
+          <mxGeometry x="2450" y="6081" width="75" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-326" value="Create s3 bucket in newly created account" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="2360" y="6170" width="250" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-330" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-327" target="Z5Rv9_4MmNpo2kXM76Gp-329">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-331" value="No?" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Z5Rv9_4MmNpo2kXM76Gp-330">
+          <mxGeometry x="-0.098" y="4" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-333" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.475;entryY=1;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-327" target="Z5Rv9_4MmNpo2kXM76Gp-332">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-334" value="Yes?" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Z5Rv9_4MmNpo2kXM76Gp-333">
+          <mxGeometry x="-0.05" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-327" value="Bucket succesfully created?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2590" y="6070" width="230" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-351" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-329" target="Z5Rv9_4MmNpo2kXM76Gp-341">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2705" y="6294" />
+              <mxPoint x="2071" y="6294" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-329" value="Show error message&lt;div&gt;&quot;&lt;span style=&quot;font-family: &amp;quot;Helvetica Neue&amp;quot;; font-size: 13px; text-align: start; background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Bucket creation failed&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&quot;&lt;/span&gt;&lt;/div&gt;" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2565" y="6229" width="280" height="59" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-346" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-332" target="Z5Rv9_4MmNpo2kXM76Gp-335">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-332" value="Show message&amp;nbsp;&lt;div&gt;&lt;p style=&quot;margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; line-height: normal; font-family: &amp;quot;Helvetica Neue&amp;quot;; text-align: start;&quot; class=&quot;p1&quot;&gt;&lt;span style=&quot;font-size: 13px;&quot;&gt;&quot;Bucket created succesfully&quot;&lt;/span&gt;&lt;/p&gt;&lt;/div&gt;" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2571" y="5920.5" width="280" height="59" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-339" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-335" target="Z5Rv9_4MmNpo2kXM76Gp-338">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-335" value="" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#7AA116;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.bucket;" vertex="1" parent="1">
+          <mxGeometry x="3002.5" y="6092" width="75" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-337" value="Enable versioning on s3 bucket" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="3090" y="6110" width="190" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-352" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-338" target="Z5Rv9_4MmNpo2kXM76Gp-341">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="3040" y="6294" />
+              <mxPoint x="2290" y="6294" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-338" value="" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#7AA116;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.bucket;" vertex="1" parent="1">
+          <mxGeometry x="3002.5" y="6210" width="75" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-340" value="Restrict public access" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="3100" y="6234" width="140" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-354" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-341" target="Z5Rv9_4MmNpo2kXM76Gp-353">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-341" value="Show message&amp;nbsp;&lt;div&gt;&lt;p style=&quot;margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; line-height: normal; font-family: &amp;quot;Helvetica Neue&amp;quot;; text-align: start;&quot; class=&quot;p1&quot;&gt;&lt;font&gt;&quot;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Provisioning Healthcheck Alarm&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&quot;&lt;/span&gt;&lt;/font&gt;&lt;/p&gt;&lt;/div&gt;" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1297.25" y="6264" width="280" height="59" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-357" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-353" target="Z5Rv9_4MmNpo2kXM76Gp-358">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1437.3000000000002" y="6590.021739130435" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-353" value="" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#E7157B;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.cloudformation;" vertex="1" parent="1">
+          <mxGeometry x="1399" y="6410" width="78" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-355" value="&lt;span style=&quot;color: rgb(0, 0, 0); font-family: Helvetica; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(251, 251, 251); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; float: none; display: inline !important;&quot;&gt;Retrieve status from Health check CloudFormation Stack&lt;/span&gt;" style="text;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1496.5" y="6429" width="180" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-360" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-358" target="Z5Rv9_4MmNpo2kXM76Gp-359">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-361" value="Yes?" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Z5Rv9_4MmNpo2kXM76Gp-360">
+          <mxGeometry x="-0.0534" y="2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-369" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-358" target="Z5Rv9_4MmNpo2kXM76Gp-368">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-370" value="No?" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Z5Rv9_4MmNpo2kXM76Gp-369">
+          <mxGeometry x="-0.2303" y="-2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-358" value="Can the CloudFormation status being retrieved?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1332.25" y="6600" width="210" height="87.5" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-363" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-359" target="Z5Rv9_4MmNpo2kXM76Gp-362">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-359" value="Is the status not &#39;delete-complete&#39;?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1052" y="6600" width="210" height="87.5" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-365" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-362" target="Z5Rv9_4MmNpo2kXM76Gp-364">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-362" value="Show message&amp;nbsp;&lt;div&gt;&lt;p style=&quot;margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; line-height: normal; font-family: &amp;quot;Helvetica Neue&amp;quot;; text-align: start;&quot; class=&quot;p1&quot;&gt;&lt;font&gt;&quot;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Stack already exists for this host&#39;s Healthcheck&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&quot;&lt;/span&gt;&lt;/font&gt;&lt;/p&gt;&lt;/div&gt;" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="725" y="6614.25" width="280" height="59" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-436" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-364" target="Z5Rv9_4MmNpo2kXM76Gp-435">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-364" value="" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#E7157B;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.cloudformation;" vertex="1" parent="1">
+          <mxGeometry x="550" y="6604.75" width="78" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-366" value="&lt;span style=&quot;color: rgb(0, 0, 0); font-family: Helvetica; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(251, 251, 251); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; float: none; display: inline !important;&quot;&gt;Retrieve Stack ID for Health Check Alarm&lt;/span&gt;" style="text;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="510" y="6700" width="180" height="26.25" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-372" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-368" target="Z5Rv9_4MmNpo2kXM76Gp-371">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-376" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-368" target="Z5Rv9_4MmNpo2kXM76Gp-375">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-368" value="Does the Health Check CloudFormation Template exists?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1321.5" y="6740" width="230" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-374" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-371" target="Z5Rv9_4MmNpo2kXM76Gp-373">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-371" value="Show error message&amp;nbsp;&lt;div&gt;&lt;p style=&quot;margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; line-height: normal; font-family: &amp;quot;Helvetica Neue&amp;quot;; text-align: start;&quot; class=&quot;p1&quot;&gt;&lt;font&gt;&lt;font&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&quot;&lt;/font&gt;&lt;/font&gt;&lt;span style=&quot;font-size: 13px; background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Cannot determine location of cloudformation-healthcheck-alarm.yml&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&quot;&lt;/span&gt;&lt;/p&gt;&lt;/div&gt;" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="970" y="6760.5" width="280" height="59" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-373" value="End" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="805" y="6775" width="90" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-379" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-375" target="Z5Rv9_4MmNpo2kXM76Gp-378">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-375" value="Configure parameters" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1376.5" y="6930" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-377" value="Run CloudFormation Stack for creating Healthcheck Alarm" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="1480" y="7060" width="330" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-381" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-378" target="Z5Rv9_4MmNpo2kXM76Gp-380">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-378" value="" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#E7157B;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.cloudformation;" vertex="1" parent="1">
+          <mxGeometry x="1398.25" y="7032" width="78" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-383" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-380" target="Z5Rv9_4MmNpo2kXM76Gp-382">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-386" value="No?" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Z5Rv9_4MmNpo2kXM76Gp-383">
+          <mxGeometry x="-0.1566" y="-1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-388" value="Yes?" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-380" target="Z5Rv9_4MmNpo2kXM76Gp-387">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-380" value="Is the Stack creation succesfully initialised?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1322.25" y="7140" width="230" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-385" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-382" target="Z5Rv9_4MmNpo2kXM76Gp-384">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-382" value="Show error message&amp;nbsp;&lt;div&gt;&lt;p style=&quot;margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; line-height: normal; font-family: &amp;quot;Helvetica Neue&amp;quot;; text-align: start;&quot; class=&quot;p1&quot;&gt;&lt;font&gt;&quot;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Create stack failed&quot;&lt;/span&gt;&lt;/font&gt;&lt;/p&gt;&lt;/div&gt;" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="980" y="7160.5" width="280" height="59" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-384" value="End" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1075" y="7070" width="90" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-390" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-387" target="Z5Rv9_4MmNpo2kXM76Gp-389">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-391" value="Yes?" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Z5Rv9_4MmNpo2kXM76Gp-390">
+          <mxGeometry x="-0.1111" y="1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-414" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-387" target="Z5Rv9_4MmNpo2kXM76Gp-412">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-415" value="No?" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Z5Rv9_4MmNpo2kXM76Gp-414">
+          <mxGeometry x="-0.5704" y="-3" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-387" value="Does the script need to wait for CloudFormation Stack to be created?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1323" y="7290" width="230" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-393" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-389" target="Z5Rv9_4MmNpo2kXM76Gp-392">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-389" value="Show message&amp;nbsp;&lt;div&gt;&lt;p style=&quot;margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; line-height: normal; font-family: &amp;quot;Helvetica Neue&amp;quot;; text-align: start;&quot; class=&quot;p1&quot;&gt;&lt;font&gt;&quot;Waiting for stack to be created&quot;&lt;/font&gt;&lt;/p&gt;&lt;/div&gt;" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="980" y="7310.5" width="280" height="59" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-396" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-392" target="Z5Rv9_4MmNpo2kXM76Gp-395">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-392" value="" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#E7157B;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.cloudformation;" vertex="1" parent="1">
+          <mxGeometry x="792" y="7301" width="78" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-394" value="&lt;span style=&quot;color: rgb(0, 0, 0); font-family: Helvetica; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(251, 251, 251); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; float: none; display: inline !important;&quot;&gt;Retrieve status from CloudFormation Stack&lt;/span&gt;" style="text;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="770" y="7390" width="180" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-398" value="Yes?" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-395" target="Z5Rv9_4MmNpo2kXM76Gp-397">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-403" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-395" target="Z5Rv9_4MmNpo2kXM76Gp-402">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-404" value="No?" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Z5Rv9_4MmNpo2kXM76Gp-403">
+          <mxGeometry x="-0.28" y="-4" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-395" value="Is the stack creation still in progress?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="525" y="7290" width="230" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-400" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-397" target="Z5Rv9_4MmNpo2kXM76Gp-399">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-397" value="Show message&amp;nbsp;&lt;div&gt;&lt;p style=&quot;margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; line-height: normal; font-family: &amp;quot;Helvetica Neue&amp;quot;; text-align: start;&quot; class=&quot;p1&quot;&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&quot;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&lt;font&gt;Stack creation is still in progress .. Sleeping &lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;30 seconds&lt;/font&gt;&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&quot;&lt;/span&gt;&lt;/p&gt;&lt;/div&gt;" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="140" y="7310.5" width="280" height="59" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-399" value="Wait for 30 seconds" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="220" y="7160.505" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-401" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-399" target="Z5Rv9_4MmNpo2kXM76Gp-392">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-406" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-402" target="Z5Rv9_4MmNpo2kXM76Gp-405">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-409" value="No?" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Z5Rv9_4MmNpo2kXM76Gp-406">
+          <mxGeometry x="0.2889" y="-1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-411" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-402" target="Z5Rv9_4MmNpo2kXM76Gp-410">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-402" value="Is the stack creation complete?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="525" y="7490" width="230" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-408" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-405" target="Z5Rv9_4MmNpo2kXM76Gp-407">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-405" value="Show error message&amp;nbsp;&lt;div&gt;&lt;p style=&quot;margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; line-height: normal; font-family: &amp;quot;Helvetica Neue&amp;quot;; text-align: start;&quot; class=&quot;p1&quot;&gt;&lt;font&gt;&quot;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Stack creation has failed status&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&quot;&lt;/span&gt;&lt;/font&gt;&lt;/p&gt;&lt;/div&gt;" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="190" y="7510.5" width="280" height="59" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-407" value="End" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="70" y="7525" width="90" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-413" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-410" target="Z5Rv9_4MmNpo2kXM76Gp-412">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-410" value="Show message&amp;nbsp;&lt;div&gt;&lt;p style=&quot;margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-alternates: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-variant-position: normal; font-variant-emoji: normal; font-stretch: normal; line-height: normal; font-family: &amp;quot;Helvetica Neue&amp;quot;; text-align: start;&quot; class=&quot;p1&quot;&gt;&lt;font&gt;&quot;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Stack creation is complete&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&quot;&lt;/span&gt;&lt;/font&gt;&lt;/p&gt;&lt;/div&gt;" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="970" y="7510.5" width="280" height="59" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-412" value="End" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1393" y="7525" width="90" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-422" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-420" target="Z5Rv9_4MmNpo2kXM76Gp-29">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-420" value="Set account profile" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1375.5" y="660" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-434" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="954" y="4650" as="sourcePoint" />
+            <mxPoint x="1390.5" y="4421.25" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="1314" y="4650" />
+              <mxPoint x="1314" y="4421" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-435" value="End" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="325" y="6628.75" width="90" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-437" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-43" target="Z5Rv9_4MmNpo2kXM76Gp-97">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2379" y="2040" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z5Rv9_4MmNpo2kXM76Gp-441" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="Z5Rv9_4MmNpo2kXM76Gp-111" target="Z5Rv9_4MmNpo2kXM76Gp-162">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2580" y="3799" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
