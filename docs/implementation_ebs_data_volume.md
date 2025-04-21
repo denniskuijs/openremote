@@ -3,7 +3,9 @@
 ## Implementation: Separate EBS Volume for storing/decoupling the IoT Data  <!-- omit in toc -->
 
 ## Context
-This document provides a detailed overview of how I implemented the creation and mounting of the separate `EBS` data volume within the `CI/CD` workflow. It also outlines the decisions I made and the challenges encountered throughout the development process.
+This document provides a detailed overview of how I implemented the creation and mounting of the separate `EBS` data volume within the `CI/CD` workflow. 
+
+It also outlines the decisions I made and the challenges encountered throughout the development process.
 
 ## Contents <!-- omit in toc -->
 
@@ -48,6 +50,7 @@ After completing my initial research, I shared my findings with several team mem
 
 ### 1.1. Mount EBS volume on the Docker volumes directory
 One of the team members suggested mounting the default `Docker` volumes directory (`/var/lib/docker/volumes`) to the newly created `EBS` data volume, rather than creating and mounting a custom directory.
+
 I began investigating this option by mounting the separate `EBS` data volume to this directory using the following command:
 
 ```sh
@@ -73,6 +76,7 @@ However, after attaching the `EBS` data volume to another `EC2` instance running
 <img src="./Media/docker_volume_permission_error_postgres.png" width="800">
 
 Based on the insights of my initial research, I knew that this issue could be resolved by setting the `PGDATA` environment variable in the `Docker Compose` file.
+
 Since the `EBS` volume is an external block device, this step is nessecary for `Docker` to properly access the data. It's not possible to `chown` the directory to both the `postgres` and `root` users simultaneously, which makes specifying the `PGDATA` variable essential.
 
 After adding the `PGDATA` variable the `Docker Compose` file looks like this.
@@ -174,7 +178,9 @@ With this setup, the `EBS` data volume can now easily be attached to other `EC2`
 Additionally, the `Docker Compose` file becomes much simpeler, only the `PGDATA` variable needs to be configured, eliminating the need to define different volume paths for each individual container.
 
 ## 2. Implementation in the CI/CD pipeline
-In this section, I will explain how I implemented my prototype into the existing `CI/CD` workflow on `Github Actions`. It will be devided into the following topics:
+In this section, I will explain how I implemented my prototype into the existing `CI/CD` workflow on `Github Actions`. 
+
+It will be devided into the following topics:
   
   - Creating/Mounting the `EBS` data volume
   - Adding CloudWatch metrics/alarms for the `EBS` data volume
@@ -254,6 +260,7 @@ WAIT_FOR_STACK=${10,,}
 ```
 
 Next, I created the `EBS_STACK_NAME` variable, which generates a unique name for the `CloudFormation` stack by combining the `STACK_NAME` with a predefined text string. The `STACK_NAME` itself is created from the `HOST` variable, where all dots in the `hostname` are replaced with a separator. With this apparoach, the `CloudFormation` stack names are unique for every `host`.
+
 It is crucial that the `EBS` volume is created in the same `availabilty zone` as the `EC2` instance, as the volume cannot be attached to the instance otherwise. To ensure this, I first investigated how the `EC2` instance is assigned to a specific `availabilty zone`.
 
 First, the `SUBNET_NUMBER` variable is set to a random integer between `1` and `3`. There are `3` different `public subnets` and this apparoach randomly selects one of them. Each subnet is located in a different `availabilty zone` (`1a`, `1b` or `1c`). The subnet name is then generated using the `SUBNET_NUMBER` variable and a predefined text string.
