@@ -270,7 +270,9 @@ SUBNET_NUMBER=$(( $RANDOM % 3 + 1 ))
 SUBNETNAME="or-subnet-public-$SUBNET_NUMBER"
 ```
 
-I still needed the exact `availabilty zone` name that the `EC2` instance will use. The script already includes a line that retrieves the `AvailabiltyZoneId` based on the `SUBNET_NAME` variable. However, this ID cannot be used to to create the `EBS` data volume, as the volume requires the `availabilty zone` name. to resolve this, I added the following line to the script to retrieve the name.
+I still needed the exact `availabilty zone` name that the `EC2` instance will use. The script already includes a line that retrieves the `AvailabiltyZoneId` based on the `SUBNET_NAME` variable. 
+
+However, this ID cannot be used to to create the `EBS` data volume, as the volume requires the `availabilty zone` name. to resolve this, I added the following line to the script to retrieve the name.
 
 ```
 SUBNET_AZ=$(aws ec2 describe-subnets --filters Name=tag:Name,Values=$SUBNETNAME --query "Subnets[0].AvailabilityZone" --output text $ACCOUNT_PROFILE 2>/dev/null)
@@ -291,6 +293,7 @@ else
 ```
 
 If the stack exists, the `EBS_STACK_ID` variable will be set with the `Stack ID` for future reference. Otherwise, the `EBS` data volume is created.
+
 Before creating the volume, I first check if the `CloudFormation` template exists in one of the specified directories. If the template is not found, the script will exit and throw an error.
 
 ```
@@ -341,7 +344,9 @@ else
 fi
 ```
 
-After the stack is successfully created, we need to check whether the creation was succesful or failed with an error. The code below retrieves the status from the `CloudFormation` stack based off the `Stack ID` stored in the previous step. As long as the status returns `CREATE_IN_PROGRESS` the stack is still being created. The script checks the stack status every `30` seconds and stops when the status either returns `CREATE_COMPLETE` (indicating successful stack creation) or when the status is neither `CREATE_IN_PROGRESS` nor `CREATE_COMPLETE` (indicating stack creation failure).
+After the stack is successfully created, we need to check whether the creation was succesful or failed with an error. The code below retrieves the status from the `CloudFormation` stack based off the `Stack ID` stored in the previous step. As long as the status returns `CREATE_IN_PROGRESS` the stack is still being created. 
+
+The script checks the stack status every `30` seconds and stops when the status either returns `CREATE_COMPLETE` (indicating successful stack creation) or when the status is neither `CREATE_IN_PROGRESS` nor `CREATE_COMPLETE` (indicating stack creation failure).
 
 ```
     echo "Waiting for stack to be created"
@@ -361,13 +366,16 @@ After the stack is successfully created, we need to check whether the creation w
     fi
 ```
 
-When the `EBS` data volume is succesfully created, it can be attached to the `EC2` instance. To attach the volume to the instance, you must specify a `Device Name` such as `/dev/sda`, `/dev/sdb` etc. It is not possible to automatically assign a `device name` when attaching the volume. You must specify a specific `device name` upfront. To achieve this, I configured a variable named `EBS_DEVICE_NAME` and set it to `/dev/sdf` as the designated `device name`.
+When the `EBS` data volume is succesfully created, it can be attached to the `EC2` instance. To attach the volume to the instance, you must specify a `Device Name` such as `/dev/sda`, `/dev/sdb` etc. 
+
+It is not possible to automatically assign a `device name` when attaching the volume. You must specify a specific `device name` upfront. To achieve this, I configured a variable named `EBS_DEVICE_NAME` and set it to `/dev/sdf` as the designated `device name`.
 
 <img src="./Media/ebs_volume_virtualization.png" width="1000">
 
 As shown in the image above, for `EC2` instances that are using `HVM` as the virtualization method, it is recommended to choose a `device name` between `/dev/sd[b]` and `/dev/sd[z]`.
 
 Attaching the volume to the `EC2` instance is a technical process that involves several logical steps. 
+
 First, before the `EBS` data volume can be mounted there must of course be a running `EC2` instance. To check this I retrieve the `Instance ID` and state from the `CloudFormation` stack that creates the `EC2` instance.
 
 ```
@@ -375,8 +383,9 @@ INSTANCE_ID=$(aws ec2 describe-instances --filters "Name=tag:Name,Values='$HOST'
 INSTANCE_STATE=$(aws ec2 describe-instances --filters "Name=tag:Name,Values='$HOST'" --query "Reservations[].Instances[?Tags[?Value=='$STACK_ID']].State.Name" --output text $ACCOUNT_PROFILE 2>/dev/null)
 ```
 
-The script checks for an `EC2` instance associated to the `CloudFormation` template by querying the specifc `Stack ID` that was returned when this stack was successfully created. To ensure that we always target the correct instance, a filter is applied to retrieve the instance with the name provided in the `CloudFormation` template.
-The script also retrieves the instance's status, as the volume can only be attached to an instance that is in the `running` state.
+The script checks for an `EC2` instance associated to the `CloudFormation` template by querying the specifc `Stack ID` that was returned when this stack was successfully created. 
+
+To ensure that we always target the correct instance, a filter is applied to retrieve the instance with the name provided in the `CloudFormation` template. The script also retrieves the instance's status, as the volume can only be attached to an instance that is in the `running` state.
 
 ```
 echo "Check if instance is available"
@@ -390,7 +399,9 @@ while [[ -z "$INSTANCE_ID" ]] && [[ "$INSTANCE_STATE" != 'running' ]] && [ $coun
 done
 ```
 
-If the `Instance ID` is not found or the instance status is not `running`, the script waits for `30` seconds before retrying. Each attempt increments a counter, and the script continues checking as long as the counter remains below `30`. This counter acts as a safeguard, in case the instance fails to launch successfully. If the counter exceeds `30`, the script will stop prevent running indefinitely.
+If the `Instance ID` is not found or the instance status is not `running`, the script waits for `30` seconds before retrying. Each attempt increments a counter, and the script continues checking as long as the counter remains below `30`. 
+
+This counter acts as a safeguard, in case the instance fails to launch successfully. If the counter exceeds `30`, the script will stop prevent running indefinitely.
 
 ```
 if [ -z "$INSTANCE_ID" ] && [ "$INSTANCE_STATE" != 'running' ]; then
@@ -401,7 +412,9 @@ fi
 
 If the `Instance ID` cannot be retrieved or the instance state is not `running` after `30` attempts, the script will exit with an error status code.
 
-Once the `Instance ID` is found and the instance is in a `running` state, the script attempts to attach the `EBS` data volume to the `EC2` instance. It's crucial that this step happens immediately after the instance becomes available, as several `cfn-scripts` begin running right after instance creation. One of these scripts automatically creates a filesystem on the volume and mounts it to the `/var/lib/docker/volumes` directory. If the volume isn’t attached in time, this step will fail, which then fails instance creation and therefore automatic rollbacks the `CloudFormation` stack.
+Once the `Instance ID` is found and the instance is in a `running` state, the script attempts to attach the `EBS` data volume to the `EC2` instance. It's crucial that this step happens immediately after the instance becomes available, as several `cfn-scripts` begin running right after instance creation. One of these scripts automatically creates a filesystem on the volume and mounts it to the `/var/lib/docker/volumes` directory. 
+
+If the volume isn’t attached in time, this step will fail, which then fails instance creation and therefore automatic rollbacks the `CloudFormation` stack.
 
 After retrieving the `Instance ID` the script is trying to retrieve the `Volume ID` that belongs to the volume that was created by the `EBS` `CloudFormation` template. 
 
@@ -681,6 +694,7 @@ This ensures that the `CloudWatch Agent` retrieves metrics for this specific mou
 ```
 
 Next, I added a new `CloudWatch Alarm` to the same `CloudFormation` template. This alarm is set to trigger if disk usage exceeds `90%` within a `one-hour` period. When the alarm is triggered, Amazon sends a notification to the configured `SNS` topic, which in turn sends an email alert to the topic's subscribers.
+
 To connect the newly added metric to this alarm, I configured the `Dimensions` block with the required details, including the `Instance ID`, the `path` that is referring to the `mount point` in the metrics and the `Filesystem type`.
 
 ```
@@ -745,6 +759,7 @@ If the `CloudFormation` stack does not exists, the script will attempt to create
 ```
 
 Before the stack can be created, the script first checks if the required `IAM` role is already created in the AWS account. This role is required for the `DLM` policy to perform snapshot creation tasks on behalf of the `IAM` user.
+
 If the role doesn't exists, the system will create the default role and set the `ROLE_ARN` variable with the `Amazon Resource Name` (ARN). This variable will then be passed to the `CloudFormation` template in the next step.
 
 ```
@@ -851,6 +866,7 @@ Resources:
 ```
 
 The script creates a `lifecycle policy` with a single schedule that creates a new `snapshot` every `24 hours` at `5 AM`. The `RetainRule` is configured to keep the `5` most recent snapshots, automatically deleting older ones beyond that limit. The policy is enabled immediately upon creation.
+
 To ensure that snapshots are only created for the correct volume, the `TargetTags` parameter uses the `EBS_STACK_ID` value to identify the appropriate volume.
 
 ### 2.4. Adding support for automatic attaching/detaching the EBS data volume
@@ -1326,6 +1342,7 @@ I also corrected a few comments to fix spelling errors.
 
 ### 4.2. Improving the filesystem check in the SSM document
 As mentioned [here](#35-improve-check-if-filesystem-exists) I previously explained that the current implementation isn't ideal. When the volume is attached for the first time, there is no filesystem yet. which results in a 900 second wait loop before the initial filesystem is created.
+
 I’ve improved this by combining the volume attachment and filesystem check into a single command. Since the filesystem check depends on the volume being attached, running them separately can cause issues since these commands are running asynchronous and don’t wait for each other to finish.
 
 <img src="./Media/review_13.png" width="1000">
@@ -1356,6 +1373,7 @@ I also performed a manual test with a fellow student by testing his changes from
 <img src="./Media/map_test_1.png" width="1000">
 
 In the image above, you can see that custom `maptiles` can be uploaded through the OpenRemote Manager. These `maptiles` are stored on a `Docker` volume, which is stored on the separate `EBS` data volume.
+
 When attaching this `EBS` data volume to another `EC2` instance, the image below shows that the `maptiles` are still available. This confirms that the implementation is working as expected. The data is correctly stored on the separate `EBS` volume and remains accessible when attached to other `EC2` instances.
 
 <img src="./Media/map_test_2.png" width="1000">
