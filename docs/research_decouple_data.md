@@ -102,7 +102,10 @@ The system also configures `CloudWatch` and creates some alarms for several metr
 
 <img src="./Media/ec2_cloudformation.png" width="1000">
 
-There are several things happening simultaneously in this scenario. The `EC2` instance is using a single root block device, which means there is no separation between the system data and application data. The volume has been configured with the property `DeleteOnTermination=true`, meaning it will be deleted when the instance is terminated. However, simply changing this setting is not enough to access the IoT data easily. This is because the volume is also serving as the boot drive for the operating system.
+There are several things happening simultaneously in this scenario. The `EC2` instance is using a single root block device, which means there is no separation between the system data and application data. The volume has been configured with the property `DeleteOnTermination=true`, meaning it will be deleted when the instance is terminated. 
+
+However, simply changing this setting is not enough to access the IoT data easily. This is because the volume is also serving as the boot drive for the operating system.
+
 When changes are made to the `CloudFormation` template, there is a possibility that the `EC2` instance will be recreated to apply the updates. This could result in the termination of both the instance and its associated volume, along with the data stored on it.
 
 ### 1.2. Desired Situation

@@ -16,16 +16,16 @@ It also outlines the decisions I made and the challenges encountered throughout 
   - [1.1. Mount EBS volume on the Docker volumes directory](#11-mount-ebs-volume-on-the-docker-volumes-directory)
 - [2. Implementation in the CI/CD pipeline](#2-implementation-in-the-cicd-pipeline)
   - [2.1. Creating and Mounting the EBS data volume](#21-creating-and-mounting-the-ebs-data-volume)
-    - [2.1.1. GitHub Actions Workflow](#211-github-actions-workflow)
-    - [2.1.2. Provision Host Script](#212-provision-host-script)
-    - [2.1.3. CloudFormation Template](#213-cloudformation-template)
+    - [2.1.1. GitHub Actions workflow](#211-github-actions-workflow)
+    - [2.1.2. Provision Host script](#212-provision-host-script)
+    - [2.1.3. CloudFormation template](#213-cloudformation-template)
   - [2.2. Adding CloudWatch metrics and alarms for the EBS data volume](#22-adding-cloudwatch-metrics-and-alarms-for-the-ebs-data-volume)
     - [2.2.1. CloudFormation Template](#221-cloudformation-template)
   - [2.3. Adding support for automatic snapshot creation of the EBS data volume](#23-adding-support-for-automatic-snapshot-creation-of-the-ebs-data-volume)
     - [2.3.1. Provision Host Script](#231-provision-host-script)
-    - [2.3.2. CloudFormation Template](#232-cloudformation-template)
+    - [2.3.2. CloudFormation template](#232-cloudformation-template)
   - [2.4. Adding support for automatic attaching and detaching the EBS data volume](#24-adding-support-for-automatic-attaching-and-detaching-the-ebs-data-volume)
-    - [2.4.1. Provision Host Script](#241-provision-host-script)
+    - [2.4.1. Provision Host script](#241-provision-host-script)
     - [2.4.2. CloudFormation Template](#242-cloudformation-template)
 - [3. Improved implementation based on feedback](#3-improved-implementation-based-on-feedback)
   - [3.1. Add counter when attaching volume](#31-add-counter-when-attaching-volume)
@@ -189,7 +189,7 @@ It will be devided into the following topics:
 
 ### 2.1. Creating and Mounting the EBS data volume
 
-#### 2.1.1. GitHub Actions Workflow
+#### 2.1.1. GitHub Actions workflow
 I start my implementation in the `GitHub Actions` workflow file. In this file the steps for executing the `CI/CD` workflow are defined.
 The workflow is triggered on `workflow dispatch`, meaning it runs on-demand without the need for a pull request or code push.
 
@@ -243,7 +243,7 @@ Finally, I passed the newly created variables to the `provision host` script. Th
 .ci_cd/aws/provision_host.sh "$ACCOUNT_NAME" "$HOST" "$INSTANCE_TYPE" "$ROOT_DISK_SIZE" "$DATA_DISK_SIZE" "$SNAPSHOT_ID" "$ELASTIC_IP" "$PROVISION_S3_BUCKET" "$ENABLE_METRICS"
 ```
 
-#### 2.1.2. Provision Host Script
+#### 2.1.2. Provision Host script
 In the `provision host` script, I modified the order of the variables passed from the `workflow` to the script. In bash, you can reference each variable based on the order in which they are passed.
 
 ```
@@ -477,7 +477,7 @@ prepare_volume:
           fi
 ```
 
-#### 2.1.3. CloudFormation Template
+#### 2.1.3. CloudFormation template
 
 The `CloudFormation` template for creating the `EBS` volume looks like this:
 
@@ -825,7 +825,7 @@ After the `CloudFormation` stack is successfully created, the script checks its 
   fi
 ```
 
-#### 2.3.2. CloudFormation Template
+#### 2.3.2. CloudFormation template
 
 The `CloudFormation` template for creating the `DLM` policy looks like this:
 
@@ -873,7 +873,7 @@ To ensure that snapshots are only created for the correct volume, the `TargetTag
 
 ### 2.4. Adding support for automatic attaching and detaching the EBS data volume
 
-#### 2.4.1. Provision Host Script
+#### 2.4.1. Provision Host script
 The final step in the process is to create two scripts for automatically `attaching` and `detaching` the `EBS` data volume. These scripts are stored in `Amazon Systems Manager` and can be executed either manually through the AWS Management Console or via the AWS `CLI`.
 
 To provision the `SSM` scripts, I reused the same logic applied when provisioning the `EBS` data volume and `DLM` policy in the `provision host` script.
