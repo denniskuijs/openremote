@@ -7,6 +7,8 @@ This document provides a detailed overview of how I implemented the creation and
 
 It also outlines the decisions I made and the challenges encountered throughout the development process.
 
+<div style="page-break-after: always;"></div>
+
 ## Contents <!-- omit in toc -->
 
 <div class="toc">
@@ -44,6 +46,8 @@ It also outlines the decisions I made and the challenges encountered throughout 
 - [5. Tests](#5-tests)
 
 </div>
+
+<div style="page-break-after: always;"></div>
 
 ## 1. Research based on feedback
 After completing my initial research, I shared my findings with several team members. Following their feedback, I continued my research on this topic before proceeding with the implementation of my prototype in the `CI/CD` workflow.
@@ -176,6 +180,8 @@ services:
 
 With this setup, the `EBS` data volume can now easily be attached to other `EC2` instances as long as the `PGDATA` variable is configured on both the original and target machine.
 Additionally, the `Docker Compose` file becomes much simpeler, only the `PGDATA` variable needs to be configured, eliminating the need to define different volume paths for each individual container.
+
+<div style="page-break-after: always;"></div>
 
 ## 2. Implementation in the CI/CD pipeline
 In this section, I explain how I implemented my prototype into the existing `CI/CD` workflow on `Github Actions`. 
@@ -477,6 +483,8 @@ prepare_volume:
           fi
 ```
 
+<div style="page-break-after: always;"></div>
+
 #### 2.1.3. CloudFormation template
 
 The `CloudFormation` template for creating the `EBS` volume looks like this:
@@ -518,6 +526,8 @@ Resources:
 
 The script will create an `EBS` data volume based on the parameters that are passed from the `provision host` script. To easily identify each volume, a tag will be added with the host's name.
 If the condition `IsSnapshotProvided` is true, the `Snapshot ID` will be configured and the volume will be created based off an existing snaphost. Otherwise, an empty volume will be created.
+
+<div style="page-break-after: always;"></div>
 
 ### 2.2. Adding CloudWatch metrics and alarms for the EBS data volume
 
@@ -724,6 +734,8 @@ DataDiskUtilizationAlarm:
         Value: xfs
 ```
 
+<div style="page-break-after: always;"></div>
+
 ### 2.3. Adding support for automatic snapshot creation of the EBS data volume
 
 #### 2.3.1. Provision Host Script
@@ -825,6 +837,8 @@ After the `CloudFormation` stack is successfully created, the script checks its 
   fi
 ```
 
+<div style="page-break-after: always;"></div>
+
 #### 2.3.2. CloudFormation template
 
 The `CloudFormation` template for creating the `DLM` policy looks like this:
@@ -870,6 +884,8 @@ Resources:
 The script creates a `lifecycle policy` with a single schedule that creates a new `snapshot` every `24 hours` at `5 AM`. The `RetainRule` is configured to keep the `5` most recent snapshots, automatically deleting older ones beyond that limit. The policy is enabled immediately upon creation.
 
 To ensure that snapshots are only created for the correct volume, the `TargetTags` parameter uses the `EBS_STACK_ID` value to identify the appropriate volume.
+
+<div style="page-break-after: always;"></div>
 
 ### 2.4. Adding support for automatic attaching and detaching the EBS data volume
 
@@ -960,6 +976,8 @@ if [ "$WAIT_FOR_STACK" != 'false' ]; then
   fi
 fi
 ```
+
+<div style="page-break-after: always;"></div>
 
 #### 2.4.2. CloudFormation Template
 The `CloudFormation` template for provisioning the `SSM` documents looks like this:
@@ -1124,6 +1142,8 @@ Resources:
 It creates two seperate documents, one for `attaching` and another for `detaching` the `EBS` data volume. 
 When these documents are executed, `SSM` runs the commands defined in the `runCommand` block on the targeted `EC2` instance.
 
+<div style="page-break-after: always;"></div>
+
 ## 3. Improved implementation based on feedback
 
 After my initial implementation, I reviewed it with an team member and received valuable feedback to improve it further.
@@ -1144,6 +1164,8 @@ done
 
 <img src="./Media/review_1.png" width="1000">
 
+<div style="page-break-after: always;"></div>
+
 ### 3.2. Stop Docker before unmounting/detaching the volume
 The second change I made was to add an extra command in the `create-ssm` `CloudFormation` template to stop `Docker` before `unmounting` and `detaching` the volume. 
 
@@ -1158,6 +1180,8 @@ Previously, if the volume was `unmounted`and `detached` without stopping `Docker
 ```
 
 <img src="./Media/review_2.png" width="1000">
+
+<div style="page-break-after: always;"></div>
 
 ### 3.3. Wait until EC2 instance is created before attaching/mounting the volume
 
@@ -1214,6 +1238,8 @@ With this approach, volume attachment and mounting only occur after the instance
 
 <img src="./Media/review_3.png" width="1000">
 
+<div style="page-break-after: always;"></div>
+
 ### 3.4. SSM Documents for each account instead of host
 
 When provisioing the `SSM` documents. In my first attempt, they will be created for each individual host. Since the documents are configureable with parameters and we need to specify on which instance they need to be executed. There is no reason to create this for every single host. Instead, provisioning them for each account is a beter alternative. To achieve this, I moved this logic to the `provision account` script.
@@ -1256,6 +1282,8 @@ fi
 
 <img src="./Media/review_4.png" width="1000">
 
+<div style="page-break-after: always;"></div>
+
 ### 3.5. Improve check if filesystem exists
 
 In my initial implementation, I used the `snapshot` variable to determine whether the script should create a filesystem on the `EBS` data volume or simply mount it. When a `snapshot` is used, the volume already contains a filesystem, so it only needs to be mounted.
@@ -1287,6 +1315,8 @@ This delay is too long, so I'm planning to improve the implementation to handle 
 
 <img src="./Media/review_5.png" width="1000">
 
+<div style="page-break-after: always;"></div>
+
 ### 3.6. Problems with auto-reloader.conf
 
 Updating the `CloudFormation` stack re-executes the `cfn-scripts`, causing duplicate entries in `/etc/fstab`
@@ -1306,6 +1336,8 @@ In my new implementation, I moved the volume attachment and mounting logic out o
 
 <img src="./Media/review_6.png" width="1000">
 
+<div style="page-break-after: always;"></div>
+
 ### 3.7. Attaching volume within the provision host script
 
 Initally, I added the logic for attaching the volume in the `provision host` script. However, As previously mentioned, this approach could lead to errors if the volume wasn't created on time when the script ran.
@@ -1313,12 +1345,16 @@ To resolve this, I moved the provisioning of the `EBS` data volume to the `creat
 
 <img src="./Media/review_7.png" width="1000">
 
+<div style="page-break-after: always;"></div>
+
 ### 3.8. Move provisioning DLM Policy to create-ec2 stack
 
 In my inital approach, I included logic in the `provision host` script to create the `DLM` policy using a separate `CloudFormation` stack. 
 However, since `DLM` is a native part of `EC2`, it made more sense to move the this part into the `create-ec2` `CloudFormation` stack. This change simplifies the `provision host` script and ensures the `DLM` policy is created automatically once the `EBS` data volume is successfully provisioned.
 
 <img src="./Media/review_8.png" width="1000">
+
+<div style="page-break-after: always;"></div>
 
 ### 3.9. Move provisioning EBS data volume to create-ec2 stack
 
@@ -1330,6 +1366,8 @@ Because the volume must reside in the same `availability zone` as the instance, 
 I’ve also removed the steps for creating the filesystem and mounting the volume from the `cfn-script` section. Instead, that logic is now handeled via `SSM` documents, which are executed by the `provision host` script after the stack is successfully created.
 
 <img src="./Media/review_9.png" width="1000">
+
+<div style="page-break-after: always;"></div>
 
 ## 4. Additional changes after second feedback round
 After refining my implementation based on the initial feedback, I requested another review. This time only a few minor changes were suggested.
@@ -1348,12 +1386,16 @@ I also corrected a few comments to fix spelling errors.
 
 <img src="./Media/review_12.png" width="1000">
 
+<div style="page-break-after: always;"></div>
+
 ### 4.2. Improving the filesystem check in the SSM document
 As mentioned [here](#35-improve-check-if-filesystem-exists) I previously explained that the current implementation isn't ideal. When the volume is attached for the first time, there is no filesystem yet. which results in a `900` second wait loop before the initial filesystem is created.
 
 I’ve improved this by combining the volume attachment and filesystem check into a single command. Since the filesystem check depends on the volume being attached, running them separately can cause issues since these commands are running asynchronous and don’t wait for each other to finish.
 
 <img src="./Media/review_13.png" width="1000">
+
+<div style="page-break-after: always;"></div>
 
 ### 4.3. Replace contents of existing volume
 One of my colleagues is wondering if we could replace the contents of the existing volume with a `snapshot`.
@@ -1370,6 +1412,8 @@ To improve flexibility, we could extend our implementation to also support provi
 I will continue investigating the options for this in the upcoming weeks.
 
 <img src="./Media/review_14.png" width="1000">
+
+<div style="page-break-after: always;"></div>
 
 ## 5. Tests
 To make sure the implementation is working as expected, I executed several tests by running the script in the `CI/CD` workflow on `GitHub Actions`.
