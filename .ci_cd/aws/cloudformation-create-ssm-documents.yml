@@ -79,7 +79,7 @@ Resources:
                   - '{{ DeviceName }}'
                 InstanceIds:
                   - '{{ InstanceId }}'
-              nextStep: DetachVolume
+            nextStep: DetachVolume
           - name: DetachVolume
             action: aws:executeAwsApi
             onFailure: Abort
@@ -164,7 +164,7 @@ Resources:
               VolumeId: '{{ VolumeId }}'
               InstanceId: '{{ InstanceId }}'
               Device: '{{ DeviceName }}'
-              nextStep: MountVolume
+            nextStep: MountVolume
           - name: MountVolume
             action: aws:executeAwsApi
             onFailure: Abort
