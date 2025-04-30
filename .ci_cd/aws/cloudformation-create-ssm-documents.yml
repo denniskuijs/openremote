@@ -77,8 +77,8 @@ Resources:
               Parameters: 
                 DeviceName: 
                   - '{{ DeviceName }}'
-                InstanceIds:
-                  - '{{ InstanceId }}'
+              InstanceIds:
+                - '{{ InstanceId }}'
             nextStep: DetachVolume
           - name: DetachVolume
             action: aws:executeAwsApi
@@ -175,5 +175,5 @@ Resources:
               Parameters:
                 DeviceName:
                   - '{{ DeviceName }}'
-                InstanceIds:
-                  - '{{ InstanceId }}'
+              InstanceIds:
+                - '{{ InstanceId }}'
