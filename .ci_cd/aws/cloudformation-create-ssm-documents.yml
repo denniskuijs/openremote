@@ -407,31 +407,31 @@ Resources:
               PropertySelector: '$.AutomationExecution.AutomationExecutionStatus'
               DesiredValues:
                 - 'Success'
-            nextStep: GetPolicyDetails
-          - name: GetPolicyDetails
-            action: aws:executeAwsApi
-            timeoutSeconds: 60
-            onFailure: Abort
-            inputs:
-              Service: dlm
-              Api: GetLifecyclePolicies
-              ResourceTypes: VOLUME
-              TargetTags:
-                - Key: Name
-                  Value: '{{ GetCurrentVolumeDetails.Name }}'
-            outputs:
-              - Name: PolicyId
-                Selector: '$.PolicyId'
-                Type: String
-            nextStep: UpdateDLMPolicy
-          - name: UpdateDLMPolicy
-            action: aws:executeAwsApi
-            timeoutSeconds: 60
-            onFailure: Abort
-            inputs:
-              Service: dlm
-              Api: UpdateLifecyclePolicy
-              PolicyId: '{{ GetPolicyDetails.PolicyId }}'
-              TargetTags:
-                - Key: VolumeId
-                  Value:  '{{ CreateVolume.VolumeId }}'
+          #   nextStep: GetPolicyDetails
+          # - name: GetPolicyDetails
+          #   action: aws:executeAwsApi
+          #   timeoutSeconds: 60
+          #   onFailure: Abort
+          #   inputs:
+          #     Service: dlm
+          #     Api: GetLifecyclePolicies
+          #     ResourceTypes: VOLUME
+          #     TargetTags:
+          #       - Key: Name
+          #         Value: '{{ GetCurrentVolumeDetails.Name }}'
+          #   outputs:
+          #     - Name: PolicyId
+          #       Selector: '$.PolicyId'
+          #       Type: String
+          #   nextStep: UpdateDLMPolicy
+          # - name: UpdateDLMPolicy
+          #   action: aws:executeAwsApi
+          #   timeoutSeconds: 60
+          #   onFailure: Abort
+          #   inputs:
+          #     Service: dlm
+          #     Api: UpdateLifecyclePolicy
+          #     PolicyId: '{{ GetPolicyDetails.PolicyId }}'
+          #     TargetTags:
+          #       - Key: Name
+          #         Value: '{{ GetCurrentVolumeDetails.Name }}'
