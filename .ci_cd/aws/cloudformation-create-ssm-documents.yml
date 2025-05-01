@@ -286,14 +286,16 @@ Resources:
               Filters:
                 - Name: tag-value
                   Values: ['{{ StackName }}']
+                - Name: instance-state-name
+                  Values: ['running']
             outputs:
               - Name: InstanceId
                 Selector: '$.Reservations[0].Instances[0].InstanceId'
               - Name: AvailabilityZone
                 Selector: '$.Reservations[0].Instances[0].Placement.AvailabilityZone'
                 Type: String
-            nextStep: GetCurrentVolumeDetails
-          - name: GetCurrentVolumeDetails
+            nextStep: GetVolumeDetails
+          - name: GetVolumeDetails
             action: aws:executeAwsApi
             timeoutSeconds: 60
             onFailure: Abort
@@ -303,12 +305,16 @@ Resources:
               Filters:
                 - Name: tag-value
                   Values: ['{{ StackName }}']
+                - Name: tag-value
+                  Values: ['OR_TYPE']
+                - Name: attachment.status
+                  Values: [' attached']
             outputs:
-              - Name: OldVolumeId
+              - Name: VolumeId
                 Selector: '$.Volumes[0].VolumeId'
               - Name: DeviceName
                 Selector: '$.Volumes[0].Attachments[0].Device'
-              - Name: Name
+              - Name: VolumeName
                 Selector: '$.Volumes[0].Tags[0].Value'
             nextStep: CreateVolume
           - name: CreateVolume
@@ -322,10 +328,10 @@ Resources:
               TagSpecifications:
                 - ResourceType: volume
                   Tags:
-                    - Key: VolumeId
-                      Value: '{{ CreateVolume.VolumeId }}'
                     - Key: Name
-                      Value: '{{ GetCurrentVolumeDetails.Name }}'
+                      Value: '{{ GetVolumeDetails.VolumeName }}'
+                    - Key: Type
+                      Value: OR_TYPE
             outputs:
               - Name: VolumeId
                 Selector: '$.VolumeId'
@@ -343,8 +349,8 @@ Resources:
               PropertySelector: '$.Volumes[0].State'
               DesiredValues:
                 - 'available'
-            nextStep: DetachOldVolume
-          - name: DetachOldVolume
+            nextStep: DetachVolume
+          - name: DetachVolume
             action: aws:executeAwsApi
             timeoutSeconds: 60
             onFailure: Abort
@@ -354,29 +360,29 @@ Resources:
               DocumentName: detach_volume
               Parameters:
                 DeviceName:
-                  - '{{ GetCurrentVolumeDetails.DeviceName }}'
+                  - '{{ GetVolumeDetails.DeviceName }}'
                 VolumeId: 
-                  - '{{ GetCurrentVolumeDetails.OldVolumeId }}'
+                  - '{{ GetVolumeDetails.VolumeId }}'
                 InstanceId: 
                   - '{{ GetInstanceDetails.InstanceId }}'
             outputs:
               - Name: AutomationId
                 Selector: "$.AutomationExecutionId"
                 Type: String
-            nextStep: WaitForOldVolumeDetaching
-          - name: WaitForOldVolumeDetaching
+            nextStep: WaitForVolumeDetachment
+          - name: WaitForVolumeDetachment
             action: aws:waitForAwsResourceProperty
             timeoutSeconds: 60
             onFailure: Abort
             inputs:
               Service: ssm
               Api: GetAutomationExecution
-              AutomationExecutionId: '{{ DetachOldVolume.AutomationId }}'
+              AutomationExecutionId: '{{ DetachVolume.AutomationId }}'
               PropertySelector: '$.AutomationExecution.AutomationExecutionStatus'
               DesiredValues:
                 - 'Success'
-            nextStep: AttachNewVolume
-          - name: AttachNewVolume
+            nextStep: AttachVolume
+          - name: AttachVolume
             action: aws:executeAwsApi
             timeoutSeconds: 60
             onFailure: Abort
@@ -386,7 +392,7 @@ Resources:
               DocumentName: attach_volume
               Parameters:
                 DeviceName:
-                  - '{{ GetCurrentVolumeDetails.DeviceName }}'
+                  - '{{ GetVolumeDetails.DeviceName }}'
                 VolumeId: 
                   - '{{ CreateVolume.VolumeId }}'
                 InstanceId: 
@@ -395,8 +401,8 @@ Resources:
               - Name: AutomationId
                 Selector: '$.AutomationExecutionId'
                 Type: String
-            nextStep: WaitForNewVolumeAttaching
-          - name: WaitForNewVolumeAttaching
+            nextStep: WaitForVolumeAttachment
+          - name: WaitForVolumeAttachment
             action: aws:waitForAwsResourceProperty
             timeoutSeconds: 60
             onFailure: Abort
@@ -407,31 +413,3 @@ Resources:
               PropertySelector: '$.AutomationExecution.AutomationExecutionStatus'
               DesiredValues:
                 - 'Success'
-          #   nextStep: GetPolicyDetails
-          # - name: GetPolicyDetails
-          #   action: aws:executeAwsApi
-          #   timeoutSeconds: 60
-          #   onFailure: Abort
-          #   inputs:
-          #     Service: dlm
-          #     Api: GetLifecyclePolicies
-          #     ResourceTypes: VOLUME
-          #     TargetTags:
-          #       - Key: Name
-          #         Value: '{{ GetCurrentVolumeDetails.Name }}'
-          #   outputs:
-          #     - Name: PolicyId
-          #       Selector: '$.PolicyId'
-          #       Type: String
-          #   nextStep: UpdateDLMPolicy
-          # - name: UpdateDLMPolicy
-          #   action: aws:executeAwsApi
-          #   timeoutSeconds: 60
-          #   onFailure: Abort
-          #   inputs:
-          #     Service: dlm
-          #     Api: UpdateLifecyclePolicy
-          #     PolicyId: '{{ GetPolicyDetails.PolicyId }}'
-          #     TargetTags:
-          #       - Key: Name
-          #         Value: '{{ GetCurrentVolumeDetails.Name }}'
