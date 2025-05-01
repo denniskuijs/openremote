@@ -267,17 +267,13 @@ Resources:
         schemaVersion: '0.3'
         description: 'Script for replacing EBS data volume with a new snapshot'
         parameters:
-          InstanceId:
+          StackName:
             type: String
-            description: Instance ID where the script needs to be executed.
+            description: CloudFormation Stack name where this stack is deployed.
             default: ''
           SnapshotId:
             type: String
             description: Snapshot ID to create volume based of existing data.
-            default: ''
-          DeviceName:
-            type: String
-            description: EBS Device name where this volume is mounted on.
             default: ''
         mainSteps:
           - name: GetInstanceDetails
@@ -287,14 +283,33 @@ Resources:
             inputs:
               Service: ec2
               Api: DescribeInstances
-              InstanceIds:
-                -  '{{ InstanceId }}'
+              Filters:
+                - Name: tag-value
+                  Values: ['{{ StackName }}']
             outputs:
+              - Name: InstanceId
+                Selector: '$.Reservations[0].Instances[0].InstanceId'
               - Name: AvailabilityZone
                 Selector: '$.Reservations[0].Instances[0].Placement.AvailabilityZone'
                 Type: String
+            nextStep: GetCurrentVolumeDetails
+          - name: GetCurrentVolumeDetails
+            action: aws:executeAwsApi
+            timeoutSeconds: 60
+            onFailure: Abort
+            inputs:
+              Service: ec2
+              Api: DescribeVolumes
+              Filters:
+                - Name: tag-value
+                  Values: ['{{ StackName }}']
+            outputs:
               - Name: OldVolumeId
-                Selector: '$.Reservations[0].Instances[0].BlockDeviceMappings[1].Ebs.VolumeId'
+                Selector: '$.Volumes[0].VolumeId'
+              - Name: DeviceName
+                Selector: '$.Volumes[0].Attachments[0].Device'
+              - Name: Name
+                Selector: '$.Volumes[0].Tags[0].Value'
             nextStep: CreateVolume
           - name: CreateVolume
             action: aws:executeAwsApi
@@ -304,6 +319,13 @@ Resources:
               Api: CreateVolume
               AvailabilityZone: '{{ GetInstanceDetails.AvailabilityZone }}'
               SnapshotId: '{{ SnapshotId }}'
+              TagSpecifications:
+                - ResourceType: volume
+                  Tags:
+                    - Key: VolumeId
+                      Value: '{{ CreateVolume.VolumeId }}'
+                    - Key: Name
+                      Value: '{{ GetCurrentVolumeDetails.Name }}'
             outputs:
               - Name: VolumeId
                 Selector: '$.VolumeId'
@@ -332,11 +354,11 @@ Resources:
               DocumentName: detach_volume
               Parameters:
                 DeviceName:
-                  - '{{ DeviceName }}'
+                  - '{{ GetCurrentVolumeDetails.DeviceName }}'
                 VolumeId: 
-                  - '{{ GetInstanceDetails.OldVolumeId }}'
+                  - '{{ GetCurrentVolumeDetails.OldVolumeId }}'
                 InstanceId: 
-                  - '{{ InstanceId }}'
+                  - '{{ GetInstanceDetails.InstanceId }}'
             outputs:
               - Name: AutomationId
                 Selector: "$.AutomationExecutionId"
@@ -364,11 +386,11 @@ Resources:
               DocumentName: attach_volume
               Parameters:
                 DeviceName:
-                  - '{{ DeviceName }}'
+                  - '{{ GetCurrentVolumeDetails.DeviceName }}'
                 VolumeId: 
                   - '{{ CreateVolume.VolumeId }}'
                 InstanceId: 
-                  - '{{ InstanceId }}'
+                  - '{{ GetInstanceDetails.InstanceId }}'
             outputs:
               - Name: AutomationId
                 Selector: '$.AutomationExecutionId'
@@ -385,3 +407,31 @@ Resources:
               PropertySelector: '$.AutomationExecution.AutomationExecutionStatus'
               DesiredValues:
                 - 'Success'
+            nextStep: GetPolicyDetails
+          - name: GetPolicyDetails
+            action: aws:executeAwsApi
+            timeoutSeconds: 60
+            onFailure: Abort
+            inputs:
+              Service: dlm
+              Api: GetLifecyclePolicies
+              ResourceTypes: VOLUME
+              TargetTags:
+                - Key: VolumeId
+                  Value: '{{ GetCurrentVolumeDetails.OldVolumeId }}'
+            outputs:
+              - Name: PolicyId
+                Selector: '$.PolicyId'
+                Type: String
+            nextStep: UpdateDLMPolicy
+          - name: UpdateDLMPolicy
+            action: aws:executeAwsApi
+            timeoutSeconds: 60
+            onFailure: Abort
+            inputs:
+              Service: dlm
+              Api: UpdateLifecyclePolicy
+              PolicyId: '{{ GetPolicyDetails.PolicyId }}'
+              TargetTags:
+                - Key: VolumeId
+                  Value:  '{{ CreateVolume.VolumeId }}'

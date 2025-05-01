@@ -904,8 +904,8 @@ Resources:
         PolicyLanguage: STANDARD
         PolicyType: EBS_SNAPSHOT_MANAGEMENT
         TargetTags:
-          - Key: aws:cloudformation:stack-id
-            Value: !Sub ${AWS::StackId}
+          - Key: VolumeId
+            Value: !GetAtt EBSDataVolume.VolumeId
         ResourceTypes: 
           - VOLUME
         Schedules:
