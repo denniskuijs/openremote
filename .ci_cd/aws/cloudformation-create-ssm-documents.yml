@@ -80,10 +80,10 @@ Resources:
                 - '{{ VolumeId }}'
             outputs:
               - Name: InstanceId
-                Selector: '$.Volumes[0].Attachments.InstanceId'
+                Selector: '$.Volumes[0].Attachments[0].InstanceId'
                 Type: String
               - Name: DeviceName
-                Selector: '$.Volumes[0].Attachments.Device'
+                Selector: '$.Volumes[0].Attachments[0].Device'
                 Type: String
             nextStep: UmountVolume
           - name: UmountVolume
@@ -303,7 +303,7 @@ Resources:
                 Selector: '$.Reservations[0].Instances[0].Placement.AvailabilityZone'
                 Type: String
               - Name: Host
-                Selector: '$.Reservations[0].Instances[0].Tags[0].Value'
+                Selector: '$.Reservations[0].Instances[0].Tags[1].Value'
             nextStep: GetVolumeDetails
           - name: GetVolumeDetails
             action: aws:executeAwsApi
