@@ -68,15 +68,24 @@ Resources:
             type: String
             description: 'VolumeId that needs to be detached.'
             default: ''
-          InstanceId:
-            type: String
-            description: 'InstanceId where the volume is attached.'
-            default: ''
-          DeviceName:
-            type: String
-            description: 'Device name where this volume is mounted on.'
-            default: ''
         mainSteps:
+          - name: GetVolumeDetails
+            action: aws:executeAwsApi
+            timeoutSeconds: 60
+            onFailure: 60
+            inputs:
+              Service: ec2
+              Api: DescribeVolumes
+              VolumeIds:
+                - '{{ VolumeId }}'
+            outputs:
+              - Name: InstanceId
+                Selector: '$.Volumes[0].Attachments.InstanceId'
+                Type: String
+              - Name: DeviceName
+                Selector: '$.Volumes[0].Attachments.Device'
+                Type: String
+            nextStep: UmountVolume
           - name: UmountVolume
             action: aws:executeAwsApi
             timeoutSeconds: 60
@@ -87,9 +96,9 @@ Resources:
               DocumentName: umount_volume
               Parameters: 
                 DeviceName: 
-                  - '{{ DeviceName }}'
+                  - '{{ GetVolumeDetails.DeviceName }}'
               InstanceIds:
-                - '{{ InstanceId }}'
+                - '{{ GetVolumeDetails.InstanceId }}'
             outputs:
               - Name: CommandId
                 Selector: '$.Command.CommandId'
@@ -103,7 +112,7 @@ Resources:
               Service: ssm
               Api: GetCommandInvocation
               CommandId: '{{ UmountVolume.CommandId }}'
-              InstanceId: '{{ InstanceId }}'
+              InstanceId: '{{ GetVolumeDetails.InstanceId }}'
               PropertySelector: '$.StatusDetails'
               DesiredValues:
                 - 'Success'
