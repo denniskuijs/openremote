@@ -16,11 +16,11 @@ Resources:
       Name: umount_volume
       Content:
         schemaVersion: '2.2'
-        description: 'Script for umounting the EBS data volume'
+        description: 'Script for umounting the EBS data volume.'
         parameters:
           DeviceName:
             type: String
-            description: EBS Device name where this volume is mounted on.
+            description: Device name where this volume is mounted on.
             default: ''
         mainSteps:
           - name: StopDocker
@@ -62,19 +62,19 @@ Resources:
       Name: detach_volume
       Content:
         schemaVersion: '0.3'
-        description: 'Script for detaching the EBS data volume'
+        description: 'Script for detaching the EBS data volume.'
         parameters:
           VolumeId:
             type: String
-            description: 'Volume ID that needs to be detached.'
+            description: 'VolumeId that needs to be detached.'
             default: ''
           InstanceId:
             type: String
-            description: Instance ID where the script needs to be executed.
+            description: 'InstanceId where the volume is attached.'
             default: ''
           DeviceName:
             type: String
-            description: EBS Device name where this volume is mounted on.
+            description: 'Device name where this volume is mounted on.'
             default: ''
         mainSteps:
           - name: UmountVolume
@@ -139,11 +139,11 @@ Resources:
       Name: mount_volume
       Content:
         schemaVersion: '2.2'
-        description: 'Script for mounting the EBS data volume'
+        description: 'Script for mounting the EBS data volume.'
         parameters:
           DeviceName:
             type: String
-            description: EBS Device name where this volume is mounted on.
+            description: EBS Device name where this volume needs to be mounted.
             default: ''
         mainSteps:
           - name: MountVolume
@@ -190,15 +190,15 @@ Resources:
         parameters:
           VolumeId:
             type: String
-            description: 'Volume ID that needs to be detached.'
+            description: 'VolumeId that needs to be attached.'
             default: ''
           InstanceId:
             type: String
-            description: Instance ID where the script needs to be executed.
+            description: 'InstanceId where the volume needs to be attached.'
             default: ''
           DeviceName:
             type: String
-            description: EBS Device name where this volume is mounted on.
+            description: 'Device name where this volume needs to be mounted on.'
             default: ''
         mainSteps:
           - name: AttachVolume
@@ -265,19 +265,19 @@ Resources:
       Name: replace_snapshot
       Content:
         schemaVersion: '0.3'
-        description: 'Script for replacing EBS data volume with a new snapshot'
+        description: 'Script for replacing EBS data volume with a new snapshot.'
         parameters:
           InstanceId:
             type: String
-            description: Instance ID where the script needs to be executed.
+            description: 'InstanceId where the new volume needs to be attached.'
             default: ''
           VolumeId:
             type: String
-            description: VolumeId where this volume is mounted on.
+            description: 'VolumeId that needs to be replaced.'
             default: ''
           SnapshotId:
             type: String
-            description: Snapshot ID to create volume based of existing data.
+            description: 'SnapshotId to specify which snapshot will be used for volume creation.'
             default: ''
         mainSteps:
           - name: GetInstanceDetails
