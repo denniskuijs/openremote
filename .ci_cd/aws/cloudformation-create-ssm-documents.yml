@@ -358,12 +358,8 @@ Resources:
               Api: StartAutomationExecution
               DocumentName: detach_volume
               Parameters:
-                DeviceName:
-                  - '{{ GetVolumeDetails.DeviceName }}'
                 VolumeId: 
                   - '{{ VolumeId }}'
-                InstanceId: 
-                  - '{{ InstanceId }}'
             outputs:
               - Name: AutomationId
                 Selector: "$.AutomationExecutionId"
