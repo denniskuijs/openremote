@@ -267,9 +267,13 @@ Resources:
         schemaVersion: '0.3'
         description: 'Script for replacing EBS data volume with a new snapshot'
         parameters:
-          StackName:
+          InstanceId:
             type: String
-            description: CloudFormation Stack name where this stack is deployed.
+            description: Instance ID where the script needs to be executed.
+            default: ''
+          VolumeId:
+            type: String
+            description: VolumeId where this volume is mounted on.
             default: ''
           SnapshotId:
             type: String
@@ -283,14 +287,9 @@ Resources:
             inputs:
               Service: ec2
               Api: DescribeInstances
-              Filters:
-                - Name: tag-value
-                  Values: ['{{ StackName }}']
-                - Name: instance-state-name
-                  Values: ['running']
+              InstanceIds:
+                - '{{ InstanceId }}'
             outputs:
-              - Name: InstanceId
-                Selector: '$.Reservations[0].Instances[0].InstanceId'
               - Name: AvailabilityZone
                 Selector: '$.Reservations[0].Instances[0].Placement.AvailabilityZone'
                 Type: String
@@ -302,16 +301,9 @@ Resources:
             inputs:
               Service: ec2
               Api: DescribeVolumes
-              Filters:
-                - Name: tag-value
-                  Values: ['{{ StackName }}']
-                - Name: tag-value
-                  Values: ['OR_TYPE']
-                - Name: attachment.status
-                  Values: [' attached']
+              VolumeIds:
+                - '{{ VolumeId }}'
             outputs:
-              - Name: VolumeId
-                Selector: '$.Volumes[0].VolumeId'
               - Name: DeviceName
                 Selector: '$.Volumes[0].Attachments[0].Device'
               - Name: VolumeName
@@ -330,8 +322,6 @@ Resources:
                   Tags:
                     - Key: Name
                       Value: '{{ GetVolumeDetails.VolumeName }}'
-                    - Key: Type
-                      Value: OR_TYPE
             outputs:
               - Name: VolumeId
                 Selector: '$.VolumeId'
@@ -396,7 +386,7 @@ Resources:
                 VolumeId: 
                   - '{{ CreateVolume.VolumeId }}'
                 InstanceId: 
-                  - '{{ GetInstanceDetails.InstanceId }}'
+                  - '{{ InstanceId }}'
             outputs:
               - Name: AutomationId
                 Selector: '$.AutomationExecutionId'
@@ -409,7 +399,7 @@ Resources:
             inputs:
               Service: ssm
               Api: GetAutomationExecution
-              AutomationExecutionId: '{{ AttachNewVolume.AutomationId }}'
+              AutomationExecutionId: '{{ AttachVolume.AutomationId }}'
               PropertySelector: '$.AutomationExecution.AutomationExecutionStatus'
               DesiredValues:
                 - 'Success'
