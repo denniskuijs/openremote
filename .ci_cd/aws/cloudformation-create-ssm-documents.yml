@@ -354,7 +354,7 @@ Resources:
                 VolumeId: 
                   - '{{ GetVolumeDetails.VolumeId }}'
                 InstanceId: 
-                  - '{{ GetInstanceDetails.InstanceId }}'
+                  - '{{ InstanceId }}'
             outputs:
               - Name: AutomationId
                 Selector: "$.AutomationExecutionId"
