@@ -321,7 +321,7 @@ Resources:
                 - ResourceType: volume
                   Tags:
                     - Key: Name
-                      Value: '{{ GetVolumeDetails.VolumeName }}'
+                      Value: '{{ GetInstanceDetails.Host }}-data'
             outputs:
               - Name: VolumeId
                 Selector: '$.VolumeId'
