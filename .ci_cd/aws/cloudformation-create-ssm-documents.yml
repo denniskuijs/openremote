@@ -293,6 +293,8 @@ Resources:
               - Name: AvailabilityZone
                 Selector: '$.Reservations[0].Instances[0].Placement.AvailabilityZone'
                 Type: String
+              - Name: Host
+                Selector: '$.Reservations[0].Instances[0].Tags[0].Value'
             nextStep: GetVolumeDetails
           - name: GetVolumeDetails
             action: aws:executeAwsApi
@@ -306,8 +308,6 @@ Resources:
             outputs:
               - Name: DeviceName
                 Selector: '$.Volumes[0].Attachments[0].Device'
-              - Name: VolumeName
-                Selector: '$.Volumes[0].Tags[0].Value'
             nextStep: CreateVolume
           - name: CreateVolume
             action: aws:executeAwsApi
@@ -352,7 +352,7 @@ Resources:
                 DeviceName:
                   - '{{ GetVolumeDetails.DeviceName }}'
                 VolumeId: 
-                  - '{{ GetVolumeDetails.VolumeId }}'
+                  - '{{ VolumeId }}'
                 InstanceId: 
                   - '{{ InstanceId }}'
             outputs:
