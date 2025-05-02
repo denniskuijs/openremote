@@ -72,7 +72,7 @@ Resources:
           - name: GetVolumeDetails
             action: aws:executeAwsApi
             timeoutSeconds: 60
-            onFailure: 60
+            onFailure: Abort
             inputs:
               Service: ec2
               Api: DescribeVolumes
