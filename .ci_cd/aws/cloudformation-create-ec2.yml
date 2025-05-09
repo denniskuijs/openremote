@@ -904,8 +904,8 @@ Resources:
         PolicyLanguage: STANDARD
         PolicyType: EBS_SNAPSHOT_MANAGEMENT
         TargetTags:
-          - Key: Name
-            Value: !Sub ${Host}-data
+          - Key: Type
+            Value: OR-DATA-IN-USE
         ResourceTypes: 
           - VOLUME
         Schedules:
