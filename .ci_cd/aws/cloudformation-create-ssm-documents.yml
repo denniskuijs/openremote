@@ -89,6 +89,43 @@ Resources:
               - Name: DeviceName
                 Selector: '$.Volumes[0].Attachments[0].Device'
                 Type: String
+            nextStep: GetInstanceDetails
+          # Retrieve instance details to get the AvailabilityZone and assigned Tags
+          - name: GetInstanceDetails
+            action: aws:executeAwsApi
+            timeoutSeconds: 120
+            onFailure: Abort
+            inputs:
+              Service: ec2
+              Api: DescribeInstances
+              InstanceIds:
+                - '{{ GetVolumeDetails.InstanceId }}'
+            outputs:
+              - Name: Tags
+                Selector: '$.Reservations[0].Instances[0].Tags'
+                Type: MapList
+            nextStep: GetHostName
+          # Retrieve the hostname by searching for the tag 'Name'
+          - name: GetHostName
+            action: aws:executeScript
+            timeoutSeconds: 120
+            onFailure: Abort
+            inputs:
+              Runtime: python3.11
+              Handler: get_hostname
+              InputPayload: 
+                Tags: "{{ GetInstanceDetails.Tags }}"
+              Script: |
+                def get_hostname(event, context):
+                  tags = event["Tags"]
+                  for tag in tags:
+                    if tag["Key"] == "Name":
+                      return {"Host": tag["Value"]}
+                  return {"Host:" "-"}
+            outputs:
+              - Name: Host
+                Selector: "$.Payload.Host"
+                Type: String
             nextStep: UmountVolume
           # Execute the SSM command that umounts the specified EBS data volume
           - name: UmountVolume
@@ -153,7 +190,7 @@ Resources:
                 - '{{ VolumeId }}'
               Tags:
                 - Key: Type
-                  Value: OR-DATA
+                  Value: '{{ GetHostName.Host }}-OR-DATA
   
   SSMMountVolumeDocument:
     Type: AWS::SSM::Document
@@ -229,6 +266,43 @@ Resources:
             description: '(Required) Specify the Device name where the volume should be mounted on'
             allowedPattern: '^/dev/sd[b-z]$'
         mainSteps:
+          # Retrieve instance details to get the AvailabilityZone and assigned Tags
+          - name: GetInstanceDetails
+            action: aws:executeAwsApi
+            timeoutSeconds: 120
+            onFailure: Abort
+            inputs:
+              Service: ec2
+              Api: DescribeInstances
+              InstanceIds:
+                - '{{ InstanceId }}'
+            outputs:
+              - Name: Tags
+                Selector: '$.Reservations[0].Instances[0].Tags'
+                Type: MapList
+            nextStep: GetHostName
+          # Retrieve the hostname by searching for the tag 'Name'
+          - name: GetHostName
+            action: aws:executeScript
+            timeoutSeconds: 120
+            onFailure: Abort
+            inputs:
+              Runtime: python3.11
+              Handler: get_hostname
+              InputPayload: 
+                Tags: "{{ GetInstanceDetails.Tags }}"
+              Script: |
+                def get_hostname(event, context):
+                  tags = event["Tags"]
+                  for tag in tags:
+                    if tag["Key"] == "Name":
+                      return {"Host": tag["Value"]}
+                  return {"Host:" "-"}
+            outputs:
+              - Name: Host
+                Selector: "$.Payload.Host"
+                Type: String
+            nextStep: AttachVolume
           # Attach EBS data volume to specified instance
           - name: AttachVolume
             action: aws:executeAwsApi
@@ -295,7 +369,7 @@ Resources:
                 - '{{ VolumeId }}'
               Tags:
                 - Key: Type
-                  Value: OR-DATA-IN-USE
+                  Value: '{{ GetHostName.Host }}-OR-DATA-IN-USE
 
   SSMReplaceSnapshotDocument:
     Type: AWS::SSM::Document
