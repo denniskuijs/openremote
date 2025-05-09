@@ -1,11 +1,11 @@
 # ---------------------------------------------------------------------------------------------------------------------
 #
-# CloudFormation Template for creating SSM Documents for attaching, detaching and replacing the EBS data volume
+# CloudFormation Template for creating SSM Documents for attaching, detaching and replacing an EBS data volume
 #
 # ---------------------------------------------------------------------------------------------------------------------
 
 AWSTemplateFormatVersion: '2010-09-09'
-Description: 'SSM documents for attaching, detaching and replacing the EBS data volume'
+Description: 'SSM documents for attaching, detaching and replacing an EBS data volume'
 Resources:
   SSMUmountVolumeDocument:
     Type: AWS::SSM::Document

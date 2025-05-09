@@ -900,7 +900,6 @@ Resources:
     DependsOn: EBSDataVolume
     Properties:
       ExecutionRoleArn: !Ref DLMExecutionRoleArn
-      Description: !Sub ${Host}-data
       State: ENABLED
       PolicyDetails:
         PolicyLanguage: STANDARD
