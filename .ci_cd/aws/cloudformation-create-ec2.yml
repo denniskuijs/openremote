@@ -901,6 +901,7 @@ Resources:
     Properties:
       ExecutionRoleArn: !Ref DLMExecutionRoleArn
       State: ENABLED
+      Description: 'OR-DATA'
       PolicyDetails:
         PolicyLanguage: STANDARD
         PolicyType: EBS_SNAPSHOT_MANAGEMENT
