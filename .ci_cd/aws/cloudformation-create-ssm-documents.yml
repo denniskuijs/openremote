@@ -190,7 +190,7 @@ Resources:
                 - '{{ VolumeId }}'
               Tags:
                 - Key: Type
-                  Value: '{{ GetHostName.Host }}-OR-DATA
+                  Value: '{{ GetHostName.Host }}-OR-DATA'
   
   SSMMountVolumeDocument:
     Type: AWS::SSM::Document
@@ -369,7 +369,7 @@ Resources:
                 - '{{ VolumeId }}'
               Tags:
                 - Key: Type
-                  Value: '{{ GetHostName.Host }}-OR-DATA-IN-USE
+                  Value: '{{ GetHostName.Host }}-OR-DATA-IN-USE'
 
   SSMReplaceSnapshotDocument:
     Type: AWS::SSM::Document
