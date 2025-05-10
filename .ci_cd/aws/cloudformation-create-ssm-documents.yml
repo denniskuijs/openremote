@@ -167,7 +167,7 @@ Resources:
               ResourceIds: 
                 - '{{ VolumeId }}'
               Tags:
-                - Key: Type
+                - Key: type
                   Value: '{{ GetInstanceDetails.Host }}-or-data'
   
   SSMMountVolumeDocument:
@@ -324,7 +324,7 @@ Resources:
               ResourceIds: 
                 - '{{ VolumeId }}'
               Tags:
-                - Key: Type
+                - Key: type
                   Value: '{{ GetInstanceDetails.Host }}-or-data-in-use'
 
   SSMReplaceSnapshotDocument:

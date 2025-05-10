@@ -889,7 +889,7 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub ${Host}-data
-        - Key: Type
+        - Key: type
           Value: !Sub ${Host}-or-data
     DeletionPolicy: Snapshot
 
@@ -900,13 +900,13 @@ Resources:
     DependsOn: EBSDataVolume
     Properties:
       ExecutionRoleArn: !Ref DLMExecutionRoleArn
-      State: ENABLED
       Description: 'or-data'
+      State: ENABLED
       PolicyDetails:
         PolicyLanguage: STANDARD
         PolicyType: EBS_SNAPSHOT_MANAGEMENT
         TargetTags:
-          - Key: Type
+          - Key: type
             Value: !Sub ${Host}-or-data-in-use
         ResourceTypes: 
           - VOLUME
