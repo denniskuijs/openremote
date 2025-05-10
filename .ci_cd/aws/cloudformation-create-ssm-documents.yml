@@ -167,8 +167,8 @@ Resources:
               ResourceIds: 
                 - '{{ VolumeId }}'
               Tags:
-                - Key: type
-                  Value: '{{ GetInstanceDetails.Host }}-or-data'
+                - Key: Type
+                  Value: '{{ GetInstanceDetails.Host }}-or-data-not-in-use'
   
   SSMMountVolumeDocument:
     Type: AWS::SSM::Document
@@ -324,7 +324,7 @@ Resources:
               ResourceIds: 
                 - '{{ VolumeId }}'
               Tags:
-                - Key: type
+                - Key: Type
                   Value: '{{ GetInstanceDetails.Host }}-or-data-in-use'
 
   SSMReplaceSnapshotDocument:
@@ -402,7 +402,7 @@ Resources:
                     - Key: Name
                       Value: '{{ GetInstanceDetails.Host }}-data'
                     - Key: Type
-                      Value: '{{ GetInstanceDetails.Host }}-or-data'
+                      Value: '{{ GetInstanceDetails.Host }}-or-data-not-in-use'
             outputs:
               - Name: VolumeId
                 Selector: '$.VolumeId'

@@ -889,8 +889,8 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub ${Host}-data
-        - Key: type
-          Value: !Sub ${Host}-or-data
+        - Key: Type
+          Value: !Sub ${Host}-or-data-not-in-use
     DeletionPolicy: Snapshot
 
   # DLM Policy for automatic snapshot creation
@@ -906,7 +906,7 @@ Resources:
         PolicyLanguage: STANDARD
         PolicyType: EBS_SNAPSHOT_MANAGEMENT
         TargetTags:
-          - Key: type
+          - Key: Type
             Value: !Sub ${Host}-or-data-in-use
         ResourceTypes: 
           - VOLUME
