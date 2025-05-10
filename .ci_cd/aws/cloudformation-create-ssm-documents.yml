@@ -72,7 +72,7 @@ Resources:
             description: '(Required) Specify the VolumeId of the volume that should be detached'
             allowedPattern: '^vol-[a-z0-9]{8,17}$'
         mainSteps:
-          # Retrieve volume details to get the InstanceId and Devicename
+          # Retrieve EBS data volume details to get the InstanceId and Devicename
           - name: GetVolumeDetails
             action: aws:executeAwsApi
             timeoutSeconds: 120
@@ -90,7 +90,7 @@ Resources:
                 Selector: '$.Volumes[0].Attachments[0].Device'
                 Type: String
             nextStep: GetInstanceDetails
-          # Retrieve instance details to get the Host name.
+          # Retrieve instance details to get the Hostname.
           - name: GetInstanceDetails
             action: aws:executeAwsApi
             timeoutSeconds: 120
@@ -157,7 +157,7 @@ Resources:
               DesiredValues:
                 - available
             nextStep: UpdateTag
-          # Change tag to ensure the volume is no longer targeted by the DLM policy.
+          # Change tag to ensure the volume is no longer targeted by the DLM policy
           - name: UpdateTag
             action: aws:createTags
             timeoutSeconds: 120
@@ -186,7 +186,7 @@ Resources:
             description: '(Required) Specify the Device name where the volume should be mounted on'
             allowedPattern: '^/dev/sd[b-z]$'
         mainSteps:
-          # Mount the specified volume to the instance
+          # Mount the specified EBS data volume to the instance
           - name: MountVolume
             action: aws:runShellScript
             inputs:
@@ -199,7 +199,7 @@ Resources:
                   else
                     mount {{ DeviceName }} /var/lib/docker/volumes
                   fi
-          # Add the specified volume to the file system table
+          # Add the specified EBS data volume to the file system table
           - name: AddFileSystemEntry
             action: aws:runShellScript
             inputs:
@@ -351,7 +351,7 @@ Resources:
             description: '(Optional) Choose whether you want to delete the current volume'
             default: false
         mainSteps:
-          # Retrieve volume details to get the DeviceName and InstanceId
+          # Retrieve EBS data volume details to get the DeviceName and InstanceId
           - name: GetVolumeDetails
             action: aws:executeAwsApi
             timeoutSeconds: 120
@@ -367,7 +367,7 @@ Resources:
               - Name: InstanceId
                 Selector: '$.Volumes[0].Attachments[0].InstanceId'
             nextStep: GetInstanceDetails
-          # Retrieve instance details to get the AvailabilityZone and assigned Tags
+          # Retrieve instance details to get the AvailabilityZone and Hostname
           - name: GetInstanceDetails
             action: aws:executeAwsApi
             timeoutSeconds: 120
