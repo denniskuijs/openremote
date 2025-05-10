@@ -90,7 +90,7 @@ Resources:
                 Selector: '$.Volumes[0].Attachments[0].Device'
                 Type: String
             nextStep: GetInstanceDetails
-          # Retrieve instance details to get the assigned Tags
+          # Retrieve instance details to get the Host name.
           - name: GetInstanceDetails
             action: aws:executeAwsApi
             timeoutSeconds: 120
@@ -101,30 +101,8 @@ Resources:
               InstanceIds:
                 - '{{ GetVolumeDetails.InstanceId }}'
             outputs:
-              - Name: Tags
-                Selector: '$.Reservations[0].Instances[0].Tags'
-                Type: MapList
-            nextStep: GetHostName
-          # Retrieve the hostname by searching for the tag 'Name'
-          - name: GetHostName
-            action: aws:executeScript
-            timeoutSeconds: 120
-            onFailure: Abort
-            inputs:
-              Runtime: python3.11
-              Handler: get_hostname
-              InputPayload: 
-                Tags: "{{ GetInstanceDetails.Tags }}"
-              Script: |
-                def get_hostname(event, context):
-                  tags = event["Tags"]
-                  for tag in tags:
-                    if tag["Key"] == "Name":
-                      return {"Host": tag["Value"]}
-                  return {"Host:" "-"}
-            outputs:
               - Name: Host
-                Selector: "$.Payload.Host"
+                Selector: $.Reservations[0].Instances[0].Tags[?(@.Key == 'Name')].Value
                 Type: String
             nextStep: UmountVolume
           # Execute the SSM command that umounts the specified EBS data volume
@@ -190,7 +168,7 @@ Resources:
                 - '{{ VolumeId }}'
               Tags:
                 - Key: Type
-                  Value: '{{ GetHostName.Host }}-or-data'
+                  Value: '{{ GetInstanceDetails.Host }}-or-data'
   
   SSMMountVolumeDocument:
     Type: AWS::SSM::Document
@@ -266,7 +244,7 @@ Resources:
             description: '(Required) Specify the Device name where the volume should be mounted on'
             allowedPattern: '^/dev/sd[b-z]$'
         mainSteps:
-          # Retrieve instance details to get the assigned Tags
+          # Retrieve instance details to get the Host name.
           - name: GetInstanceDetails
             action: aws:executeAwsApi
             timeoutSeconds: 120
@@ -277,30 +255,8 @@ Resources:
               InstanceIds:
                 - '{{ InstanceId }}'
             outputs:
-              - Name: Tags
-                Selector: '$.Reservations[0].Instances[0].Tags'
-                Type: MapList
-            nextStep: GetHostName
-          # Retrieve the hostname by searching for the tag 'Name'
-          - name: GetHostName
-            action: aws:executeScript
-            timeoutSeconds: 120
-            onFailure: Abort
-            inputs:
-              Runtime: python3.11
-              Handler: get_hostname
-              InputPayload: 
-                Tags: "{{ GetInstanceDetails.Tags }}"
-              Script: |
-                def get_hostname(event, context):
-                  tags = event["Tags"]
-                  for tag in tags:
-                    if tag["Key"] == "Name":
-                      return {"Host": tag["Value"]}
-                  return {"Host:" "-"}
-            outputs:
               - Name: Host
-                Selector: "$.Payload.Host"
+                Selector: $.Reservations[0].Instances[0].Tags[?(@.Key == 'Name')].Value
                 Type: String
             nextStep: AttachVolume
           # Attach EBS data volume to specified instance
@@ -369,7 +325,7 @@ Resources:
                 - '{{ VolumeId }}'
               Tags:
                 - Key: Type
-                  Value: '{{ GetHostName.Host }}-or-data-in-use'
+                  Value: '{{ GetInstanceDetails.Host }}-or-data-in-use'
 
   SSMReplaceSnapshotDocument:
     Type: AWS::SSM::Document
@@ -425,30 +381,8 @@ Resources:
               - Name: AvailabilityZone
                 Selector: '$.Reservations[0].Instances[0].Placement.AvailabilityZone'
                 Type: String
-              - Name: Tags
-                Selector: '$.Reservations[0].Instances[0].Tags'
-                Type: MapList
-            nextStep: GetHostName
-          # Retrieve the hostname by searching for the tag 'Name'
-          - name: GetHostName
-            action: aws:executeScript
-            timeoutSeconds: 120
-            onFailure: Abort
-            inputs:
-              Runtime: python3.11
-              Handler: get_hostname
-              InputPayload: 
-                Tags: "{{ GetInstanceDetails.Tags }}"
-              Script: |
-                def get_hostname(event, context):
-                  tags = event["Tags"]
-                  for tag in tags:
-                    if tag["Key"] == "Name":
-                      return {"Host": tag["Value"]}
-                  return {"Host:" "-"}
-            outputs:
               - Name: Host
-                Selector: "$.Payload.Host"
+                Selector: $.Reservations[0].Instances[0].Tags[?(@.Key == 'Name')].Value
                 Type: String
             nextStep: CreateVolume
           # Create new EBS data volume using the retrieved details and specified snapshot
@@ -466,9 +400,9 @@ Resources:
                 - ResourceType: volume
                   Tags:
                     - Key: Name
-                      Value: '{{ GetHostName.Host }}-data'
+                      Value: '{{ GetInstanceDetails.Host }}-data'
                     - Key: Type
-                      Value: OR-DATA
+                      Value: '{{ GetInstanceDetails.Host }}-or-data'
             outputs:
               - Name: VolumeId
                 Selector: '$.VolumeId'
