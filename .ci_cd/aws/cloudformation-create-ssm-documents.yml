@@ -90,7 +90,7 @@ Resources:
                 Selector: '$.Volumes[0].Attachments[0].Device'
                 Type: String
             nextStep: GetInstanceDetails
-          # Retrieve instance details to get the Hostname.
+          # Retrieve instance details to get the Hostname
           - name: GetInstanceDetails
             action: aws:executeAwsApi
             timeoutSeconds: 120
