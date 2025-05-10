@@ -475,6 +475,7 @@ Resources:
               PropertySelector: '$.AutomationExecution.AutomationExecutionStatus'
               DesiredValues:
                 - Success
+            nextStep: ChooseVolumeDeletion
           # Checks whether the old EBS data volume should be kept
           - name: ChooseVolumeDeletion
             action: aws:branch
@@ -493,4 +494,3 @@ Resources:
               Service: ec2
               Api: DeleteVolume
               VolumeId: '{{ VolumeId }}'
-            isEnd: true
