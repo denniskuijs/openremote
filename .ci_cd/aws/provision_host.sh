@@ -253,11 +253,14 @@ EOF
     if [ $? -ne 0 ]; then
       echo "IAM Role creation has failed"
       exit 1
+    else
+      echo "IAM Role creation is complete"
     fi
 
-    echo "IAM Role creation is complete"
     ROLE_ARN=$(aws iam get-role --role-name AWSDataLifecycleManagerDefaultRole --query "Role.Arn" --output text $ACCOUNT_PROFILE 2>/dev/null)
   fi
+
+  echo "DLM IAM Role found"
 
   PARAMS="$PARAMS ParameterKey=DLMExecutionRoleArn,ParameterValue=$ROLE_ARN"
 
