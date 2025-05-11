@@ -261,7 +261,6 @@ EOF
   fi
 
   echo "DLM IAM Role found"
-
   PARAMS="$PARAMS ParameterKey=DLMExecutionRoleArn,ParameterValue=$ROLE_ARN"
 
   # Create standard stack resources in specified account
