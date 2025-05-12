@@ -3,8 +3,7 @@
 ## Implementation: Separate EBS Volume for storing/decoupling the IoT Data  <!-- omit in toc -->
 
 ## Context
-This document provides a detailed overview of how I implemented the creation and mounting of the separate `EBS` data volume within the `CI/CD` workflow. 
-
+This document provides a detailed overview how I implemented the creation and mounting of the separate `EBS` data volume within the `CI/CD` workflow. 
 It also outlines the decisions I made and the challenges encountered throughout the development process.
 
 <div style="page-break-after: always;"></div>
@@ -69,15 +68,15 @@ sudo lsblk -f
 
 It shows that the volume is mounted on `Docker's` default volume location (`/var/lib/docker/volumes`)
 
-<img src="./Media/docker_volume_default_location.png" width="800">
+<img src="./Media/docker_volume_default_location.png" width="1000">
 
 After starting OpenRemote with the default `Docker Compose` file, everything booted up properly without any issues.
 
-<img src="./Media/openremote_healthy.png" width="800">
+<img src="./Media/openremote_healthy.png" width="1000">
 
 However, after attaching the `EBS` data volume to another `EC2` instance running OpenRemote, I encountered permission errors with the `PostgresSQL` container once again.
 
-<img src="./Media/docker_volume_permission_error_postgres.png" width="800">
+<img src="./Media/docker_volume_permission_error_postgres.png" width="1000">
 
 Based on the insights of my initial research, I knew that this issue could be resolved by setting the `PGDATA` environment variable in the `Docker Compose` file.
 
