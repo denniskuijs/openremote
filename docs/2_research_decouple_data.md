@@ -1,6 +1,6 @@
-<!-- title: Research: How can we decouple the IoT data from the virtual machine and store them on a separate EBS (data) volume? -->
+<!-- title: 2. Research: How can we decouple the IoT data from the virtual machine and store them on a separate EBS (data) volume? -->
 
-## Research: How can we decouple the IoT data from the virtual machine and store them on a separate EBS (data) volume? <!-- omit in toc -->
+## 2. Research: How can we decouple the IoT data from the virtual machine and store them on a separate EBS (data) volume? <!-- omit in toc -->
 
 ## Context
 The creation of various cloud services is done using `CloudFormation` templates. [CloudFormation](https://aws.amazon.com/cloudformation/) is Amazon's Infrastructure as Code (IaaC) tool, allowing infrastructure to be set up through code. 
@@ -30,8 +30,6 @@ For this research, the following methods from the [DOT Framework](https://ictres
 <div style="page-break-after: always;"></div>
 
 ## Contents <!-- omit in toc -->
-
-<div class="toc">
 
 - [Context](#context)
 - [DOT Framework](#dot-framework)
@@ -69,8 +67,6 @@ For this research, the following methods from the [DOT Framework](https://ictres
   - [4.2. Feedback from Team Members](#42-feedback-from-team-members)
   - [4.3. Next Steps](#43-next-steps)
 - [5. Source](#5-source)
-
-</div>
 
 <div style="page-break-after: always;"></div>
 

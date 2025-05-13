@@ -1,6 +1,6 @@
-<!-- title: Implementation: Separate EBS Volume for storing/decoupling the IoT Data -->
+<!-- title: 3. Implementation: Separate EBS data volume for storing/decoupling the IoT Data -->
 
-## Implementation: Separate EBS Volume for storing/decoupling the IoT Data  <!-- omit in toc -->
+## 3. Implementation: Separate EBS data volume for storing/decoupling the IoT Data  <!-- omit in toc -->
 
 ## Context
 This document provides a detailed overview how I implemented the creation and mounting of the separate `EBS` data volume within the `CI/CD` workflow. 
@@ -9,8 +9,6 @@ It also outlines the decisions I made and the challenges encountered throughout 
 <div style="page-break-after: always;"></div>
 
 ## Contents <!-- omit in toc -->
-
-<div class="toc">
 
 - [Context](#context)
 - [1. Research based on feedback](#1-research-based-on-feedback)
@@ -43,8 +41,6 @@ It also outlines the decisions I made and the challenges encountered throughout 
   - [4.2. Improving the filesystem check in the SSM document](#42-improving-the-filesystem-check-in-the-ssm-document)
   - [4.3. Replace contents of existing volume](#43-replace-contents-of-existing-volume)
 - [5. Tests](#5-tests)
-
-</div>
 
 <div style="page-break-after: always;"></div>
 

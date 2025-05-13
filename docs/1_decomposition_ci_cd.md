@@ -1,6 +1,6 @@
-<!-- title: Decomposition CI/CD workflow -->
+<!-- title: 1. Decomposition: CI/CD workflow -->
 
-## Decomposition CI/CD workflow  <!-- omit in toc -->
+## 1. Decomposition: CI/CD workflow  <!-- omit in toc -->
 
 ## Context
 This document provides an overview of the flowcharts I created to decomposite the`CI/CD` workflow. By visualizing this into a flowchart I've got a better understanding how the `CI/CD` workflow is functioning.
@@ -9,13 +9,9 @@ This document provides an overview of the flowcharts I created to decomposite th
 
 ## Contents <!-- omit in toc -->
 
-<div class="toc">
-
 - [Context](#context)
 - [1. Flowchart: Provision Account](#1-flowchart-provision-account)
 - [2. Flowchart: Provision Host](#2-flowchart-provision-host)
-
-</div>
 
 <div style="page-break-after: always;"></div>
 
