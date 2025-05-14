@@ -23,7 +23,19 @@ It also outlines the decisions I made and the challenges encountered throughout 
   - [2.1.6. Update Tag](#216-update-tag)
 - [2.2. Detach Volume Document](#22-detach-volume-document)
   - [2.2.1. Get Volume Details](#221-get-volume-details)
-  - [2.2.1. Get Instance Details](#221-get-instance-details)
+  - [2.2.2. Get Instance Details](#222-get-instance-details)
+  - [2.2.3. Umount Volume](#223-umount-volume)
+  - [2.2.4. Wait For Umount](#224-wait-for-umount)
+  - [2.2.5. Detach Volume](#225-detach-volume)
+  - [2.2.6. Wait For Volume Detachment](#226-wait-for-volume-detachment)
+  - [2.2.7. Update Tag](#227-update-tag)
+- [2.3. Mount Volume Document](#23-mount-volume-document)
+  - [2.3.1. Mount Volume](#231-mount-volume)
+  - [2.3.2. Add File System Entry](#232-add-file-system-entry)
+  - [2.3.3. Start Docker](#233-start-docker)
+- [2.4. Umount Volume](#24-umount-volume)
+  - [2.4.1. Stop Docker](#241-stop-docker)
+  - [2.4.2. Remove File System Entry](#242-remove-file-system-entry)
 
 <div style="page-break-after: always;"></div>
 
@@ -271,7 +283,7 @@ Properties:
 ```
 
 ### 2.2.1. Get Volume Details
-To make the document as simple as possible and to prevent errors because of wrong configuration, I decided to retrieve the `InstanceId` and `DeviceName` using the `VolumeId` specified in the `parameters` section at the top of this document. This ensures that the  values associated with the volume are automatically retrieved instead of manually entering them.
+To make this document as simple as possible and to prevent errors because of wrong configuration, I decided to retrieve the `InstanceId` and `DeviceName` using the `VolumeId` specified in the `parameters` section at the top of this document. This ensures that always the correct `Instance` and `DeviceName` associated with the volume is retrieved instead of manually entering them.
 
 The volume details are retrieved using the `DescribeVolumes` API by specifying the `VolumeId` from the `parameters` section at the top. After successfully fetching the volume details the `DeviceName` and `InstanceId` parameters can be retrieved by targeting the parameters from the API `Response` object using the `JSONPath` notation. The parameters are then pushed to the `outputs` section so they can be used in the next steps.
 
@@ -296,8 +308,9 @@ The volume details are retrieved using the `DescribeVolumes` API by specifying t
 
 After the volume details are successfully retrieved, the automation will continue to the next step.
 
-### 2.2.1. Get Instance Details
-The same as in the previous automation, 
+### 2.2.2. Get Instance Details
+The same as in the `attach_volume` automation, I retrieve the instance details using the `DescribeInstances` API and the `InstanceId` that is retrieved in the `GetVolumeDetails` step. 
+To get the `hostname`, I used the `JSONPath` notation to filter the API `Response` object and look for the parameter `tags` filtered by name (`Key==Name`). This value is pushed to the `outputs` section so it can be used by the next steps.
 
 ```
 # Retrieve instance details to get the Hostname
@@ -316,3 +329,251 @@ The same as in the previous automation,
         Type: String
     nextStep: UmountVolume
 ```
+
+After the instance details are successfully retrieved, the automation will continue by executing the `UmountVolume` step.
+
+### 2.2.3. Umount Volume
+Before the volume can be detached from the `EC2` instance, it is recommended to first `umount` the volume to prevent any unexpected system behaviour or unrecoverable `I/O` errors with the volume.
+To `umount` the volume, I need to run several `linux` commands on the `EC2` machine itself. Therefore, I use the same `command` document as the `mount` volume.
+
+This step uses the `aws:runCommand` action to execute the document `umount_volume` with the `DeviceName` parameter. This value is retrieved from the `GetVolumeDetails` step and will be used to `umount` the correct volume.
+The `InstanceIds` parameter specifies the `InstanceId` where this document needs to be executed.
+
+```
+# Execute the SSM command that umounts the specified EBS data volume
+- name: UmountVolume
+  action: aws:runCommand
+  timeoutSeconds: 120
+  onFailure: Abort
+  inputs:
+    DocumentName: umount_volume
+    Parameters: 
+      DeviceName: 
+        - '{{ GetVolumeDetails.DeviceName }}'
+    InstanceIds:
+      - '{{ GetVolumeDetails.InstanceId }}'
+  nextStep: WaitForUmount
+```
+
+When the `umount_volume` document is successfully executed, the automation will move forward to the `WaitForUmount` step.
+
+### 2.2.4. Wait For Umount
+Before detaching the volume, it is important to check if all the steps within the `umount_volume` document are properly executed. In this step, I will check the execution status by using the `aws:waitForAwsResourceProperty` action.
+With the `GetCommandInvocation` API, I retrieve the command invocation details using the `CommandId` from the `UmountVolume` step. Then, I used the `PropertySelector` to filter the `StatusDetails` parameter from the API `Response` object.
+
+```
+# Wait until the SSM document for umounting the EBS data volume is successfully executed
+- name: WaitForUmount
+  action: aws:waitForAwsResourceProperty
+  timeoutSeconds: 120
+  onFailure: Abort
+  inputs:
+    Service: ssm
+    Api: GetCommandInvocation
+    CommandId: '{{ UmountVolume.CommandId }}'
+    InstanceId: '{{ GetVolumeDetails.InstanceId }}'
+    PropertySelector: '$.StatusDetails'
+    DesiredValues:
+      - Success
+  nextStep: DetachVolume
+```
+
+When the status becomes `Success`, the value that is configured in the `DesiredValues` section, the automation will continue to the `DetachVolume` step.
+
+### 2.2.5. Detach Volume
+The next step in the process is to detach the volume from the `EC2` machine. When the `umount_volume` document is successfully executed, the volume is properly umounted and can safely be removed from the virtual machine. In this step, I use the `DetachVolume` API to detach the volume using the `VolumeId` that is specified in the parameters section at the top of this document.
+
+```
+# Detach the EBS data volume
+- name: DetachVolume
+  action: aws:executeAwsApi
+  timeoutSeconds: 120
+  onFailure: Abort
+  isCritical: true
+  inputs:
+    Service: ec2
+    Api: DetachVolume
+    VolumeId: '{{ VolumeId }}'
+  nextStep: WaitForVolumeDetachment
+```
+
+When this step is successfully executed, the step continues to the `WaitForVolumeDetachment` step to check if the volume is successfully detached.
+
+### 2.2.6. Wait For Volume Detachment
+Before moving to the last step of this automation, it is important to check if the volume is successfully detached from the `EC2` machine. In this step, I use the `aws:waitForAwsResourceProperty` action to check the status of the volume with the `DescribeVolumes` API.
+I use the `PropertySelector` to grab the volume's `state` from the API `Response` object using the `JSONPath` notation. When the state is `available`, the volume is successfully detached and the step will be marked as completed.
+
+```
+# Wait until the EBS data volume is succesfully detached
+- name: WaitForVolumeDetachment
+  action: aws:waitForAwsResourceProperty
+  timeoutSeconds: 120
+  onFailure: Abort
+  inputs:
+    Service: ec2
+    Api: DescribeVolumes
+    VolumeIds: 
+      - '{{ VolumeId }}'
+    PropertySelector: '$.Volumes[0].State'
+    DesiredValues:
+      - available
+  nextStep: UpdateTag
+```
+
+The automation will continue to the `UpdateTag` step when it detects that the volume is successfully detached from the `EC2` instance.
+
+### 2.2.7. Update Tag
+When the volume is detached from the `EC2` machine, it's important to update the `type` tag to ensure that the volume is no longer targeted by the `DLM` policy. 
+I use the `aws:createTags` action to update the tag from the volume that is targeted in the `ResourceIds` parameter to `or-data-not-in-use`. The `hostname` is included to make this `tag` unique when multiple hosts are deployed within the same `AWS` account. Otherwise multiple `DLM` policies would target the same volume which results in duplicate snapshots.
+
+```
+# Change tag to ensure the volume is no longer targeted by the DLM policy
+- name: UpdateTag
+  action: aws:createTags
+  timeoutSeconds: 120
+  onFailure: Abort
+  inputs:
+    ResourceType: EC2
+    ResourceIds: 
+      - '{{ VolumeId }}'
+    Tags:
+      - Key: Type
+    Value: '{{ GetInstanceDetails.Host }}-or-data-not-in-use'
+```
+
+When this step is executed successful, the `detach_volume` automation is completed.
+
+## 2.3. Mount Volume Document
+To mount the `EBS` data volume to the `EC2` instance, I used the previous created `SSM` command document. This document is executing the following steps on the `EC2` instance:
+
+- `Mount Volume` - This script checks for an existing `filesystem` on the volume and based on that creates a new one or mounts the existing.
+- `Add File System Entry` - To ensure that the volume is automatically mounted on instance restart, I created a script that adds an entry in the `/etc/fstab` file.
+- `Start Docker` -  After the volume is mounted, the docker `service` and `socket` are started. When there are existing `Docker` containers on the system, they are automatically started during this step.
+
+The `mount_volume` document uses the `DocumentType` command and `schemaVersion` 2.2. The only parameter that is required is the `DeviceName` where the volume needs to be mounted on.
+
+```
+Type: AWS::SSM::Document
+Properties:
+  DocumentType: Command
+  DocumentFormat: YAML
+  TargetType: /AWS::EC2::Instance
+  Name: mount_volume
+    Content:
+      schemaVersion: '2.2'
+      description: 'Script for mounting an EBS data volume'
+      parameters:
+        DeviceName:
+          type: String
+          description: '(Required) Specify the Device name where the volume should be mounted on'
+          allowedPattern: '^/dev/sd[b-z]$'
+```
+
+### 2.3.1. Mount Volume
+Before the volume can be mounted to the `EC2` instance, it is important to check if the volume has an existing filesystem. Creating a new filesystem on top of an existing filesystem will overwrite the data.
+To check for an existing filesystem, I use the `blkid` command and filter on `TYPE` using the `DeviceName` provided in the parameters section at the top of the document.
+
+When there is no existing filesystem, the script will create one using the `xfs` file system and mountes the `/var/lib/docker/volumes` directory on the `DeviceName` specified.
+If there is already an filesystem available, for example when an volume is created from an existing snapshot, the system will only mount the volume.
+
+```
+# Mount the specified EBS data volume to the instance
+- name: MountVolume
+  action: aws:runShellScript
+  inputs:
+    runCommand:
+      - |
+        FILESYSTEM=$(blkid -o value -s TYPE {{ DeviceName }})
+        if [ -z "$FILESYSTEM" ]; then
+          mkfs -t xfs {{ DeviceName }}
+          mount {{ DeviceName }} /var/lib/docker/volumes
+        else
+          mount {{ DeviceName }} /var/lib/docker/volumes
+        fi
+```
+
+### 2.3.2. Add File System Entry
+To ensure the volume is automatically mounted on instance reboot, an entry in the file systems table must be created in the `/etc/fstab` file.
+The script first fetches the volume's `UUID`. The `UUID` is used to target the volume within the file systems table. It's possible to use the `DeviceName` here instead, but this isn't recommended as the `DeviceName` may change. The `UUID` is persistent throughout the life of the volume. Even when you restore the volume from an snapshot.
+
+After retrieving the `UUID`, the script first makes a backup of the `/etc/fstab` in case something goes wrong. When the file systems table is corrupt the instance may not be able to reboot anymore. If the backup is succesful created, the script will update the file systems table by adding a new line to the `/etc/fstab` file. The entry consists of the following components:
+
+- `UUID` - The volume's `UUID` retrieved from the `blkid` command
+- `Directory` - The directory that needs to be mounted (`/var/lib/docker/volumes`)
+- `File System` - The file system type (`xfs`)
+- `Tags` - Different tags to control the behaviour of the volume. the `nofail` tag ensures that the instance can boot even if the volume cannot be mounted. The `defaults` tag configures several standard settings to the volume.
+- `Options` - Different options to control the behaviour of the volume, the `0` means the volume isn't backupped by the `dump` command, the `2` means that the volume isn't an `root` device.
+
+Updating this file is very important. Therefore, the script will throw an error if something goes wrong.
+
+```
+# Add the specified EBS data volume to the file system table
+- name: AddFileSystemEntry
+  action: aws:runShellScript
+  inputs:
+    runCommand:
+      - |
+        UUID=$(blkid -o value -s UUID {{ DeviceName }})
+        if [ -n "$UUID" ]; then
+          cp /etc/fstab /etc/fstab.orig
+          echo "UUID=$UUID /var/lib/docker/volumes xfs defaults,nofail 0 2" >> /etc/fstab
+        else
+          echo "Failed to add /etc/fstab entry .. UUID is not found"
+          exit 1
+        fi
+```
+
+### 2.3.3. Start Docker
+When the file systems table is successfully updated, the script will start the `Docker` `socket` and `service` again using the `systemctl` command. Existing containers will automatically try to start again.
+For extra safety, both the `socket` and `service` are disabled when the volume gets detached. This prevents the `Docker` service accidentally starts when the updating process is in progress.
+
+```
+# Start the Docker service and socket
+- name: StartDocker
+  action: aws:runShellScript
+  inputs:
+    runCommand:
+      - systemctl start docker.socket docker.service
+```
+
+## 2.4. Umount Volume
+To umount the `EBS` data volume from the `EC2` instance, the `SSM` document that was previously created is being used. This document looks almost identical to the `mount_volume` document.
+The following steps are being executed:
+
+- `Umount Volume` - This script checks for an existing `filesystem` on the volume and based on that creates a new one or mounts the existing.
+- `Remove File System Entry` - To ensure that the volume is automatically mounted on instance restart, I created a script that adds an entry in the `/etc/fstab` file.
+- `Stop Docker` -  After the volume is mounted, the docker `service` and `socket` are started. Existing `Docker` containers are automatically started during this step. 
+
+The `umount_volume` document uses the `DocumentType` command and `schemaVersion` 2.2. The only parameter that is required is the `DeviceName` that needs to be umounted
+
+```
+Type: AWS::SSM::Document
+Properties:
+  DocumentType: Command
+  DocumentFormat: YAML
+  TargetType: /AWS::EC2::Instance
+  Name: umount_volume
+    Content:
+      schemaVersion: '2.2'
+      description: 'Script for umounting an EBS data volume'
+      parameters:
+        DeviceName:
+          type: String
+          description: '(Required) Specify the Device name where the volume is mounted on'
+          allowedPattern: '^/dev/sd[b-z]$'
+```
+
+### 2.4.1. Stop Docker
+The first step in this process is to stop the `Docker` `service` and `socket` using the `systemctl` command to prevent any issues with the running containers that are using the `EBS` data volume. 
+
+```
+# Stop the Docker service and socket
+- name: StopDocker
+  action: aws:runShellScript
+  inputs:
+    runCommand:
+      - systemctl stop docker.socket docker.service
+```
+
+### 2.4.2. Remove File System Entry
+When the `Docker` `service` and `socket` 
