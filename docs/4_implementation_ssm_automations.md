@@ -36,6 +36,8 @@ It also outlines the decisions I made and the challenges encountered throughout 
 - [2.4. Umount Volume](#24-umount-volume)
   - [2.4.1. Stop Docker](#241-stop-docker)
   - [2.4.2. Remove File System Entry](#242-remove-file-system-entry)
+  - [2.4.3. Umount Volume](#243-umount-volume)
+- [3. Replace snapshot automation](#3-replace-snapshot-automation)
 
 <div style="page-break-after: always;"></div>
 
@@ -576,4 +578,47 @@ The first step in this process is to stop the `Docker` `service` and `socket` us
 ```
 
 ### 2.4.2. Remove File System Entry
-When the `Docker` `service` and `socket` 
+When the `docker` `service` and `socket` are succesfully stopped all the `docker` containers are shutdown. After that, the script will remove the `EBS` data volume from the file systems table using the `sed` command. This ensures that the instance wouldn't try to mount an non-attached volume the instance. The script will create a backup first in case the file becomes corrupt.
+
+To delete the correct entry in the `/etc/fstab` file, the `sed` command uses the volume's `UUID` to identify the row that needs to be removed. If the `UUID` cannot be retrieved using the volume's `DeviceName`, the system will throw an error and the operation failes.
+
+```
+# Remove the specified EBS data volume from the file systems table
+- name: RemoveFileSystemEntry
+  action: aws:runShellScript
+  inputs:
+  runCommand: 
+    - |
+      UUID=$(blkid -o value -s UUID {{ DeviceName }})
+      if [ -n "$UUID" ]; then
+        cp /etc/fstab /etc/fstab.orig
+        sed -i '/UUID='$UUID'/d' /etc/fstab
+      else
+        echo "Failed to remove /etc/fstab entry .. UUID is not found"
+        exit 1
+      fi
+```
+
+### 2.4.3. Umount Volume
+After the entry is successfully removed from the `/etc/fstab` file, the `EBS` data will be umounted from the `EC2` instance. Umounting the volume is not required, but acts as an safeguard to prevent any unexepected errors with the volume.
+The script uses the `findmnt` command to identify if the volume is actually mounted. Trying to `umount` an volume that isn't actually mounted results in an error. Therefore, this check is neccesary.
+
+If the device is not mounted, the system will skip this step and `echo` a message for reference. Otherwise, the volume will be unmounted from the `EC2` instance.
+
+```
+# Umount the specified EBS data volume
+- name: UmountVolume
+  action: aws:runShellScript
+  inputs:
+  runCommand:
+    - |
+      MOUNT=$(findmnt -S {{ DeviceName }})
+      if [ -n "$MOUNT" ]; then
+          umount {{ DeviceName }}
+      else
+          echo "Device not mounted .. Skipping step"
+      fi
+```
+
+## 3. Replace snapshot automation
+After rewriting all the 
