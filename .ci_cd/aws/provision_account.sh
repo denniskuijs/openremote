@@ -23,26 +23,26 @@
 #     a VPC called or-vpc in the caller account and will try and use the IAM role arn:aws:iam::$CALLER_AWS_ACCOUNT_ID:role/or-vpc-peer-$AWS_REGION
 #     to automatically accept the VPC peering connection
 
-if [[ $BASH_SOURCE = */* ]]; then
- awsDir=${BASH_SOURCE%/*}/
-else
-  awsDir=./
-fi
+# if [[ $BASH_SOURCE = */* ]]; then
+#  awsDir=${BASH_SOURCE%/*}/
+# else
+#   awsDir=./
+# fi
 
-OU=${1}
-AWS_ACCOUNT_NAME=${2,,}
-PARENT_DNS_ZONE=${3,,}
-HOSTED_DNS=${4,,}
-CREATE_VPC_PEER=${5,,}
-ACCOUNT_PROFILE='--profile github-da'
+# OU=${1}
+# AWS_ACCOUNT_NAME=${2,,}
+# PARENT_DNS_ZONE=${3,,}
+# HOSTED_DNS=${4,,}
+# CREATE_VPC_PEER=${5,,}
+# ACCOUNT_PROFILE='--profile github-da'
 
-if [ -z "$AWS_ACCOUNT_NAME" ]; then
-  echo "AWS_ACCOUNT_NAME must be set"
-  exit 1
-fi
+# if [ -z "$AWS_ACCOUNT_NAME" ]; then
+#   echo "AWS_ACCOUNT_NAME must be set"
+#   exit 1
+# fi
 
-# Optionally login if AWS_ENABLED != 'true'
-source "${awsDir}login.sh"
+# # Optionally login if AWS_ENABLED != 'true'
+# source "${awsDir}login.sh"
 
 # Get github account ID from github profile
 # CALLER_AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
@@ -277,51 +277,51 @@ source "${awsDir}login.sh"
 #   echo "PARENT_DNS_ZONE not set so no DNS configuration will be attempted"
 # fi
 
-# # Provision SSM Documents
-# if [ -f "${awsDir}cloudformation-create-ssm-documents.yml" ]; then
-#   TEMPLATE_PATH="${awsDir}cloudformation-create-ssm-documents.yml"
-# elif [ -f ".ci_cd/aws/cloudformation-create-ssm-documents.yml" ]; then
-#   TEMPLATE_PATH=".ci_cd/aws/cloudformation-create-ssm-documents.yml"
-# elif [ -f "openremote/.ci_cd/aws/cloudformation-create-ssm-documents.yml" ]; then
-#   TEMPLATE_PATH="openremote/.ci_cd/aws/cloudformation-create-ssm-documents.yml"
-# else
-#   echo "Cannot determine location of cloudformation-create-ssm-documents.yml"
-#   exit 1
-# fi
+# Provision SSM Documents
+if [ -f "${awsDir}cloudformation-create-ssm-documents.yml" ]; then
+  TEMPLATE_PATH="${awsDir}cloudformation-create-ssm-documents.yml"
+elif [ -f ".ci_cd/aws/cloudformation-create-ssm-documents.yml" ]; then
+  TEMPLATE_PATH=".ci_cd/aws/cloudformation-create-ssm-documents.yml"
+elif [ -f "openremote/.ci_cd/aws/cloudformation-create-ssm-documents.yml" ]; then
+  TEMPLATE_PATH="openremote/.ci_cd/aws/cloudformation-create-ssm-documents.yml"
+else
+  echo "Cannot determine location of cloudformation-create-ssm-documents.yml"
+  exit 1
+fi
 
-# STACK_NAME=or-ssm
+STACK_NAME=or-ssm
 
-# # Create SSM Documents for attaching, detaching and replacing an EBS data volume in specified account
-# STACK_ID=$(aws cloudformation create-stack --capabilities CAPABILITY_NAMED_IAM --stack-name $STACK_NAME --template-body file://$TEMPLATE_PATH --output text $ACCOUNT_PROFILE)
+# Create SSM Documents for attaching, detaching and replacing an EBS data volume in specified account
+STACK_ID=$(aws cloudformation create-stack --capabilities CAPABILITY_NAMED_IAM --stack-name $STACK_NAME --template-body file://$TEMPLATE_PATH --output text $ACCOUNT_PROFILE)
 
-# # Wait for CloudFormation stack status to be CREATE_*
-# echo "Waiting for stack to be created"
-# STATUS=$(aws cloudformation describe-stacks --stack-name $STACK_NAME --query "Stacks[0].StackStatus" --output text $ACCOUNT_PROFILE 2>/dev/null)
+# Wait for CloudFormation stack status to be CREATE_*
+echo "Waiting for stack to be created"
+STATUS=$(aws cloudformation describe-stacks --stack-name $STACK_NAME --query "Stacks[0].StackStatus" --output text $ACCOUNT_PROFILE 2>/dev/null)
 
-# while [[ "$STATUS" == 'CREATE_IN_PROGRESS' ]]; do
-#     echo "Stack creation is still in progress .. Sleeping 30 seconds"
-#     sleep 30
-#     STATUS=$(aws cloudformation describe-stacks --stack-name $STACK_NAME --query "Stacks[0].StackStatus" --output text $ACCOUNT_PROFILE 2>/dev/null)
-# done
+while [[ "$STATUS" == 'CREATE_IN_PROGRESS' ]]; do
+    echo "Stack creation is still in progress .. Sleeping 30 seconds"
+    sleep 30
+    STATUS=$(aws cloudformation describe-stacks --stack-name $STACK_NAME --query "Stacks[0].StackStatus" --output text $ACCOUNT_PROFILE 2>/dev/null)
+done
 
-# if [ "$STATUS" != 'CREATE_COMPLETE' ] && [ "$STATUS" != 'UPDATE_COMPLETE' ]; then
-#   echo "Stack creation has failed status is '$STATUS'"
-#   exit 1
-# else
-#   echo "Stack creation is complete"
-# fi
+if [ "$STATUS" != 'CREATE_COMPLETE' ] && [ "$STATUS" != 'UPDATE_COMPLETE' ]; then
+  echo "Stack creation has failed status is '$STATUS'"
+  exit 1
+else
+  echo "Stack creation is complete"
+fi
 
-# # Provision default dashboard
-# if [ -f "${awsDir}cloudformation-create-dashboard.yml" ]; then
-#   TEMPLATE_PATH="${awsDir}cloudformation-create-dashboard.yml"
-# elif [ -f ".ci_cd/aws/cloudformation-create-dashboard.yml" ]; then
-#   TEMPLATE_PATH=".ci_cd/aws/cloudformation-create-dashboard.yml"
-# elif [ -f "openremote/.ci_cd/aws/cloudformation-create-dashboard.yml" ]; then
-#   TEMPLATE_PATH="openremote/.ci_cd/aws/cloudformation-create-dashboard.yml"
-# else
-#   echo "Cannot determine location of cloudformation-create-dashboard.yml"
-#   exit 1
-# fi
+# Provision default dashboard
+if [ -f "${awsDir}cloudformation-create-dashboard.yml" ]; then
+  TEMPLATE_PATH="${awsDir}cloudformation-create-dashboard.yml"
+elif [ -f ".ci_cd/aws/cloudformation-create-dashboard.yml" ]; then
+  TEMPLATE_PATH=".ci_cd/aws/cloudformation-create-dashboard.yml"
+elif [ -f "openremote/.ci_cd/aws/cloudformation-create-dashboard.yml" ]; then
+  TEMPLATE_PATH="openremote/.ci_cd/aws/cloudformation-create-dashboard.yml"
+else
+  echo "Cannot determine location of cloudformation-create-dashboard.yml"
+  exit 1
+fi
 
 STACK_NAME=or-dashboard-default
 
