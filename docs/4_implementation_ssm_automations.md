@@ -636,9 +636,9 @@ This task is currently performed manually and takes a lot of time. By automating
 
 The document uses the same `DocumentType` and `schemaVersion` as the other documents. For this automation the following parameters are required:
 
-- `VolumeId` - To specify which `EBS` data volume needs to be replaced with the snapshot
-- `SnapshotId` - To specify which snapshot should be used for creating the new `EBS` data volume
-- `DeleteVolume` - To specify if the current `EBS` data volume should be kept or deleted
+- `VolumeId` - To specify which `EBS` data volume needs to be replaced with the snapshot.
+- `SnapshotId` - To specify which snapshot should be used for creating the new `EBS` data volume.
+- `DeleteVolume` - To specify if the current `EBS` data volume should be kept or deleted.
 
 ```
 Type: AWS::SSM::Document
@@ -666,10 +666,10 @@ Properties:
 ```
 
 ### 3.1. Get Volume Details
-The first step in this automation is to retrieve the volume details using the `aws:executeAwsApi` action. The step calls the `DescribeVolumes` API with the `VolumeId` that is specified in the parameters section at the top of this document
+The first step in this automation is to retrieve the volume details using the `aws:executeAwsApi` action. The step calls the `DescribeVolumes` API with the `VolumeId` that is specified in the parameters section at the top of this document.
 When the volume details are retrieved, we can get the `InstanceId` and `DeviceName` that belongs to this volume. To ensure that the correct values are being used, I have chosen to get them from the volume instead of specifying them in the parameters section.
 
-The `DeviceName` and `InstanceId` are retrieved using the `JSONPath` notation in the `API` `Response` object and are pushed to the `outputs` section so it can be used in the next steps.
+The `DeviceName` and `InstanceId` are retrieved using the `JSONPath` notation in the `API` `response` object and are pushed to the `outputs` section so it can be used in the next steps.
 
 ```
 # Retrieve EBS data volume details to get the DeviceName and InstanceId
@@ -693,8 +693,8 @@ The `DeviceName` and `InstanceId` are retrieved using the `JSONPath` notation in
 After the volume details are successfully retrieved, the automation will continue to `GetInstanceDetails` step.
 
 ### 3.2. Get Instance Details
-When the `DeviceName` and `InstanceId` are retrived, we can fetch the instance details using the `DescribeInstances` API and the `InstanceId` from the previous step. 
-To attach an `EBS` volume to an instance, it must be reside within the same `AvailabilityZone`. In this step I retrieve the `AvailabilityZone` and `hostname` using the `JSONPath` notation in the `API` `response` object. These values are pushed to the `outputs` section for further processing.
+When the `DeviceName` and `InstanceId` are retrieved, we can fetch the instance details using the `DescribeInstances` API and the `InstanceId` from the previous step. 
+To attach an `EBS` volume to an instance, it must reside within the same `AvailabilityZone`. In this step, I retrieve the `AvailabilityZone` and `hostname` using the `JSONPath` notation in the `API` `response` object. These values are pushed to the `outputs` section for further processing.
 
 The `hostname` is required to give the correct `tags` (`Name` and `type`) to the new volume that's being created in the next step.
 
@@ -723,10 +723,10 @@ When the instance details are succesfully retrieved, the script will move forwar
 
 ### 3.3. Create Volume
 When the required details are retrieved, the automation will create an new `EBS` data volume based on the `snapshot` that's provided in the parameters section at the beginning of this document.
-To create an new volume, the automation uses the `CreateVolume` API with the `AvailabilityZone` and `SnapshotId` from the previous steps. This ensures that the volume is created within same `AvailabilityZone` as the instance and the existing (snapshot) data is being used.
+To create an new volume, the automation uses the `CreateVolume` API with the `AvailabilityZone` and `SnapshotId` from the previous steps. This ensures that the volume is created within the same `AvailabilityZone` as the instance and the existing (snapshot) data is being used.
 
 By default, the `EBS` data volume is created using the `gp2` volume type. This is an older drive with less performance. Therefore, I specified the `VolumeType` parameter and configured it to `gp3` to make sure the correct `VolumeType` is used.
-Lastly, the script will add the `Name` tag using the `hostname` that's retrieved in the previous step and the `data` keyword to easily identify that this volume is used as a data drive. The `Type` tag will be added to target to make sure the volume is targeted by the `DLM` policy.
+Lastly, the script adds the `Name` tag using the `hostname` that's retrieved in the previous step and the `data` keyword to easily identify that this volume is used as a data drive. The `Type` tag is added to make sure the volume is targeted by the `DLM` policy.
 
 ```
 # Create new EBS data volume using the retrieved details and specified snapshot
@@ -778,7 +778,7 @@ To retrieve the status, I used the `DescribeVolumes` API with the `VolumeId` fro
     nextStep: DetachVolume
 ```
 
-When the volume's status is `available`, the value specified in the `DesiredValues` parameter, the script will continue to the next step.
+When the volume's status is `available`, the value specified in the `DesiredValues` parameter, the volume is ready to be attached and the script will continue to the next step.
 
 ### 3.5. Detach Volume
 When the automation reaches this step, the current `EBS` data volume will be detached from the instance. This part is handeled by an separate `SSM` automation document as some of the steps are using the `CommandType` command to execute `linux` commands on the `EC2` instance.
@@ -824,10 +824,10 @@ With the `PropertySelector` I target the `AutomationExecutionStatus` using the `
 The automation will now continue to the next step, attaching the newly created `EBS` volume to the `EC2` instance.
 
 ### 3.7. Attach Volume
-When the current `EBS` data volume is successfully detached from the `EC2` instance we can start attacing the newly created volume to the instance. This task is again handeled by an separate `SSM` automation document.
+When the current `EBS` data volume is successfully detached from the `EC2` instance we can start attacing the newly created `EBS` data volume to the instance. This task is again handeled by an separate `SSM` automation document.
 The `attach_volume` document will be executed using the `aws:executeAutomation` action. The parameters: `DeviceName`, `VolumeId` and `InstanceId` are specified in the `RuntimeParameters` section and will be passed to the document.
 
-The document is marked as crictial using the `isCritical=true` parameter. This means when this step fails, the automation will fail and the other steps won't being executed.
+The document is marked as critical using the `isCritical=true` parameter. When this step fails, the automation will fail and the other steps won't be executed.
 
 ```
 # Attach the newly created EBS data volume
@@ -851,7 +851,7 @@ The document is marked as crictial using the `isCritical=true` parameter. This m
 When the `attach_volume` document is successfully executed, the automation will continue to the next step to check for it's status.
 
 ### 3.8. Wait For Volume Attachment
-After executing the `SSM` document we need to check it's status to make it is executed successfully. In this step, I use the `aws:waitForAwsResourceProperty` action again to check for the `Success` status.
+After executing the `SSM` document we need to check it's status to make sure it's executed successfully. In this step, I use the `aws:waitForAwsResourceProperty` action again to check for the `Success` status.
 The execution details are retrieved using the `GetAutomationExecution` API with the `ExecutionId` from the previous step. With the `PropertySelector` I target the `AutomationExecutionStatus` using the `JSONPath` notation.
 
 The script frequently polls the status and continues to the next step once the status has the value that's described in the `DesiredValues` section.
@@ -893,10 +893,9 @@ If the value is `false`, the script will end (`isEnd=true`) and the other steps 
 ```
 
 ### 3.10. Delete Volume
-When the `DeleteVolume` parameter is true, this step will be executed. 
-
+When the `DeleteVolume` parameter is true, this step will be executed.
 The script uses the `DeleteVolume` API to delete the volume with the `VolumeId` specified in the parameters section at the top of this document (current volume)
-Unfortunately, this `API` call doesn't return anything. Therefore, we can't check the status anymore. If no status is returned, the volume is deleted succesfully. When this step isn't executed successfully, there might be a problem deleting the volume.
+Unfortunately, this `API` call doesn't return anything. Therefore, we can't check the status anymore. If no status is returned, the volume is deleted succesfully. When this step isn't executed successfully, the volume is not deleted.
 
 ```
 # Delete old EBS data volume if DeleteVolume variable is equal to true
