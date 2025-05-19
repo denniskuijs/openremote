@@ -284,7 +284,7 @@ echo "Provisioning SSM Documents"
 STATUS=$(aws cloudformation describe-stacks --stack-name $STACK_NAME --query "Stacks[0].StackStatus" --output text 2>/dev/null)
 
 if [ -n "$STATUS" ] && [ "$STATUS" != 'DELETE_COMPLETE' ]; then
-  echo "Stack already exists for this host '$HOST' current status is '$STATUS'"
+  echo "Stack already exists for this host .. Current status is '$STATUS'"
   STACK_ID=$(aws cloudformation describe-stacks --stack-name $STACK_NAME --query "Stacks[0].StackId" --output text 2>/dev/null)
 else
 
@@ -332,7 +332,7 @@ echo "Provisioning CloudWatch Dashboard"
 STATUS=$(aws cloudformation describe-stacks --stack-name $STACK_NAME --query "Stacks[0].StackStatus" --output text 2>/dev/null)
 
 if [ -n "$STATUS" ] && [ "$STATUS" != 'DELETE_COMPLETE' ]; then
-  echo "Stack already exists for this host '$HOST' current status is '$STATUS'"
+  echo "Stack already exists for this host .. Current status is '$STATUS'"
   STACK_ID=$(aws cloudformation describe-stacks --stack-name $STACK_NAME --query "Stacks[0].StackId" --output text 2>/dev/null)
 else
 
