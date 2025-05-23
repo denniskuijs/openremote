@@ -30,7 +30,7 @@ on:
       ROOT_DISK_SIZE:
         description: 'Override EC2 root EBS volume size (GB)'
         type: string
-        default: '30'
+        default: '16'
         required: false
       DATA_DISK_SIZE:
         description: 'Override EC2 data EBS volume size (GB)'
