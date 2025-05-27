@@ -902,10 +902,10 @@ Resources:
       ExecutionRoleArn: !Ref DLMExecutionRoleArn
       Description: 
         !Join
-          - ''
+          - '-'
           - !Split
-            - "."
-            - !Ref Host 
+            - '.'
+            - !Sub ${Host}-or-data
       State: ENABLED
       PolicyDetails:
         PolicyLanguage: STANDARD
