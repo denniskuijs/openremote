@@ -910,7 +910,6 @@ Resources:
       PolicyDetails:
         PolicyLanguage: STANDARD
         PolicyType: EBS_SNAPSHOT_MANAGEMENT
-        CopyTags: true
         TargetTags:
           - Key: Type
             Value: !Sub ${Host}-or-data-in-use
@@ -918,6 +917,7 @@ Resources:
           - VOLUME
         Schedules:
           - Name: Daily Backup
+            CopyTags: true
             CreateRule:
               Interval: 24
               IntervalUnit: HOURS
