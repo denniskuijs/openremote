@@ -900,7 +900,12 @@ Resources:
     DependsOn: EBSDataVolume
     Properties:
       ExecutionRoleArn: !Ref DLMExecutionRoleArn
-      Description: !Sub $(tr '.' '-' <<< "${Host}") Data
+      Description: 
+        !Join
+          - ''
+          - !Split
+            - "."
+            - !Ref Host 
       State: ENABLED
       CopyTags: true
       PolicyDetails:
@@ -917,7 +922,7 @@ Resources:
               Interval: 24
               IntervalUnit: HOURS
               Times:
-              - '05:00'
+                - '05:00'
             RetainRule:
               Count: 1
       Tags:
