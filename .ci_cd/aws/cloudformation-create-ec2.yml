@@ -907,10 +907,10 @@ Resources:
             - "."
             - !Ref Host 
       State: ENABLED
-      CopyTags: true
       PolicyDetails:
         PolicyLanguage: STANDARD
         PolicyType: EBS_SNAPSHOT_MANAGEMENT
+        CopyTags: true
         TargetTags:
           - Key: Type
             Value: !Sub ${Host}-or-data-in-use
