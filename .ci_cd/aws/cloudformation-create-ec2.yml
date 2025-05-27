@@ -900,7 +900,7 @@ Resources:
     DependsOn: EBSDataVolume
     Properties:
       ExecutionRoleArn: !Ref DLMExecutionRoleArn
-      Description: !Sub ${$(tr '.' '-' <<< "${Host}")} Data
+      Description: !Sub $(tr '.' '-' <<< "${Host}") Data
       State: ENABLED
       CopyTags: true
       PolicyDetails:
