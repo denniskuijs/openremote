@@ -101,7 +101,7 @@ Parameters:
   RootDiskSize:
     Description: Root EBS volume size GB
     Type: Number
-    Default: 16
+    Default: 30
   DataDiskSize:
     Description: Amount of storage you want to provision for this EBS data volume
     Type: Number
@@ -886,12 +886,12 @@ Resources:
       Size: !Ref DataDiskSize
       VolumeType: gp3
       SnapshotId: !If [SnapshotProvided, !Ref SnapshotId, !Ref 'AWS::NoValue']
+      DeletionPolicy: Snapshot
       Tags:
         - Key: Name
           Value: !Sub ${Host}-data
         - Key: Type
           Value: !Sub ${Host}-or-data-not-in-use
-    DeletionPolicy: Snapshot
 
   # DLM Policy for automatic snapshot creation
 
@@ -900,8 +900,9 @@ Resources:
     DependsOn: EBSDataVolume
     Properties:
       ExecutionRoleArn: !Ref DLMExecutionRoleArn
-      Description: 'or-data'
+      Description: !Sub ${$(tr '.' '-' <<< "${Host}")} Data
       State: ENABLED
+      CopyTags: true
       PolicyDetails:
         PolicyLanguage: STANDARD
         PolicyType: EBS_SNAPSHOT_MANAGEMENT
@@ -918,7 +919,7 @@ Resources:
               Times:
               - '05:00'
             RetainRule:
-              Count: 5
+              Count: 1
       Tags:
         - Key: Name
           Value: !Ref Host
