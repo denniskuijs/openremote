@@ -3,7 +3,7 @@
 ## 1. Decomposition: CI/CD workflow  <!-- omit in toc -->
 
 ## Context
-This document provides an overview of the flowcharts I created to decomposite the`CI/CD` workflow. By visualizing this into a flowchart I've got a better understanding how the `CI/CD` workflow is functioning.
+This document provides an overview of the flowcharts I created to decomposite the `CI/CD` workflow. By visualizing this into a flowchart I've got a better understanding how the `CI/CD` workflow is functioning.
 
 <div style="page-break-after: always;"></div>
 
