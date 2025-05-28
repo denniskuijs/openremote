@@ -19,6 +19,11 @@ This document provides a detailed description how I tested my `EBS` data volume 
   - [3.2. Testing Detach Volume](#32-testing-detach-volume)
     - [3.2.1. Volume is detached from the EC2 instance](#321-volume-is-detached-from-the-ec2-instance)
     - [3.2.2. Docker is successfully stopped](#322-docker-is-successfully-stopped)
+    - [3.2.3. Entry in the file systems table](#323-entry-in-the-file-systems-table)
+    - [3.2.3. Volume not targeted by DLM Policy](#323-volume-not-targeted-by-dlm-policy)
+  - [3.3. Testing Attach Volume](#33-testing-attach-volume)
+    - [3.3.1. Volume is attached to the EC2 instance](#331-volume-is-attached-to-the-ec2-instance)
+    - [3.3.2. Volume is targeted by DLM Policy](#332-volume-is-targeted-by-dlm-policy)
 
 <div style="page-break-after: always;"></div>
 
@@ -86,12 +91,38 @@ After the document is successfully executed I manually checked every step to mak
 <img src="./Media/ssm_detach_volume.png" width="1000">
 
 #### 3.2.1. Volume is detached from the EC2 instance
-The `EBS` data volume is correctly detached from the EC2 instance. Only the `root` volume is still attached.
+The `EBS` data volume is correctly detached from the EC2 instance. Only the `root` volume is still attached. The `EBS` data volume is also not showing up in the `block devices` list anymore.
 
 <img src="./Media/aws_ec2_ebs_data_volume_detached.png" width="1000">
+<img src="./Media/aws_lsblk_not_showing.png" width="1000">
 
 #### 3.2.2. Docker is successfully stopped
 The `Docker` service and socket are successfully stopped. The `Docker` containers are no longer running and OpenRemote is shutdown safely
 
 <img src="./Media/aws_docker_stop.png" width="1000">
 
+#### 3.2.3. Entry in the file systems table
+When the `EBS` volume is successfully detached, the system removes the entry from the file systems table in the `/etc/fstab` file.
+
+<img src="./Media/aws_ec2_fstab_entry_removed.png" width="1000">
+
+#### 3.2.3. Volume not targeted by DLM Policy
+The tag gets updated to `or-data-not-in-use` to make sure the `EBS` data volume is no longer targeted by the `DLM` policy. The policy only needs to target the `EBS` data volume that is currently attached to the instance.
+
+<img src="./Media/aws_dlm_policy_not_targeted.png" width="1000">
+
+### 3.3. Testing Attach Volume
+When the `EBS` volume is successfully detached from the `EC2` instance I start testing the possibility to attach the `EBS` volume again using the `attach_volume` `SSM` document.
+After the document is successfully executed I manually go through every step to ensure it's processed correctly.
+
+<img src="./Media/aws_ec2_ssm_attach_volume.png" width="1000">
+
+#### 3.3.1. Volume is attached to the EC2 instance
+The `EBS` data volume is successfully attached to the `EC2` instance.
+
+<img src="./Media/aws_ec2_ebs_data_volume_attached.png" width="1000">
+
+#### 3.3.2. Volume is targeted by DLM Policy
+The script has updated the tag to `or-data-in-use` and the `EBS` volume is targeted by the `DLM` policy again.
+
+<img src="./Media/aws_ec2_dlm_policy_targeted.png" width="1000">
