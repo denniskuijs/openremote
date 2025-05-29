@@ -18,12 +18,23 @@ This document provides a detailed description how I tested my `EBS` data volume 
   - [3.1. Deploying OpenRemote to the new host](#31-deploying-openremote-to-the-new-host)
   - [3.2. Testing Detach Volume](#32-testing-detach-volume)
     - [3.2.1. Volume is detached from the EC2 instance](#321-volume-is-detached-from-the-ec2-instance)
-    - [3.2.2. Docker is successfully stopped](#322-docker-is-successfully-stopped)
-    - [3.2.3. Entry in the file systems table](#323-entry-in-the-file-systems-table)
-    - [3.2.3. Volume not targeted by DLM Policy](#323-volume-not-targeted-by-dlm-policy)
+    - [3.2.2. Volume is umounted](#322-volume-is-umounted)
+    - [3.2.3. Docker is successfully stopped](#323-docker-is-successfully-stopped)
+    - [3.2.4. Entry in the File Systems Table](#324-entry-in-the-file-systems-table)
+    - [3.2.5. Volume not targeted by DLM Policy](#325-volume-not-targeted-by-dlm-policy)
   - [3.3. Testing Attach Volume](#33-testing-attach-volume)
     - [3.3.1. Volume is attached to the EC2 instance](#331-volume-is-attached-to-the-ec2-instance)
-    - [3.3.2. Volume is targeted by DLM Policy](#332-volume-is-targeted-by-dlm-policy)
+    - [3.3.2. Volume is mounted](#332-volume-is-mounted)
+    - [3.3.3. Entry in the File Systems Table](#333-entry-in-the-file-systems-table)
+    - [3.3.4. Volume is targeted by DLM Policy](#334-volume-is-targeted-by-dlm-policy)
+    - [3.3.5. Docker is successfully started](#335-docker-is-successfully-started)
+  - [3.4. Testing Replace Volume with/without Volume Deletion](#34-testing-replace-volume-withwithout-volume-deletion)
+    - [3.4.1. Create new volume from snapshot](#341-create-new-volume-from-snapshot)
+    - [3.4.2. Old volume detached](#342-old-volume-detached)
+    - [3.4.3. New volume mounted](#343-new-volume-mounted)
+    - [3.4.4. Entry in the File Systems Table](#344-entry-in-the-file-systems-table)
+    - [3.4.5. New volume is targeted by DLM Policy](#345-new-volume-is-targeted-by-dlm-policy)
+    - [3.4.6. Docker is starting](#346-docker-is-starting)
 
 <div style="page-break-after: always;"></div>
 
@@ -94,19 +105,23 @@ After the document is successfully executed I manually checked every step to mak
 The `EBS` data volume is correctly detached from the EC2 instance. Only the `root` volume is still attached. The `EBS` data volume is also not showing up in the `block devices` list anymore.
 
 <img src="./Media/aws_ec2_ebs_data_volume_detached.png" width="1000">
-<img src="./Media/aws_lsblk_not_showing.png" width="1000">
 
-#### 3.2.2. Docker is successfully stopped
-The `Docker` service and socket are successfully stopped. The `Docker` containers are no longer running and OpenRemote is shutdown safely
+#### 3.2.2. Volume is umounted
+The `EBS` data volume is successfully umounted from the `/var/lib/docker/volumes` directory. The `docker` persistent volumes are no longer available by the filesystem.
+
+<img src="./Media/aws_ec2_volume_umounted.png" width="1000">
+
+#### 3.2.3. Docker is successfully stopped
+The `Docker` service and socket are successfully stopped. The `Docker` containers are no longer running and OpenRemote is shutdown safely.
 
 <img src="./Media/aws_docker_stop.png" width="1000">
 
-#### 3.2.3. Entry in the file systems table
-When the `EBS` volume is successfully detached, the system removes the entry from the file systems table in the `/etc/fstab` file.
+#### 3.2.4. Entry in the File Systems Table
+When the `EBS` volume is successfully detached, the system has removed the entry from the file systems table in the `/etc/fstab` file.
 
 <img src="./Media/aws_ec2_fstab_entry_removed.png" width="1000">
 
-#### 3.2.3. Volume not targeted by DLM Policy
+#### 3.2.5. Volume not targeted by DLM Policy
 The tag gets updated to `or-data-not-in-use` to make sure the `EBS` data volume is no longer targeted by the `DLM` policy. The policy only needs to target the `EBS` data volume that is currently attached to the instance.
 
 <img src="./Media/aws_dlm_policy_not_targeted.png" width="1000">
@@ -122,7 +137,66 @@ The `EBS` data volume is successfully attached to the `EC2` instance.
 
 <img src="./Media/aws_ec2_ebs_data_volume_attached.png" width="1000">
 
-#### 3.3.2. Volume is targeted by DLM Policy
-The script has updated the tag to `or-data-in-use` and the `EBS` volume is targeted by the `DLM` policy again.
+#### 3.3.2. Volume is mounted 
+The `EBS` data volume is successfully mounted to the `/var/lib/docker/volumes` directory. 
+
+<img src="./Media/aws_ec2_volume_mounted.png" width="1000">
+
+#### 3.3.3. Entry in the File Systems Table
+After successfully attaching the `EBS` data volume to the `EC2` instance, the script will add the `block device` to the file systems table in the `/etc/fstab` file.
+
+<img src="./Media/aws_ec2_fstab_entry_added.png" width="1000">
+
+#### 3.3.4. Volume is targeted by DLM Policy
+The script has updated the tag to `or-data-in-use` to make sure the `EBS` volume is targeted by the `DLM` policy again. `DLM` will now create automatic snapshots for this volume.
 
 <img src="./Media/aws_ec2_dlm_policy_targeted.png" width="1000">
+
+#### 3.3.5. Docker is successfully started
+The script enables the `Docker` socket and service. The existing containers are automatically trying to boot up. After a few minutes all the containers became healthy and OpenRemote is accesible.
+
+<img src="./Media/aws_ec2_docker_start.png" width="1000">
+
+When visiting the OpenRemote platform, all the data is visible and the platform is working as expected.
+
+<img src="./Media/aws_ec2_openremote_data_visible.png" width="1000">
+
+### 3.4. Testing Replace Volume with/without Volume Deletion
+In this section, I tested the option to replace an existing `EBS` data volume with an snapshot using the `replace_volume` `SSM` document. In this example, the script is configured to keep the original `EBS` data volume.
+After successfully executed the document, I checked every step manually to make sure all the tasks are executed properly.
+
+<img src="./Media/ssm_replace_volume_without_deletion.png" width="1000">
+
+#### 3.4.1. Create new volume from snapshot
+The script creates an new `EBS` data volume based off an existing snapshot an attaches this volume to the `EC2` instance. The existing `EBS` data volume will be detached from the instance.
+
+<img src="./Media/aws_ec2_volume_replaced.png" width="1000">
+
+#### 3.4.2. Old volume detached
+The current `EBS` data volume is successfully detached from the `EC2` instance and is visible in the `volumes` overview
+
+<img src="./Media/aws_ec2_old_volume_visible.png" width="1000">
+
+#### 3.4.3. New volume mounted
+The newly created `EBS` data volume is mounted to the `/var/lib/docker/volumes` directory. The snapshot data (docker volumes) are available in this directory.
+
+<img src="./Media/aws_ec2_newly_ebs_volume_mounted.png" width="1000">
+
+#### 3.4.4. Entry in the File Systems Table
+The newly created `EBS` data volume is added to the file systems table in the `/etc/fstab` file. The old volume is removed from this table.
+
+<img src="./Media/aws_ec2_fstab_newly_ebs_volume_added.png" width="1000">
+
+#### 3.4.5. New volume is targeted by DLM Policy
+Only the newly created `EBS` data volume is targeted by the `DLM` policy using the tag `or-data-in-use`. The tag from the old volume is updated to `or-data-not-in-use` to ensure it's no longer targeted by the `DLM` policy.
+
+<img src="./Media/aws_ec2_dlm_policy_new_volume_targeted.png" width="1000">
+
+#### 3.4.6. Docker is starting
+The scripts starts the `Docker` service and socket. The containers are booting up again using the existing `docker` volumes from the snapshot that are mounted to the `/var/lib/docker/volumes` directory.
+
+<img src="./Media/aws_ec2_docker_starting_snapshot_data.png" width="1000">
+
+After a few minutes, the containers are healthy and OpenRemote is accessible again. The data from the snapshot is successfully loaded.
+
+<img src="./Media/aws_ec2_docker_data_openremote.png" width="1000">
