@@ -1,5 +1,5 @@
 ---
-title: "AWS (Production) Instance"
+title: "Production AWS Instance"
 subtitle: "Migration"
 author: [Dennis Catharina Johannes Kuijs]
 date: "June 3, 2025"
