@@ -2,7 +2,7 @@
 title: "CI/CD Workflow"
 subtitle: "Decomposition"
 author: [Dennis Catharina Johannes Kuijs]
-date: "June 3, 2025"
+date: "June 17, 2025"
 lang: "en"
 toc: true
 toc-own-page: true
