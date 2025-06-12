@@ -18,7 +18,6 @@ footer-center: "\\theauthor"
 code-block-font-size: "\\scriptsize"
 ...
 
-
 # 1. Context
 The creation of various cloud services is done using `CloudFormation` templates. [CloudFormation](https://aws.amazon.com/cloudformation/) is Amazon's Infrastructure as Code (IaaC) tool, allowing infrastructure to be set up through code. 
 This approach makes it possible to easily create and modify infrastructure without having to make changes through an administrator panel.
@@ -175,7 +174,6 @@ You can either use the default encryption key or create your own. Using your own
 It is also possible to create `EBS` volumes while launching an `EC2` instance. These volumes are automatically attached to the instance.
 
 ### 3.4.3. Attach Volume to an EC2 Instance
-
 ![The EBS data volume is attached to the EC2 instance](../Media/volume_detail.png)
 
 After creating an `EBS` volume, you can attach it to an `EC2` instance.
@@ -195,7 +193,6 @@ Select a device name for the `EBS` volume.
 Data volumes typically use names like `/dev/sd[a-z]`, with names between `/dev/sd[f-p]` being recommended. Root volumes generally use the default `/dev/xvda` name. Each device name can only be used once.
 
 ### 3.4.4. Create Filesystem on Volume
-
 Before an `EBS` volume can be used, it must be formatted and have a filesystem on it.
 Start by running the command below to list all existing block devices on the host machine.
 
@@ -312,7 +309,6 @@ Creating the `fstab` entry ensures that the device is mounted using its `UUID`, 
 This section explains how `snapshots` (backups) can be created/restored with the built-in snapshot functionality.
 
 ### 3.5.1. Manually creating snapshots
-
 You can create snapshots on specific `EBS` volumes and on instance level.
 To create a snapshot via the management console, You need to configure the following options:
 
@@ -331,7 +327,6 @@ After the snaphot is successfully created you will see the `complete` status on 
 ![The snapshot creation is completed successfully](../Media/snapshot_complete.png)
 
 ### 3.5.2. Restoring snapshots
-
 To restore a snapshot, you can choose to either create a new volume or an `AMI` (Amazon Machine Image), which can then be used to launch a new instance.
 
 ![Create a new EBS volume based off an existing snapshot](../Media/snapshot_restore.png)
@@ -356,11 +351,9 @@ The DSU pricing for `eu-west-1` is $0.83 per 1 DSU hour for each snapshot with t
 When creating a volume from a snapshot with `Fast Snapshot Restore` enabled, it will immediately deliver all its provisioned performance `(IOPS)`, eliminating the latency usually associated with I/O operations when accessing the volume for the first time. This ensures that the volume is fully initialized upon creation.
 
 ## 3.6. Amazon Data Lifecycle Manager
-
 To automate snapshot creation, retention, and deletion, you can use `Amazon Data Lifecycle Manager`. With this tool, you can configure policies that define when snapshots are created and from which resources. You can also specify how frequently the policy should be executed. Additionally, it allows you to run scripts before or after snapshot creation, automatically copy snapshots to other regions or accounts, and even set rules for snapshot retention and archiving.
 
 ### 3.6.1. Creating policies
-
 To create a policy you can either choose between two different options:
 
 - `Default Policy`: The default policy is simple and can only be used to create snapshots from volumes. Customization options are limited. it’s not possible to target specific volumes or instances. Retention settings can only be configured with a maximum of `14` days, and snapshot creation can be scheduled between `1` and `7` days. 
@@ -519,7 +512,6 @@ This location is stored on the default (root) `EBS` volume. To decouple the data
 In my approach, I aim to make the solution as modular as possible, ensuring that it is easy for others to modify these values for their own OpenRemote configuration.
 
 ## 4.2. Approach 1 (Bind Mount)
-
 In my first approach, I tried to replace the `named` volumes with the directory that is mounted on the seperate `EBS` volume. This way, the data will be stored directly on the seperate block device.
 
 ```sh
@@ -812,7 +804,6 @@ With this setup, the `Docker` `containers` are spinning up and OpenRemote is ava
 ![The OpenRemote platform is accessibile using it's Public IP](../Media/openremote_working.png)
 
 ## 4.4. Approach 3 (Named volumes)
-
 The second approach is working, but to improve this setup further, I made some additional changes. Currently, all the data is stored in a single `volume/directory` without subfolders, leading to a large mess.
 
 ![Docker volumes are visible on the filesystem, but are unsorted](../Media/ls_unordered.png)
@@ -935,7 +926,6 @@ OR_HOSTNAME=<PUBLIC IP> OR_EXTERNAL_VOLUME=true docker-compose -p openremote up 
 ```
 
 ## 4.5. Approach 4 (Named volumes)
-
 I continued optimizing this approach and after tweaking the `Docker Compose` file a little more, I currently have the following result:
 
 ````yaml

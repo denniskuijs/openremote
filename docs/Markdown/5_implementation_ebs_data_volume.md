@@ -455,7 +455,6 @@ prepare_volume:
 ```
 
 ### 3.1.3. CloudFormation template
-
 The `CloudFormation` template for creating the `EBS` volume looks like this:
 
 ```yaml
@@ -844,7 +843,6 @@ fi
 ```
 
 ### 3.3.2. CloudFormation template
-
 The `CloudFormation` template for creating the `DLM` policy looks like this:
 
 ```yaml
@@ -1143,7 +1141,6 @@ It creates two seperate documents, one for `attaching` and another for `detachin
 When these documents are executed, `SSM` runs the commands defined in the `runCommand` block on the targeted `EC2` instance.
 
 # 4. Improved implementation based on feedback
-
 After my initial implementation, I reviewed it with an team member and received valuable feedback to improve it further.
 
 ## 4.1. Add counter when attaching volume
@@ -1178,7 +1175,6 @@ Previously, if the volume was `unmounted`and `detached` without stopping `Docker
 ![Rich proposed to stop the Docker service first before unmounting the EBS data volume](../Media/review_2.png)
 
 ## 4.3. Wait until EC2 instance is created before attaching/mounting the volume
-
 In my initial attempt, I added logic to provision the `EBS` data volume using a separate `CloudFormation` template. Once the instance was created by the `create-ec2` stack, I attached the volume immediately. The goal with this approach was to ensure the volume would be mounted in time before the `cfn-scripts` responsible for formatting and mounting the volume were executed.
 
 However, the creation of the `EC2` instance is only considered complete once all `cfn-scripts` have been successfully executed and `cfn-signal` returns a `SUCCESS` status. Since volume creation and mounting were part of the `cfn-scripts`, It wasn't possible to wait for the instance to be initalized beforehand. As a result, if the volume couldn't be attached or mounted successfully or in time, the `cfn-scripts` would fail, and the `CloudFormation` stack will be rolled back.
@@ -1229,11 +1225,9 @@ fi
 
 With this approach, volume attachment and mounting only occur after the instance has been successfully created. This ensures the volume operations are only executed on a fully initialized instance, reducing the risks of errors during provisioning when for example the volume is not attached to the instance on time before executing the `cfn-scripts`.
 
-
 ![Rich proposed to check whether the EBS data volume is attached on time](../Media/review_3.png)
 
 ## 4.4. SSM Documents for each account instead of host
-
 When provisioing the `SSM` documents. In my first attempt, they will be created for each individual host. Since the documents are configureable with parameters and we need to specify on which instance they need to be executed. There is no reason to create this for every single host. Instead, provisioning them for each account is a beter alternative. To achieve this, I moved this logic to the `provision account` script.
 
 ```sh
@@ -1275,7 +1269,6 @@ fi
 ![Rich proposed to create the SSM documents for each account instead of each host](../Media/review_4.png)
 
 ## 4.5. Improve check if filesystem exists
-
 In my initial implementation, I used the `snapshot` variable to determine whether the script should create a filesystem on the `EBS` data volume or simply mount it. When a `snapshot` is used, the volume already contains a filesystem, so it only needs to be mounted.
 Creating a new filesystem in this case would overwrite the existing one, resulting in data loss. Therefore, it's important to ensure that a filesystem is only created when no `snapshot` is provided.
 
@@ -1306,7 +1299,6 @@ This delay is too long, so I'm planning to improve the implementation to handle 
 ![Rich proposed to change the filesystem check to look for an existing filesystem instead for an snapshot](../Media/review_5.png)
 
 ## 4.6. Problems with auto-reloader.conf
-
 Updating the `CloudFormation` stack re-executes the `cfn-scripts`, causing duplicate entries in `/etc/fstab`
 
 ```yaml
@@ -1325,21 +1317,18 @@ In my new implementation, I moved the volume attachment and mounting logic out o
 ![Rich proposed to take a look at the auto-reloader configuration as it might conflicts with the current implementation](../Media/review_6.png)
 
 ## 4.7. Attaching volume within the provision host script
-
 Initally, I added the logic for attaching the volume in the `provision host` script. However, As previously mentioned, this approach could lead to errors if the volume wasn't created on time when the script ran.
 To resolve this, I moved the provisioning of the `EBS` data volume to the `create-ec2` `CloudFormation` template and removed it from the `provision host` script. Now, once the `instance` is successfully created and the `cfn-signal` returns a `SUCCESS` status. The volume is `attached` and `mounted` using `SSM` documents.
 
 ![Rich mentioned that this solution can proberly result in a potential problem](../Media/review_7.png)
 
 ## 4.8. Move provisioning DLM Policy to create-ec2 stack
-
 In my inital approach, I included logic in the `provision host` script to create the `DLM` policy using a separate `CloudFormation` stack. 
 However, since `DLM` is a native part of `EC2`, it made more sense to move the this part into the `create-ec2` `CloudFormation` stack. This change simplifies the `provision host` script and ensures the `DLM` policy is created automatically once the `EBS` data volume is successfully provisioned.
 
 ![Rich proposed to move the DLM Policy creation to the create-ec2 CloudFormation Stack](../Media/review_8.png)
 
 ## 4.9. Move provisioning EBS data volume to create-ec2 stack
-
 Initially, I considered splitting the provisioning process to avoid the risk of the volume being detached or modified during `CloudFormation` updates.
 
 However, after moving the volume creation into the `create-ec2` template, I found out that only the `root` volume is affected during updates, while data volumes remain unchanged. To add an extra layer of safety, I’ve applied `DeletionPolicy: Snapshot`, which ensures a final `snapshot` is taken before the volume is deleted.
@@ -1353,7 +1342,6 @@ I’ve also removed the steps for creating the filesystem and mounting the volum
 After refining my implementation based on the initial feedback, I requested another review. This time only a few minor changes were suggested.
 
 ## 5.1. Changing variable names and comments
-
 To mantain consistency in naming, I replaced the slash with a hyphen in the `EBS` data volume name. This name appears in the AWS management console to make it easier to identify each volume.
 
 ![Updated the name of the new EBS data volume](../Media/review_10.png)
