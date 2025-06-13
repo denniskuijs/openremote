@@ -76,7 +76,6 @@ When the volume is provisioned, it has been attached to the new instance.
 ## 3.3. Moving the Docker volumes directory
 
 ### 3.3.1. Creating Temporary Folder
-
 When the `EBS` data volume is attached to the instance it first needs to be mounted to a directory. The directory must be different from the one where the files are copied to.
 I created a temporary directory named `staging` using the following command:
 
@@ -85,7 +84,6 @@ sudo mkdir /staging
 ```
 
 ### 3.3.2. Mounting snapshot volume to temporary folder
-
 Thereafter, I mounted the `EBS` data volume with the instance data to this directory with the following command: 
 
 ```sh
@@ -95,7 +93,6 @@ mount -t xfs -o nouuid /dev/nvme1n1 /staging
 Since this snapshot is taken from a `root` volume, you need to specify which filesystem is used, that the `UUID` check can be ignored and you need to mount the block device using the current `block device name` instead of the `device name`
 
 ### 3.3.3. Removing or_proxy-data Docker volume
-
 After the `EBS` data volume is mounted to the `/staging` directory we can check the contents of the `Docker` volumes directory using the following command:
 
 ```sh
@@ -110,7 +107,6 @@ sudo rm -rf /staging/var/lib/docker/volumes/or_proxy-data
 ```
 
 ### 3.3.1. Stopping Docker
-
 I also disabled the `Docker` socket and service to make sure the containers are not running while modifying the persistens volumes. I used the `systemctl` command for this action
 
 ```sh
@@ -118,7 +114,6 @@ sudo systemctl start docker.service docker.socket
 ```
 
 ### 3.3.2. Copying Docker volumes using RSync
-
 When the `proxy` volume is removed, we can start copying the `Docker` volumes to the new `EBS` data volume mounted at `/var/lib/docker/volumes` using the built-in `rsync` command from linux.
 I have used the `rsync` command with the following options:
 
@@ -137,7 +132,6 @@ sudo ls /var/lib/docker/volumes
 ```
 
 ### 3.3.3. Restarting Docker
-
 When everything is copied correctly, I started the `Docker` service and socket again using the command
 
 ```sh
