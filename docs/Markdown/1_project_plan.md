@@ -23,65 +23,65 @@ code-block-font-size: "\\scriptsize"
 ## 1.1. Context
 
 ### 1.1.1. Bedrijf
-OpenRemote, opgericht in 2015, is een organisatie die een open-source IoT platform ontwikkelt. 
+OpenRemote, opgericht in 2015, is een organisatie die een Open-Source IoT platform ontwikkelt. 
 Het doel van het platform is om de integratie van verschillende communicatieprotocollen en databronnen te vereenvoudigen in één gebruiksvriendelijk systeem.
 
-Het platform maakt integratie mogelijk met verschillende soorten sensoren, databronnen, (IoT-) apparaten, en zorgt ervoor dat deze centraal beheerd kunnen worden via een gebruiksvriendelijk managementportaal. De data van deze bronnen kan vervolgens gevisualiseerd worden en worden ingezet in op maat gemaakte applicaties en (mobiele) apps.
-De software is volledig open-source, waardoor iedereen deze gratis kan gebruiken of eraan bijdragen. Momenteel wordt OpenRemote toegepast in diverse branches, zoals het beheer en monitoring van energiesystemen, crowd management en wagenparken.
+Het platform maakt integratie mogelijk met verschillende soorten sensoren, databronnen, IoT apparaten, en zorgt ervoor dat deze centraal beheerd kunnen worden via een gebruiksvriendelijk managementportaal. De data van deze bronnen kan vervolgens gevisualiseerd worden en worden ingezet in op maat gemaakte applicaties en (mobiele) apps.
+De software is volledig Open-Source, waardoor iedereen deze gratis kan gebruiken of eraan bijdragen. Momenteel wordt OpenRemote toegepast in diverse branches, zoals het beheer en monitoring van energiesystemen, crowd management en wagenparken.
 
 ### 1.1.2. Probleemstelling
-Naast het open-source product kunnen bedrijven en (overheids)organisaties ervoor kiezen de software (tegen betaling) te laten beheren en onderhouden door OpenRemote. Deze zogenaamde ‘managed’ service wordt steeds populairder en dat brengt nieuwe uitdagingen met zich mee.
-Een van de belangrijkste uitdagingen is het onderhouden van de ‘virtuele’ machines waarop de software van OpenRemote draait.
+Naast het Open-Source product kunnen bedrijven en (overheids)organisaties ervoor kiezen de software (tegen betaling) te laten beheren en onderhouden door OpenRemote. Deze zogenaamde ‘managed’ service wordt steeds populairder en dat brengt nieuwe uitdagingen met zich mee.
+Een van de belangrijkste uitdagingen is het onderhouden van de virtuele machines waarop de software van OpenRemote draait.
 
-Het komt regelmatig voor dat deze machines geüpdatet moeten worden, variërend van updates aan het besturingssysteem tot situaties waarbij meerdere (software)pakketten op de ‘virtuele’ machine moeten worden bijgewerkt.
-In de meeste gevallen kunnen deze updates zonder problemen en met minimale downtime worden uitgevoerd, waarbij de ‘virtuele’ machine intact blijft. Echter, wanneer er te veel wijzigingen in het AWS CloudFormation bestand zijn aangebracht, zal Amazon de ‘virtuele’ machine opnieuw opbouwen, waardoor alle data verloren gaat.
+Het komt regelmatig voor dat deze machines geüpdatet moeten worden, variërend van updates aan het besturingssysteem tot situaties waarbij meerdere (software)pakketten op de virtuele machine moeten worden bijgewerkt.
+In de meeste gevallen kunnen deze updates zonder problemen en met minimale downtime worden uitgevoerd, waarbij de virtuele machine intact blijft. Echter, wanneer er te veel wijzigingen in het AWS `CloudFormation` bestand zijn aangebracht, zal Amazon de virtuele machine opnieuw opbouwen, waardoor alle data verloren gaat.
 
-Omdat het updaten een risicovolle actie is en het vooraf niet te voorspellen is wanneer Amazon voor deze ingrijpende maatregel kiest, wordt het proces voor iedere klant en ‘virtuele’ machine momenteel handmatig uitgevoerd via het managementportaal van Amazon, in plaats van via de CLI-tool of de CI/CD pipeline. 
+Omdat het updaten een risicovolle actie is en het vooraf niet te voorspellen is wanneer Amazon voor deze ingrijpende maatregel kiest, wordt het proces voor iedere klant en virtuele machine momenteel handmatig uitgevoerd via het managementportaal van Amazon, in plaats van via de `CLI` of de `CI/CD` workflow. 
 
-Voorafgaand aan het updateproces worden verschillende stappen uitgevoerd, waaronder het maken van een snapshot (back-up) van de ‘virtuele’ machine. Deze extra back-up, naast de automatische dagelijkse back-ups, zorgt ervoor dat de klantdata beschermd blijft en niet verloren gaat. 
+Voorafgaand aan het updateproces worden verschillende stappen uitgevoerd, waaronder het maken van een `snapshot` (back-up) van de virtuele machine. Deze extra back-up, naast de automatische dagelijkse back-ups, zorgt ervoor dat de klantdata beschermd blijft en niet verloren gaat. 
 Na het updateproces wordt de klantdata vervolgens handmatig op de juiste manier hersteld, zodat de klant de software zonder onderbrekingen kan blijven gebruiken.
 
 Door het handmatig uitvoeren van deze taken is het proces tijdrovend, kwetsbaar en foutgevoelig. Naarmate het aantal klanten voor de ‘managed’ service toeneemt, zal het bijwerken steeds meer tijd vergen van het teamlid dat verantwoordelijk is voor deze taak.
 
 ### 1.1.3. Oplossing
-OpenRemote is op zoek naar een manier om het updateproces voor de ‘virtuele’ machines op een schaalbare, veilige en vooral betrouwbare manier te automatiseren.
-De oplossing moet in staat zijn om op meerdere ‘virtuele’ machines tegelijk te worden toegepast zonder verdere aanpassingen, waarbij de veiligheid van de ‘virtuele’ machines gewaarborgd blijft en de klantdata te allen tijde behouden blijft en niet wordt gewijzigd.
+OpenRemote is op zoek naar een manier om het updateproces voor de virtuele machines op een schaalbare, veilige en vooral betrouwbare manier te automatiseren.
+De oplossing moet in staat zijn om op meerdere virtuele machines tegelijk te worden toegepast zonder verdere aanpassingen, waarbij de veiligheid van de virtuele machines gewaarborgd blijft en de klantdata te allen tijde behouden blijft en niet wordt gewijzigd.
 
-Daarnaast moet de oplossing naadloos integreren met bestaande tools en platformen, zoals het Cloudplatform van Amazon (AWS), waarop de ‘virtuele’ machines draaien, en de CI/CD-pipeline op GitHub Actions, die wordt gebruikt voor het opzetten van klantomgevingen op dit Cloudplatform.
+Daarnaast moet de oplossing naadloos integreren met bestaande tools en platformen, zoals het Cloudplatform van `Amazon (AWS)`, waarop de virtuele machines draaien, en de `CI/CD` workflow op `GitHub` Actions, die wordt gebruikt voor het opzetten van klantomgevingen op dit Cloudplatform.
 
 ## 1.2. Doel van het project
-Het doel van het project is om te onderzoeken hoe het updateproces van de ‘virtuele’ machines geautomatiseerd kan worden op schaalbare, veilig en vooral betrouwbare manier.
+Het doel van het project is om te onderzoeken hoe het updateproces van de virtuele machines geautomatiseerd kan worden op schaalbare, veilig en vooral betrouwbare manier.
 
 ## 1.3. De opdracht
-Onderzoek welke mogelijkheden er zijn om het updateproces van de ‘virtuele’ machines te automatiseren op een schaalbare, veilig en vooral betrouwbare manier en ontwikkel een POC (Proof Of Concept) waarin de mogelijke oplossing(en) worden getest op een ontwikkelomgeving.
+Onderzoek welke mogelijkheden er zijn om het updateproces van de virtuele machines te automatiseren op een schaalbare, veilig en vooral betrouwbare manier en ontwikkel een `POC` (Proof Of Concept) waarin de mogelijke oplossing(en) worden getest op een ontwikkelomgeving.
 
 ## 1.4. Scope
 | Tot het project behoort:                                                                                                    | Tot het project behoort niet:                                               |
 | --------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
 | Het onderzoeken van de mogelijkheden om het updateproces op een schaalbare, veilige en betrouwbare manier te automatiseren. | Het ontwikkelen van functionaliteiten die buiten het updateproces vallen.   |
-| Het ontwikkelen van een POC (Proof Of Concept) waarin de mogelijke oplossing(en) worden getest in een ontwikkelomgeving.    | Het doorvoeren van wijzigingen aan de bestaande infrastructuur van klanten. |
-|                                                                                                                             | Het implementeren van de POC (Proof Of Concept) in een productieomgeving.   |
+| Het ontwikkelen van een `POC` (Proof Of Concept) waarin de mogelijke oplossing(en) worden getest in een ontwikkelomgeving.  | Het doorvoeren van wijzigingen aan de bestaande infrastructuur van klanten. |
+|                                                                                                                             | Het implementeren van de `POC` (Proof Of Concept) in een productieomgeving. |
 
 ## 1.5. Randvoorwaarden
-•	De oplossing moet schaalbaar zijn, wat betekent dat deze op meerdere ‘virtuele’ machines kan worden toegepast zonder verdere aanpassingen.
-•	De oplossing moet veilig zijn, waarbij de veiligheid van de ‘virtuele’ machines gewaarborgd blijft en niet negatief wordt beïnvloed.
+•	De oplossing moet schaalbaar zijn, wat betekent dat deze op meerdere virtuele machines kan worden toegepast zonder verdere aanpassingen.
+•	De oplossing moet veilig zijn, waarbij de veiligheid van de virtuele machines gewaarborgd blijft en niet negatief wordt beïnvloed.
 •	De oplossing moet betrouwbaar zijn, wat inhoudt dat gegarandeerd moet kunnen worden dat de klantdata niet verloren gaat of wordt gewijzigd.
-•	De oplossing moet werken met bestaande tools en platformen, wat betekent dat deze naadloos geïntegreerd moet zijn met het Cloudplatform van Amazon (AWS) en de CI/CD-pipeline op GitHub Actions.
+•	De oplossing moet werken met bestaande tools en platformen, wat betekent dat deze naadloos geïntegreerd moet zijn met het Cloudplatform van Amazon `(AWS)` en de `CI/CD` workflow op `GitHub` Actions.
 
 ## 1.6. Onderzoeksvragen
 
 ### 1.6.1. Hoofdvraag
-Hoe kunnen we het updateproces van de ‘virtuele’ machines op een schaalbare, veilige en betrouwbare manier automatiseren?
+Hoe kunnen we het updateproces van de virtuele machines op een schaalbare, veilige en betrouwbare manier automatiseren?
 
 ### 1.6.2. Deelvragen
-1.	Hoe zorgen we ervoor dat de klantdata niet verloren gaat of wordt gewijzigd? Kunnen we de data ‘los te trekken’ van de ‘virtuele’ machines? Bijvoorbeeld door het tijdelijk op te slaan op een aparte ‘volume’? Of zijn er nog andere mogelijkheden?
+1.	Hoe zorgen we ervoor dat de klantdata niet verloren gaat of wordt gewijzigd? Kunnen we de data loskoppelen van de virtuele machines? Bijvoorbeeld door het tijdelijk op te slaan op een aparte volume? Of zijn er nog andere mogelijkheden?
 2.	Welke controles kunnen we inbouwen om er zeker van te zijn dat de klantdata voorafgaand aan het updateproces is veiliggesteld?
-3.	Hoe kunnen we de ‘virtuele’ machines automatisch bijwerken? En hoe zorgen we ervoor dat we enkel de onderdelen bijwerken die noodzakelijk zijn?
+3.	Hoe kunnen we de virtuele machines automatisch bijwerken? En hoe zorgen we ervoor dat we enkel de onderdelen bijwerken die noodzakelijk zijn?
 4.	Hoe kunnen we klanten het beste informeren over de voortgang van het updateproces?
 5.	Hoe zorgen we ervoor dat klanten de software kunnen blijven gebruiken tijdens het updateproces?
-6.	Hoe kunnen we het updateproces monitoren? Hoe kunnen we bijvoorbeeld zien welke ‘virtuele’ machines worden bijgewerkt, en wat de status hiervan is? En wat doen we op moment dat een (fatale) fout optreedt tijdens het bijwerken? 
-7.	Welke mogelijkheden zijn er binnen het Cloudplatform van Amazon om het proces te automatiseren? Welke kosten zijn hieraan verbonden? En kunnen deze mogelijkheden geïntegreerd worden met de huidige CI/CD-pipeline.
-8.	Hoe kunnen we de oplossing integreren in onze huidige CI/CD-pipeline? Welke aanpassingen moeten we hiervoor maken en wat is de verwachte impact?
+6.	Hoe kunnen we het updateproces monitoren? Hoe kunnen we bijvoorbeeld zien welke virtuele machines worden bijgewerkt, en wat de status hiervan is? En wat doen we op moment dat een (fatale) fout optreedt tijdens het bijwerken? 
+7.	Welke mogelijkheden zijn er binnen het Cloudplatform van Amazon om het proces te automatiseren? Welke kosten zijn hieraan verbonden? En kunnen deze mogelijkheden geïntegreerd worden met de huidige `CI/CD` workflow.
+8.	Hoe kunnen we de oplossing integreren in onze huidige `CI/CD` workflow? Welke aanpassingen moeten we hiervoor maken en wat is de verwachte impact?
 
 In paragraaf 2.2. wordt toegelicht welke onderzoeksmethoden worden gebruikt voor het beantwoorden van de bovenstaande deelvragen.
 
@@ -91,16 +91,16 @@ In paragraaf 2.2. wordt toegelicht welke onderzoeksmethoden worden gebruikt voor
 In dit document wordt het initiële plan van de opdracht uiteengezet. Het bepaalt welke onderdelen gerealiseerd en onderzocht worden, evenals de voorwaarden waaraan dit moet voldoen.
 
 ### 1.7.2. Analysedocument
-Dit document bevat de probleemanalyse, opgesteld met de SPA-methode. Op basis van de probleemstelling zijn requirements en user stories geformuleerd volgends de MoSCoW-methode.
+Dit document bevat de probleemanalyse, opgesteld met de SPA-methode. Op basis van de probleemstelling zijn requirements en user stories geformuleerd volgends de `MoSCoW` methode.
 
 ### 1.7.3. Onderzoeksdocumenten
 De resultaten van de verschillende onderzoeksvragen, zoals vastgesteld in het projectplan, zijn te vinden in de bijbehorende onderzoeksdocumenten. Om het overzicht te behouden, wordt elk onderzoek (deelvraag) in een apart document uitgewerkt.
 
 ### 1.7.4. Architectuurdocument
-De architectuur van de beoogde oplossing, die wordt gerealiseerd op het Cloudplatform van Amazon (AWS) en in de CI/CD-pipeline op GitHub Actions is in dit document opgenomen. De werking wordt aan de hand van verschillende diagrammen toegelicht.
+De architectuur van de beoogde oplossing, die wordt gerealiseerd op het Cloudplatform van `Amazon (AWS)` en in de `CI/CD` workflow op `GitHub` Actions is in dit document opgenomen. De werking wordt aan de hand van verschillende diagrammen toegelicht.
 
 ### 1.7.5. Realisatiedocument
-De werking van de POC (Proof Of Concept) wordt in dit document toegelicht met behulp van relevante ‘code-snippets’ en diagrammen.
+De werking van de `POC` (Proof Of Concept) wordt in dit document toegelicht met behulp van relevante code-snippets en diagrammen.
 
 ### 1.7.6. Adviesdocument
 De (mogelijke) vervolgstappen voor het project zijn in dit document opgenomen. Dit omvat vragen zoals ‘Wat moet er nog gebeuren?’ en ‘Waar moet nog over nagedacht worden?’ enzovoort.
@@ -112,20 +112,20 @@ In dit document worden de instructies voor het gebruik en de configuratie van de
 Dit document bevat belangrijke informatie voor een succesvolle overdacht van het project aan de opdrachtgever en stakeholders. Het omvat onder andere een samenvatting van de technische werking en configuratie van de oplossing.
 
 ### 1.7.9. Technische producten
-Alle (technische) producten die tijdens dit project wordt ontwikkeld, zullen worden opgeleverd in een GitHub-repository.
+Alle (technische) producten die tijdens dit project wordt ontwikkeld, zullen worden opgeleverd in een `GitHub` repository.
 
 # 2. Aanpak en Planning
 
 ## 2.1.	Aanpak
-Voor dit project werk ik in 2-weekse sprints volgens de Agile SCRUM-methode. Als onderdeel van het SCRUM-team neem ik deel aan stand-ups, (sprint)opleveringen en retrospectives. De opleveringen worden individueel ingepland in overleg met stakeholders en collega’s en maken geen direct deel uit van het SCRUM-team.
+Voor dit project werk ik in `2-weekse` sprints volgens de `Agile SCRUM-methode`. Als onderdeel van het SCRUM-team neem ik deel aan stand-ups, (sprint)opleveringen en retrospectives. De opleveringen worden individueel ingepland in overleg met stakeholders en collega’s en maken geen direct deel uit van het SCRUM-team.
 
-Het bijhouden van taken gebeurt via GitHub Projects, gebaseerd op de GitHub Flow-methode. Dit houdt in dat voor elke bug, feature, epic, enzovoort, een ‘issue’ wordt aangemaakt in de GitHub Repository. Zodra een ‘issue’ is afgerond, wordt er een PR (pull-request) ingediend om de wijzigingen samen te voegen (mergen) met de ‘master’ branch. Een collega zal altijd de PR (pull-request) reviewen (code-review) voordat deze wordt samengevoegd.
+Het bijhouden van taken gebeurt via `GitHub` Projects, gebaseerd op de `GitHub` Flow-methode. Dit houdt in dat voor elke bug, feature, epic, enzovoort, een `issue` wordt aangemaakt in de `GitHub` Repository. Zodra een `issue` is afgerond, wordt er een PR (`pull-request`) ingediend om de wijzigingen samen te voegen (mergen) met de `master` branch. Een collega zal altijd de PR (`pull-request`) reviewen (`code-review`) voordat deze wordt samengevoegd.
 
-In eerste instantie houd ik zelf een GitHub Repository bij voor mijn issues met betrekking tot onderzoeken en POC’s (Proof Of Concepts). Zodra ik de oplossing(en) ga testen op een ontwikkelomgeving van OpenRemote, zal deze werkwijze worden toegepast op de GitHub Repository van OpenRemote.
+In eerste instantie houd ik zelf een `GitHub` Repository bij voor mijn issues met betrekking tot onderzoeken en `POC’s` (Proof Of Concepts). Zodra ik de oplossing(en) ga testen op een ontwikkelomgeving van OpenRemote, zal deze werkwijze worden toegepast op de `GitHub` Repository van OpenRemote.
 
 Om een goed overzicht te behouden van de hoeveelheid werk en de tijd, zal ik aan elke issue een deadline koppelen. Vooraf maak ik een inschatting van de benodigde tijd om de issue te voltooien en houd ik dit nauwlettend bij. Elke dag begin ik met het bekijken van het bord om te controleren of ik nog op schema lig.
 
-Sommige ‘issues’ worden aangemaakt als een zogenoemde ‘spike’, bijvoorbeeld bij onderzoeken, waarvan de oplossing nog onzeker is en er nog geen inzicht is in de mogelijke risico’s.
+Sommige `issues` worden aangemaakt als een zogenoemde `spike`, bijvoorbeeld bij onderzoeken, waarvan de oplossing nog onzeker is en er nog geen inzicht is in de mogelijke risico’s.
 Verder worden alle issues geprioriteerd op basis van de MoSCoW-methode en kunnen gedurende het project worden aangepast op basis van nieuwe inzichten of wijzigingen.
 
 Iedere werkdag begint om 09:00 uur op het kantoor in Eindhoven. Om 10:00 uur is er de dagelijkse stand-up, waarin wij als stagairs de gelegenheid krijgen om te delen waar we momenteel mee bezig zijn, wat we gisteren hebben gedaan en of we nog tegen problemen aanlopen of ergens hulp bij nodig hebben.
@@ -134,7 +134,7 @@ Om de twee weken (op maandag) wordt er een gesprek gepland met de stagebegeleide
 
 ### 2.1.1. Testaanpak
 Voor het testen van de oplossing worden non-functionele en systeem tests gebruikt.
-Het project richt zich op de Cloud van Amazon (AWS) en de CI/CD-pipeline op GitHub Actions. In dit geval zijn integratietests het meest geschikt om de oplossing te valideren voordat deze wordt uitgerold naar de productieomgevingen van klanten. 
+Het project richt zich op de Cloud van Amazon (`AWS`) en de `CI/CD` workflow op `GitHub` Actions. In dit geval zijn integratietests het meest geschikt om de oplossing te valideren voordat deze wordt uitgerold naar de productieomgevingen van klanten. 
 
 ## 2.2. Onderzoeksmethoden
 
@@ -180,7 +180,7 @@ Met deze methode wordt onderzocht of er bestaande oplossingen zijn die het probl
 Deze onderzoeksmethode zal bij deelvragen 6 en 7 worden toegepast
 
 ### 2.2.9. Gap Analysis
-Deze methode wordt gebruikt om het verschil tussen de huidige en de gewenste situatie te identificeren. De huidige situatie wordt in kaart gebracht, en er wordt onderzocht wat de nieuwe situatie zou kunnen zijn. Vervolgens worden de stappen bepaald die nodig zijn om het gat (‘gap’) te overbruggen en de gewenste oplossing te bereiken.
+Deze methode wordt gebruikt om het verschil tussen de huidige en de gewenste situatie te identificeren. De huidige situatie wordt in kaart gebracht, en er wordt onderzocht wat de nieuwe situatie zou kunnen zijn. Vervolgens worden de stappen bepaald die nodig zijn om het gat (gap) te overbruggen en de gewenste oplossing te bereiken.
 
 Deze onderzoeksmethode zal bij deelvragen 1-4-8 worden toegepast.
 
@@ -265,29 +265,29 @@ De leeruitkomsten worden tijdens het project aangetoond met de onderstaande bero
 
 **Belangrijk om te weten:**
 
-Er wordt bij OpenRemote gewerkt in sprints van 2 weken met behulp van een Agile werkwijze. Veel onderzoeksvragen hebben overlapping met elkaar en zullen wellicht al (deels) beantwoord worden in een andere onderzoeksvraag (of tijdens implementatie)
+Er wordt bij OpenRemote gewerkt in sprints van 2 weken met behulp van een `Agile` werkwijze. Veel onderzoeksvragen hebben overlapping met elkaar en zullen wellicht al (deels) beantwoord worden in een andere onderzoeksvraag (of tijdens implementatie)
 Nadat het afronden van een onderzoek wordt deze met het team besproken en eventuele feedback verwerkt. Bij een positief signaal kan de onderzochte oplossing geïntegreerd worden in de bestaande codebase. Integratie vindt meestal direct na het onderzoek plaats.
 
 De onderzoeksresultaten kunnen ook tot nieuwe inzichten leiden waardoor nieuwe onderzoeksvragen ontstaan, die mogelijk huidige onderzoeksvragen vervangen. Daardoor zijn bovenstaande onderzoeksvragen slechts een leidraad.
 
 ## 2.6.	Backlog
-Omdat we bij OpenRemote werken met behulp van een Agile werkwijze is de backlog uitgewerkt tot en met 20 maart 2025. 
+Omdat we bij OpenRemote werken met behulp van een `Agile` werkwijze is de backlog uitgewerkt tot en met 20 maart 2025. 
 
 Backlog items ontstaan namelijk op basis van onderzoeksresultaten en zijn vooraf nog niet (altijd) bekend. In de eerste weken van de stage heb ik gewerkt aan de 1e onderzoeksvraag, deze is inmiddels afgerond waardoor er taken (issues) voor de implementatie zijn ontstaan die de komende weken worden uitgevoerd.
 
 Dit proces zal voor elke deelvraag worden herhaald (iteraties)
 
-- Onderzoek de mogelijkheden voor het opslaan van de (IoT-) data op een externe EBS (Elastic Block Service) volume
-    - Voeg functionaliteit toe aan de bestaande CI-CD pipeline voor het automatisch aanmaken/mounten van de nieuwe EBS-volume.
-    - Ontwikkel een script voor het ‘detachen’ van de nieuwe EBS-volume, dit script moet opgeslagen worden bij Amazon SSM (Amazon Systems Manager)
-    - Voeg functionaliteit toe aan de bestaande CI-CD pipeline waarmee metrics en alarms van de nieuwe EBS-volume zichtbaar worden bij de ‘virtuele’ machine.
-    - Voeg functionaliteit toe aan de bestaande CI-CD pipeline waarmee een ‘policy’ wordt aangemaakt voor het geautomatiseerd maken van snapshots (backups) van de nieuwe EBS-volume via Amazon Data Lifecycle Manager.
-- Onderzoek welke controles er ingebouwd kunnen worden om er zeker van te zijn dat de (IoT-) data is veiliggesteld voorafgaand aan een update.
-- Onderzoek de manieren om de ‘virtuele’ machines automatisch te kunnen bijwerken waarbij alleen de onderdelen die een update nodig hebben worden bijgewerkt.
-- Onderzoek de manieren om klanten te informeren wanneer een ‘virtuele’ machine wordt bijgewerkt.
-- Onderzoek de manieren hoe we ervoor kunnen zorgen dat klanten tijdens een update de software kunnen blijven gebruiken (blue/green deployments)
-- Onderzoek de manieren hoe we het updateproces van de ‘virtuele’ machines kunnen monitoren.
-- Onderzoek de manieren hoe we het updateproces kunnen integreren in de bestaande CI/CD pipeline.
+- Onderzoek de mogelijkheden voor het opslaan van de (IoT-) data op een externe `EBS` (Elastic Block Service) volume
+    - Voeg functionaliteit toe aan de bestaande `CI/CD` workflow voor het automatisch aanmaken/mounten van de nieuwe `EBS` volume.
+    - Ontwikkel een script voor het loskoppelen van de nieuwe `EBS` volume, dit script moet opgeslagen worden bij Amazon `SSM` (Amazon Systems Manager)
+    - Voeg functionaliteit toe aan de bestaande `CI/CD` workflow waarmee metrics en alarms van de nieuwe `EBS` volume zichtbaar worden bij de virtuele machine.
+    - Voeg functionaliteit toe aan de bestaande `CI/CD` workflow waarmee een `policy` wordt aangemaakt voor het geautomatiseerd maken van snapshots (backups) van de nieuwe `EBS` volume via `DLM` (Amazon Data Lifecycle Manager).
+- Onderzoek welke controles er ingebouwd kunnen worden om er zeker van te zijn dat de IoT data is veiliggesteld voorafgaand aan een update.
+- Onderzoek de manieren om de virtuele machines automatisch te kunnen bijwerken waarbij alleen de onderdelen die een update nodig hebben worden bijgewerkt.
+- Onderzoek de manieren om klanten te informeren wanneer een virtuele machine wordt bijgewerkt.
+- Onderzoek de manieren hoe we ervoor kunnen zorgen dat klanten tijdens een update de software kunnen blijven gebruiken (`blue/green deployments`)
+- Onderzoek de manieren hoe we het updateproces van de virtuele machines kunnen monitoren.
+- Onderzoek de manieren hoe we het updateproces kunnen integreren in de bestaande `CI/CD` workflow.
 
 ## 2.7.	Tijdplan
 | **Fasering**                           | **Start**  | **Gereed** | **Beschikbare dagen** |
@@ -333,10 +333,10 @@ Dit proces zal voor elke deelvraag worden herhaald (iteraties)
 
 ## 3.2. Communicatie
 De communicatie met de stagebegeleider, stakeholder(s) en andere belanghebbenden zal plaatsvinden tijdens kantoortijden (maandag tot en met vrijdag van 09:00 tot 18:00 uur). 
-Er wordt vijf dagen per week gewerkt vanuit het kantoor ‘De ApparatenFabriek’ in Eindhoven, gelegen op Strijp-S. De meeste collega’s zijn dagelijks op kantoor aanwezig. Als dit niet het geval is, kan er gecommuniceerd worden via Slack of de e-mail.
+Er wordt vijf dagen per week gewerkt vanuit het kantoor (De ApparatenFabriek) in Eindhoven, gelegen op Strijp-S. De meeste collega’s zijn dagelijks op kantoor aanwezig. Als dit niet het geval is, kan er gecommuniceerd worden via Slack of de e-mail.
 
 ## 3.3. Testomgeving en benodigdheden
-Voor de testomgeving wordt de bestaande CI/CD-pipeline op GitHub Actions gebruikt. Zodra een ‘pull-request’ is goedgekeurd door één of meerdere collega’s, wordt de pipeline automatisch gestart, inclusief de bijbehorende tests.
+Voor de testomgeving wordt de bestaande `CI/CD` workflow op `GitHub` Actions gebruikt. Zodra een `pull-request` is goedgekeurd door één of meerdere collega’s, wordt de workflow automatisch gestart, inclusief de bijbehorende tests.
 
 # 4. Financiën en Risico’s
 
@@ -344,13 +344,13 @@ Voor de testomgeving wordt de bestaande CI/CD-pipeline op GitHub Actions gebruik
 Voor het project is geen specifiek kostenbudget vastgesteld. Alle kosten die redelijkerwijs noodzakelijk zijn voor de uitvoering van het project kunnen ter goedkeuring worden voorgelegd aan de stagebegeleider.
 
 ## 4.2. Risico’s en uitwijkactiviteiten
-| Risico                                                                                   | Activiteiten ter voorkoming opgenomen in plan                                                                                                                                                                                                                                          | Uitwijkactiviteiten                                                                                                                                |
-| ---------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Stagebegeleider valt weg door omstandigheden/ziekte                                      | Op zoek naar een vervangende stagebegeleider voor het geval dit nodig zou zijn.                                                                                                                                                                                                        | Een andere medewerker binnen de organisatie zal de werkzaamheden overnemen.                                                                        |
-| Computerapparatuur stopt met functioneren                                                | Er is een reservecomputer beschikbaar die kan worden ingezet bij storingen of onderbrekingen.                                                                                                                                                                                          | De reservecomputer wordt gebruikt bij storingen aan het hoofdapparaat.                                                                             |
-| Bestanden raken verloren of onherstelbaar beschadigd                                     | Elke dag wordt een back-up gemaakt van alle bestanden die tijdens het project worden aangemaakt of aangepast, deze back-up wordt vervolgens opgeslagen op een externe locatie.                                                                                                         | Wanneer een onherstelbare fout optreedt met één van de bestanden, wordt de laatste back-up teruggezet op de doelcomputer.                          |
-| Er zijn per ongeluk uitzonderlijk hoge kosten gemaakt op het Cloudplatform van Amazon.   | Er worden budgetalerts ingesteld om de kosten te monitoren en de gebruiker te waarschuwen wanneer het ingestelde limiet wordt overschreden. Daarnaast wordt voor elke gebruikte service vooraf een kostenberekening gemaakt om inzicht te geven in de verwachte (en mogelijke) kosten. | Als er onverwachts hoge kosten ontstaan, wordt geprobeerd deze te laten kwijtschelden met behulp van Amazon Support.                               |
-| Er is door een derde partij ongeoorloofd toegang verkregen tot het Amazon Cloud-account. | Er wordt een apart Cloud-account aangemaakt met specifieke toegangsrechten om ernstig misbruik te voorkomen. Daarnaast worden wachtwoorden veilig opgeslagen in een beveiligde wachtwoordenkluis en wordt, waar mogelijk, gebruik gemaakt van SSH-sleutels voor extra veiligheid.      | Als er sprake is van ongeoorloofde toegang, wordt het Cloud-account onmiddellijk gedeactiveerd en opnieuw aangemaakt met gewijzigde inloggegevens. |
+| Risico                                                                                  | Activiteiten ter voorkoming opgenomen in plan                                                                                                                                                                                                                                          | Uitwijkactiviteiten                                                                                                                               |
+| --------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Stagebegeleider valt weg door omstandigheden/ziekte                                     | Op zoek naar een vervangende stagebegeleider voor het geval dit nodig zou zijn.                                                                                                                                                                                                        | Een andere medewerker binnen de organisatie zal de werkzaamheden overnemen.                                                                       |
+| Computerapparatuur stopt met functioneren                                               | Er is een reservecomputer beschikbaar die kan worden ingezet bij storingen of onderbrekingen.                                                                                                                                                                                          | De reservecomputer wordt gebruikt bij storingen aan het hoofdapparaat.                                                                            |
+| Bestanden raken verloren of onherstelbaar beschadigd                                    | Elke dag wordt een back-up gemaakt van alle bestanden die tijdens het project worden aangemaakt of aangepast, deze back-up wordt vervolgens opgeslagen op een externe locatie.                                                                                                         | Wanneer een onherstelbare fout optreedt met één van de bestanden, wordt de laatste back-up teruggezet op de doelcomputer.                         |
+| Er zijn per ongeluk uitzonderlijk hoge kosten gemaakt op het Cloudplatform van Amazon.  | Er worden budgetalerts ingesteld om de kosten te monitoren en de gebruiker te waarschuwen wanneer het ingestelde limiet wordt overschreden. Daarnaast wordt voor elke gebruikte service vooraf een kostenberekening gemaakt om inzicht te geven in de verwachte (en mogelijke) kosten. | Als er onverwachts hoge kosten ontstaan, wordt geprobeerd deze te laten kwijtschelden met behulp van Amazon Support.                              |
+| Er is door een derde partij ongeoorloofd toegang verkregen tot het Amazon Cloudaccount. | Er wordt een apart Cloudaccount aangemaakt met specifieke toegangsrechten om ernstig misbruik te voorkomen. Daarnaast worden wachtwoorden veilig opgeslagen in een beveiligde wachtwoordenkluis en wordt, waar mogelijk, gebruik gemaakt van `SSH` sleutels voor extra veiligheid.     | Als er sprake is van ongeoorloofde toegang, wordt het Cloudaccount onmiddellijk gedeactiveerd en opnieuw aangemaakt met gewijzigde inloggegevens. |
 
 
 # 5. Overig

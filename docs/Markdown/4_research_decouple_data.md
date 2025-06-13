@@ -19,7 +19,7 @@ code-block-font-size: "\\scriptsize"
 ...
 
 # 1. Context
-The creation of various cloud services is done using `CloudFormation` templates. [CloudFormation](https://aws.amazon.com/cloudformation/) is Amazon's Infrastructure as Code (IaaC) tool, allowing infrastructure to be set up through code. 
+The creation of various cloud services is done using `CloudFormation` templates. [CloudFormation](https://aws.amazon.com/cloudformation/) is Amazon's Infrastructure as Code (`IaaC`) tool, allowing infrastructure to be set up through code. 
 This approach makes it possible to easily create and modify infrastructure without having to make changes through an administrator panel.
 
 However, the current process is not ideal and causes some issues in certain cases.
@@ -1106,7 +1106,7 @@ Based on the prototype, I recommend using the first approach, as it is the simpl
 Based on the feedback from various team members, I've received several keypoints for further development.
 
   - Investigate the possibilities to mount the seperate `EBS` data volume to the existing `Docker` directory on the root volume instead of creating an new directory.
-  - Re-create the prototype in the existing CI/CD pipeline (`provision host`) including features such as automatic `create/mount` volume, `attach/detach` volume script, `CloudWatch` metrics and automate the `snapshot` creation process.
+  - Re-create the prototype in the existing CI/CD workflow (`provision host`) including features such as automatic `create/mount` volume, `attach/detach` volume script, `CloudWatch` metrics and automate the `snapshot` creation process.
   - Investigate the possibilities for `blue/green deployments` and multi-attach `EBS` data volumes.
 
 ## 5.3. Next Steps
