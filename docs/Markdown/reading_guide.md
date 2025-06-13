@@ -151,37 +151,43 @@ The team is happy with the final results. The project was completed within the i
 During my internship I created various `deliverables` that prove the different learning outcomes. In this section I will give you an overview of the learning outcomes and which `deliverables` proving them.
 
 ## 6.1. Analyse
-- `Analysisdocument`
+- `2. Analysisdocument`
   This document describes the problem analysis I created in the first weeks of the internship.
 
-- `User stories`
+- `User stories (GitHub)`
   In this assignment you can find links to the different `GitHub` issues I created for this assignment. All the issues are written as user stories with OpenRemote issue template.
 
-- `2. Decoupling IoT data (Research)`
+- `4. Decoupling IoT data (Research)`
   In this document I explained the research about decoupling the `IoT` data from the virtual machines and the different prototypes I've created.
   
-- `Projectplan`
+- `1. Projectplan`
   This document describes the inital projectplan I've created in the first weeks of my internship. It outlines topics like the assignment, company, scope, research questions etc.
 
-- `1. CI/CD Workflow (Decomposition)`
+- `3. CI/CD Workflow (Decomposition)`
   In this document you can see the flowcharts I've made to visualize and decomposite the working of the different `CI/CD` workflows.
 
+- `User Stories (Pictures)`
+  In this assignment you can find pictures from the GitHub issues I created for this assignment. All the issues are written as user stories with OpenRemote issue template.
+
 ## 6.2. Advise
-- `2. Decoupling IoT data (Research)`
+- `4. Decoupling IoT data (Research)`
   I ended my research with some advice, which can be found at the bottom of this document.
 
 ## 6.3. Design
 - `Architecturediagram - Current Situation - Virtual machines`
-  I made a diagram to visualize the current situation when provisioning a new host (instance).
+  This diagram illustrates the current architecture based on the AWS CloudFormation template. To better understand its structure and functionality, I have decomposed the CloudFormation template and visualized it accordingly.
 
 - `Diagram - New situation - Virtual machines`
-  I visualized the new situation when using the proposed solution for decoupling the `IoT` data.
+  This diagram illustrates the proposed new situation where the IoT data is stored on a separate EBS volume.
 
 - `Flowchart - Provision Account - CI/CD Workflow`
-  This flowchart visualizes the working of the `provision_account` `CI/CD` workflow.
+  To gain a better understanding of how the `provision account` `CI/CD` workflow works, I decomposed the bash script and created a flowchart to visualize the process. This `CI/CD` workflow provisions an `AWS` account for the customer and connects it to the primary `AWS` account within the OpenRemote organization.
 
 - `Flowchart - Provision Host - CI/CD Workflow`
-  This flowchart visualizes the working of the `provision_host` `CI/CD` workflow.
+  To gain a better understanding of how the `provision host` `CI/CD` workflow works, I decomposed the bash script and created a flowchart to visualize the process. This `CI/CD` workflow provisions an `EC2` virtual machine for the customer and configures it with the OpenRemote software.
+
+- `3. CI/CD Workflow (Decomposition)`
+  In this document you can see the flowcharts I've made to visualize and decomposite the working of the different `CI/CD` workflows.
 
 ## 6.4. Realise
 - `Testcases - Prototype - EBS Volume - Video`
@@ -190,20 +196,42 @@ During my internship I created various `deliverables` that prove the different l
 - `Personal GitHub Repository`
   I used my own `GitHub` repository for storing a copy of the work I've made. A link to the repository can be found here. Some parts of this repository is being merged into the main codebase of OpenRemote.
 
-- `3. Separate EBS (data) volume for storing/decoupling the IoT Data (Implementation)`
+- `5. Separate EBS (data) volume for storing/decoupling the IoT Data (Implementation)`
   In this document, I explained how I tested and implemented the prototype in my own `AWS` account.
 
-- `4. SSM Automations (Implementation)`
+- `6. SSM Automations (Implementation)`
   This document describes the implementation of the `SSM` automations I've created for automating different tasks regarding the `EBS` data volume implementation.
 
-- `5. AWS Production Account (Tests)`
+- `7. AWS Production Account (Tests)`
   In this document you can read about the tests I've done in the AWS account from OpenRemote.
 
-- `6. AWS Production Instance (Migration)`
+- `8. AWS Production Instance (Migration)`
   In this document, I explained how I've migrated an production instance using the new `EBS` data volume.
 
+- `Technical Products (.zip)`
+  An export of the technical products I've created during this internship.
+
 ## 6.5. Manage & Control
-Exact the same `deliverables` as in section 6.4. Realise.
+- `Testcases - Prototype - EBS Volume - Video`
+  During the research phsase I tested my prototypes. In this section you can find a `.zip` file with the video's that demonstrate different test case's/scenario's.
+
+- `Personal GitHub Repository`
+  I used my own `GitHub` repository for storing a copy of the work I've made. A link to the repository can be found here. Some parts of this repository is being merged into the main codebase of OpenRemote.
+
+- `5. Separate EBS (data) volume for storing/decoupling the IoT Data (Implementation)`
+  In this document, I explained how I tested and implemented the prototype in my own `AWS` account.
+
+- `6. SSM Automations (Implementation)`
+  This document describes the implementation of the `SSM` automations I've created for automating different tasks regarding the `EBS` data volume implementation.
+
+- `7. AWS Production Account (Tests)`
+  In this document you can read about the tests I've done in the AWS account from OpenRemote.
+
+- `8. AWS Production Instance (Migration)`
+  In this document, I explained how I've migrated an production instance using the new `EBS` data volume.
+
+- `Technical Products (.zip)`
+  An export of the technical products I've created during this internship.
 
 ## 6.6. Personal leadership
 - `Logbook`
@@ -222,10 +250,20 @@ Exact the same `deliverables` as in section 6.4. Realise.
   I also filled in the review form myself, it can be found in this document.
 
 ## 6.7. Professional standard
-Almost the same `deliverables` as section 6.6. Personal leadership
+- `Logbook`
+  Every week on Friday, I have written a summary of the tasks I've completed in that week. In this section you can find all the summaries.
+
+- `FeedPulse`
+  An export of my FeedPulse can be found here.
 
 - `GitHub Projects/Sprint Board`
   An overview of the `GitHub` projects/sprint board is visible in this section.
 
 - `Midterm Presentation - OpenRemote`
   This is the PowerPoint presentation I've used for the midterm meetup on April 27
+
+- `User stories (GitHub)`
+  In this assignment you can find links to the different `GitHub` issues I created for this assignment. All the issues are written as user stories with OpenRemote issue template.
+
+- `User Stories (Pictures)`
+  In this assignment you can find pictures from the GitHub issues I created for this assignment. All the issues are written as user stories with OpenRemote issue template.
