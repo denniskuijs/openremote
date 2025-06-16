@@ -257,7 +257,7 @@ During my internship I created various `deliverables` that prove the different l
 - `Logbook`
   Every week on Friday, I have written a summary of the tasks I've completed in that week. In this section you can find all the summaries.
 
-## 6.3. Personal Leadership
+## 6.4. Personal Leadership
 - `FeedPulse`
   An export of my FeedPulse can be found here.
 
