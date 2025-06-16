@@ -221,15 +221,18 @@ During my internship I created various `deliverables` that prove the different l
 - `8. AWS Production Instance (Migration)`
   In this document, I explained how I've migrated an production instance using the new `EBS` data volume.
 
- I wrote my documentation in markdown as the company uses this language for there internal wiki. 
- The company followes the GitHub Flow workflow, which I also followed during my internship. All my user stories are written as issues and available on `GitHub`.
+- `Additional Information`
+  I wrote my documentation in markdown as the company uses this language for there internal wiki. The company followes the `GitHub` Flow workflow, which I also followed during my internship. All my user stories are written as issues and available on `GitHub`.
+  
+  Beyond my internship assignment, I also contributed to the Open Source project by working on different issues.
 
- The company is already using my implementation in production (See `8. AWS Production Instance (Migration)`). It proves that my solution is delivering value to the company.
+  The company is already using my implementation in production (See `8. AWS Production Instance (Migration)`). It proves that my solution is delivering value to the company.
 
- I structured my documents on a chronological way, starting with my analysis (`1, 2 and 3`), going to the Research phase (`4`), After that the Implementation phase (`5-6`), At the end the Test phase (`7`) and lastly the migration to production (`8`)
- Multiple stakeholders are involved in the project. I regularly talked with Don and Pierre about the progress of my assignment, they give me valuable ideas to improve the project even further. Rich reviewed my code (See chapter `4` in `5. Separate EBS (data) volume for storing/decoupling the IoT Data (Implementation)`) and we dicussed the technical implementation.
+  I organized my documents in chronological order, starting with my analysis (`1, 2 and 3`), going to the Research phase (`4`), After that the Implementation phase (`5-6`), At the end the Test phase (`7`) and lastly the migration to production (`8`)
+  
+  Multiple stakeholders are involved in the project. I regularly talked with Don and Pierre about the progress of my assignment, they give me valuable ideas to improve the project even further. Rich reviewed my code (See `5. Separate EBS (data) volume for storing/decoupling the IoT Data (Implementation)`) and we dicussed the technical implementation.
 
-## 6.3. Professional standard
+## 6.3. Professional Standard
 - `1. Project Plan`
   This document describes the inital projectplan I've created in the first weeks of my internship. It outlines topics like the assignment, company, scope, research questions etc.
 
@@ -254,7 +257,7 @@ During my internship I created various `deliverables` that prove the different l
 - `Logbook`
   Every week on Friday, I have written a summary of the tasks I've completed in that week. In this section you can find all the summaries.
 
-## 6.3. Personal leadership
+## 6.3. Personal Leadership
 - `FeedPulse`
   An export of my FeedPulse can be found here.
 
