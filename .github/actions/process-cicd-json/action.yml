@@ -35,7 +35,7 @@ runs:
         files: ".ci_cd/ci_cd.json"
 
     - name: Process ci_cd.json file
-      if: ${{ steps.check_cicd_json.outputs.files_exists == 'true' && (github.ref_type == 'tag' || (github.event_name != 'workflow_dispatch' && github.event_name != 'pull_request')) }}
+      if: ${{ steps.check_cicd_json.outputs.files_exists == 'true' && (github.ref_type == 'tag' || github.event_name != 'pull_request') }}
       id: ci-cd-output
       shell: python
       run: |
