@@ -4,18 +4,12 @@
 			"distribute": {
 				"docker": "develop-core",
 				"npm": "$version-core-snapshot"
-			},
-			"deploy": {
-				"managerTag": "develop-core",
-				"environment": "staging"
 			}
 		}
 	},
   "workflow_dispatch": {
-    "master": {
-    },
     "deploy": {
-      "managerTag": "develop-core",
+      "managerTag": "develop",
       "environment": "staging"
     }
   },
@@ -25,7 +19,7 @@
 			"npm": "$version-core"
 		},
 		"deploy": {
-			"managerTag": "latest-core",
+			"managerTag": "latest",
 			"environment": "demo"
 		}
 	}

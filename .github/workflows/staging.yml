@@ -212,7 +212,7 @@ jobs:
 
   extensions:
     name: Extensions
-    needs: [detect-changes, publish-maven, publish-npm]
+    needs: [detect-changes, build-manager-image, publish-maven, publish-npm]
     if: ${{ !failure() && !cancelled() }}
     uses: "./.github/workflows/extensions.yml"
     with:
@@ -220,12 +220,3 @@ jobs:
       is_release: ${{ needs.detect-changes.outputs.is_release }}
     secrets:
       GH_EXTENSIONS_TOKEN: ${{ secrets._TEMP_GH_EXTENSIONS_TOKEN }}
-
-  deployment:
-    name: Deploy
-    needs: [detect-changes, unit-tests, integration-tests, ui-check-outdated-translations, ui-component-tests, ui-app-tests]
-    if: ${{ !failure() && !cancelled() }}
-    uses: "./.github/workflows/deployment.yml"
-    with:
-      INPUTS: ${{ toJSON(inputs) }}
-    secrets: inherit
