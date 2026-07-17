@@ -116,7 +116,8 @@ jobs:
           context: manager/build/install/manager
           platforms: linux/amd64,linux/aarch64
           load: false
-          push: ${{ steps.meta.outputs.should_push == 'true' }}
+          outputs: type=docker,dest=/tmp/or_manager.tar
+          #push: ${{ steps.meta.outputs.should_push == 'true' }}
           tags: ${{ steps.meta.outputs.formatted_tags }}
           build-args: |
             GIT_COMMIT=${{ github.sha }}
@@ -125,3 +126,10 @@ jobs:
         env:
           DOCKER_BUILD_SUMMARY: false
           DOCKER_BUILD_RECORD_UPLOAD: false
+
+      - name: Upload image artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: or_manager
+          path: /tmp/or_manager.tar
+          retention-days: 5
