@@ -13,10 +13,10 @@
 	},
   "workflow_dispatch": {
     "master": {
-      "deploy": {
-        "managerTag": "develop-core",
-        "environment": "staging"
-      }
+    },
+    "deploy": {
+      "managerTag": "develop-core",
+      "environment": "staging"
     }
   },
 	"release": {
