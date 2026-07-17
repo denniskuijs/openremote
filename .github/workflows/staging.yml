@@ -81,12 +81,26 @@ jobs:
 
       - name: Process ci_cd.json file
         id: ci-cd-output
-        uses: openremote/openremote/.github/actions/process-cicd-json@e9e87797bed31cdf6c2de6ec30fd6a05753f35f4
+        uses: denniskuijs/openremote/.github/actions/process-cicd-json@e5ab75d1114ec7a2af57871ee662c425cd1c32d3
         with:
           IS_MAIN_REPO: ${{ steps.is_main_repo.outputs.value }} # Shouldn't be needed in this context
           MANAGER_VERSION: ${{ steps.is_main_repo.outputs.version }}
           IS_RELEASE: ${{ steps.get-version-details.outputs.is_release }}
           VERSION: ${{ steps.get-version-details.outputs.version }}
+
+      - name: Print outputs
+        run: |
+          echo "# Detect changes"
+          echo "any_modified: ${{ steps.changed-files.outputs.backend_any_modified == 'true' || steps.changed-files.outputs.ui_any_modified == 'true' }}"
+          echo "backend_any_modified: ${{ steps.changed-files.outputs.backend_any_modified }}"
+          echo "ui_any_modified: ${{ steps.changed-files.outputs.ui_any_modified }}"
+          echo "# Version details"
+          echo "version: ${{ steps.get-version-details.outputs.version }}"
+          echo "version_with_qualifier: ${{ steps.get-version-details.outputs.version_with_qualifier }}"
+          echo "is_release: ${{ steps.get-version-details.outputs.is_release }}"
+          echo "# Processed ci_cd.json outputs"
+          echo "dockerTags: ${{ steps.ci-cd-output.outputs.dockerTags }}"
+          echo "npmTag: ${{ steps.ci-cd-output.outputs.npmTag }}"
 
   ui-check-dependencies:
     name: Lint
@@ -181,10 +195,10 @@ jobs:
     if: ${{ !failure() && !cancelled() }}
     uses: "./.github/workflows/publish-maven.yml"
     secrets:
-      MAVEN_SIGNING_PASSWORD: ${{ secrets._TEMP_MAVEN_SIGNING_PASSWORD }}
-      MAVEN_SIGNING_KEY: ${{ secrets._TEMP_MAVEN_SIGNING_KEY }}
-      MAVEN_USERNAME: ${{ secrets._TEMP_MAVEN_USERNAME }}
-      MAVEN_PASSWORD: ${{ secrets._TEMP_MAVEN_PASSWORD }}
+      MAVEN_SIGNING_PASSWORD: ${{ secrets.MAVEN_SIGNING_PASSWORD }}
+      MAVEN_SIGNING_KEY: ${{ secrets.MAVEN_SIGNING_KEY }}
+      MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
+      MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
 
   publish-npm:
     name: Publish

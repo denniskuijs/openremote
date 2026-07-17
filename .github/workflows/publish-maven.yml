@@ -36,11 +36,21 @@ jobs:
           path: ui/component
 
       - name: Publish to Maven Central Sonatype
-        run: ./gradlew publishToSonatype --no-parallel -PsigningKey=${{ secrets.MAVEN_SIGNING_KEY }} -PsigningPassword=${{ secrets.MAVEN_SIGNING_PASSWORD }} -PpublishUsername=${{ secrets.MAVEN_USERNAME }} -PpublishPassword=${{ secrets.MAVEN_PASSWORD }}
-
+        env:
+          # Gradle automatically converts ORG_GRADLE_PROJECT_x into -Px
+          ORG_GRADLE_PROJECT_signingKey: ${{ secrets.MAVEN_SIGNING_KEY }}
+          ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.MAVEN_SIGNING_PASSWORD }}
+          ORG_GRADLE_PROJECT_publishUsername: ${{ secrets.MAVEN_USERNAME }}
+          ORG_GRADLE_PROJECT_publishPassword: ${{ secrets.MAVEN_PASSWORD }}
+        run: ./gradlew publishToSonatype --no-parallel
       - name: Close and Verify Staging Repository
         # This will poll the Sonatype API and wait until all validation rules pass.
-        run: ./gradlew findSonatypeStagingRepository closeSonatypeStagingRepository -PpublishUsername=${{ secrets.MAVEN_USERNAME }} -PpublishPassword=${{ secrets.MAVEN_PASSWORD }}
-
+        run: ./gradlew findSonatypeStagingRepository closeSonatypeStagingRepository
+        env:
+          ORG_GRADLE_PROJECT_publishUsername: ${{ secrets.MAVEN_USERNAME }}
+          ORG_GRADLE_PROJECT_publishPassword: ${{ secrets.MAVEN_PASSWORD }}
       - name: Release to Maven Central Sonatype
-        run: ./gradlew findSonatypeStagingRepository releaseSonatypeStagingRepository -PpublishUsername=${{ secrets.MAVEN_USERNAME }} -PpublishPassword=${{ secrets.MAVEN_PASSWORD }}
+        env:
+          ORG_GRADLE_PROJECT_publishUsername: ${{ secrets.MAVEN_USERNAME }}
+          ORG_GRADLE_PROJECT_publishPassword: ${{ secrets.MAVEN_PASSWORD }}
+        run: ./gradlew findSonatypeStagingRepository closeAndReleaseSonatypeStagingRepository

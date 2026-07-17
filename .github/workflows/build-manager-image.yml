@@ -43,8 +43,8 @@ jobs:
         run: |
           COMMIT_SHA_SHORT=$(git rev-parse --short HEAD)
 
-          FORMATTED_TAGS="openremote/manager:$COMMIT_SHA_SHORT"
-          FIRST_TAG="openremote/manager:$COMMIT_SHA_SHORT"
+          FORMATTED_TAGS="denniskuijs/manager:$COMMIT_SHA_SHORT"
+          FIRST_TAG="denniskuijs/manager:$COMMIT_SHA_SHORT"
           SHOULD_PUSH="false"
 
           if [ -n "${{ inputs.TAGS }}" ]; then
@@ -53,10 +53,10 @@ jobs:
             IFS=',' read -ra TAGS <<< "${{ inputs.TAGS }}"
             for tag in "${TAGS[@]}"; do
               CLEAN_TAG=$(echo "$tag" | xargs)
-              FULL_TAG="openremote/manager:$CLEAN_TAG"
+              FULL_TAG="denniskuijs/manager:$CLEAN_TAG"
 
               # Make the first explicit tag our primary reference
-              if [ "$FIRST_TAG" == "openremote/manager:$COMMIT_SHA_SHORT" ]; then
+              if [ "$FIRST_TAG" == "denniskuijs/manager:$COMMIT_SHA_SHORT" ]; then
                 FIRST_TAG=$FULL_TAG
               fi
 
