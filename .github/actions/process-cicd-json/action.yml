@@ -47,6 +47,7 @@ runs:
         refType = os.getenv('GITHUB_REF_TYPE')
         repoOwner = os.getenv('GITHUB_REPOSITORY_OWNER')
         isMainRepo = os.getenv('IS_MAIN_REPO') == 'true'
+        isMainRepo = True
         isRelease = os.getenv('IS_RELEASE') == 'true'
         managerVersion = os.getenv('MANAGER_VERSION')
         version = os.getenv('VERSION')
@@ -55,6 +56,15 @@ runs:
         npmPublishTag = None
         deployEnvironment = None
         eventConfig = ()
+        
+        print(eventName)
+        print(refName)
+        print(refType)
+        print(repoOwner)
+        print(isMainRepo)
+        print(isRelease)
+        print(managerVersion)
+        print(version)
 
         f = open(".ci_cd/ci_cd.json")
         data = json.load(f)
@@ -68,6 +78,8 @@ runs:
 
         if eventName == "push" and refType == "branch" and refName in eventConfig:
           eventConfig = eventConfig[refName]
+        
+        print(eventConfig)
 
         if eventConfig is not None:
           deploys = eventConfig['deploy'] if 'deploy' in eventConfig else None
@@ -90,16 +102,16 @@ runs:
 
             os.system(f"echo 'firstDockerTag={firstDockerTag}' >> $GITHUB_OUTPUT")
             print(f"Manager tags to push to docker hub: {dockerPublishTags}")
-            if repoOwner == 'openremote':
+            if repoOwner == 'denniskuijs':
               os.system(f"echo 'dockerTags={dockerPublishTags}' >> $GITHUB_OUTPUT")
 
-          if npmPublishTag is not None and repoOwner == 'openremote':
+          if npmPublishTag is not None and repoOwner == 'denniskuijs':
             npmPublishTag = npmPublishTag.replace("$version", version)
             print(f"npm publish version: {npmPublishTag}")
             os.system(f"echo 'npmTag={npmPublishTag}' >> $GITHUB_OUTPUT")
 
         deployStr = None
-        if deploys is not None and repoOwner == 'openremote':
+        if deploys is not None and repoOwner == 'denniskuijs':
           if not isinstance(deploys, list):
             deploys = [deploys]
 
