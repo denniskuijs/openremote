@@ -55,7 +55,7 @@ runs:
         dockerPublishTags = None
         npmPublishTag = None
         deployEnvironment = None
-        eventConfig = ()
+        eventConfig = None
         
         print(eventName)
         print(refName)
@@ -70,28 +70,29 @@ runs:
         data = json.load(f)
         f.close()
 
-        if isRelease:
-          eventName = "release"
-
         if data is not None and eventName in data:
           eventConfig = data[eventName]
 
-        if eventName == "push" and refType == "branch" and refName in eventConfig:
-          eventConfig = eventConfig[refName]
+        if eventName == "push" and refType == "branch" and isinstance(eventConfig, dict):
+          eventConfig = eventConfig.get(refName)
         
         print(eventConfig)
 
         if eventConfig is not None:
-            deploys = eventConfig['deploy'] if 'deploy' in eventConfig else None
-            if eventName == "workflow_dispatch" and isinstance(deploys, dict):
-                deploys = deploys["release"] if isRelease else deploys["snapshot"]
-            if 'distribute' in eventConfig:
-                if 'docker' in eventConfig['distribute']:
-                    dockerPublishTags = eventConfig['distribute']['docker']
-                if 'npm' in eventConfig['distribute']:
-                    npmPublishTag = eventConfig['distribute']['npm']
+            if eventName == "workflow_dispatch":
+                deploys = eventConfig.get('deploy')
+                if isinstance(deploys, dict):
+                    deploys = deploys["release"] if isRelease else deploys["snapshot"]
+            elif eventName == "push":
+                if 'distribute' in eventConfig:
+                    dockerPublishTags = eventConfig['distribute'].get('docker')
+                    npmPublishTag = eventConfig['distribute'].get('npm')
+            elif eventName == "release":
+                if 'distribute' in eventConfig:
+                    dockerPublishTags = eventConfig['distribute'].get('docker')
+                    npmPublishTag = eventConfig['distribute'].get('npm')
 
-        if isMainRepo and ((eventName == "release" and isRelease) or (eventName != "release" and not isRelease)):
+        if isMainRepo:
 
           if dockerPublishTags is not None:
             dockerPublishTags = ",".join(map(lambda t: t.strip(), dockerPublishTags.split(",")))

@@ -5,21 +5,6 @@ on:
     branches: [master]
     tags:
       - '[0-9]+.[0-9]+.[0-9]+'
-  workflow_dispatch:
-    inputs:
-      ENVIRONMENT:
-        description: 'Environment to use (if any)'
-      MANAGER_TAG:
-        description: 'Manager docker tag to pull'
-      CLEAN_INSTALL:
-        description: 'Delete data before starting'
-        type: boolean
-      COMMIT:
-        description: 'Repo branch or commit SHA to checkout'
-      OR_HOSTNAME:
-        description: 'Host to deploy to (e.g. demo.openremote.app)'
-      OR_ADMIN_PASSWORD:
-        description: 'Admin password override'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
