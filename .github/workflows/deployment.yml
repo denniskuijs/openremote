@@ -40,7 +40,7 @@ jobs:
 
       - name: Process ci_cd.json file
         id: ci-cd-output
-        uses: denniskuijs/openremote/.github/actions/process-cicd-json@3af2408197512b2042401233c3c7a26af99040e5
+        uses: denniskuijs/openremote/.github/actions/process-cicd-json@c983d3e1f9af6511c8cd8f3728d77f6b89f4164c
         with:
           IS_MAIN_REPO: ${{ steps.is_main_repo.outputs.value }}
           MANAGER_VERSION: ${{ steps.is_main_repo.outputs.version }}
