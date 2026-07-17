@@ -11,6 +11,14 @@
 			}
 		}
 	},
+  "workflow_dispatch": {
+    "master": {
+      "deploy": {
+        "managerTag": "develop-core",
+        "environment": "staging"
+      }
+    }
+  },
 	"release": {
 		"distribute": {
 			"docker": "latest-core,$version-core",
