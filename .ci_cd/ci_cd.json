@@ -9,18 +9,20 @@
 	},
   "workflow_dispatch": {
     "deploy": {
-      "managerTag": "develop",
-      "environment": "staging"
+      "snapshot": {
+        "managerTag": "develop",
+        "environment": "staging"
+      },
+      "release": {
+        "managerTag": "latest",
+        "environment": "demo"
+      }
     }
   },
 	"release": {
 		"distribute": {
 			"docker": "latest-core,$version-core",
 			"npm": "$version-core"
-		},
-		"deploy": {
-			"managerTag": "latest",
-			"environment": "demo"
 		}
 	}
 }
