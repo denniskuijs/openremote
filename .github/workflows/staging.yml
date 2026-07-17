@@ -25,10 +25,6 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-permissions:
-  actions: write
-  contents: read
-
 jobs:
   detect-changes:
     name: Detect whether code changed
