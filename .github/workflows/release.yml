@@ -61,5 +61,5 @@ jobs:
           gh workflow run staging.yml --ref $RELEASED_VERSION
           gh release create $RELEASED_VERSION --generate-notes
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ _TEMP_GH_EXTENSIONS_TOKEN }}
           RELEASED_VERSION: ${{ steps.release.outputs.released-version }}
