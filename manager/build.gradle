@@ -105,7 +105,6 @@ tasks.withType(Zip) {
 distributions {
     main {
         contents {
-            exclude("**/openremote-demo-setup-extension-*.jar", "**/openremote-energy-extension-*.jar")
             from(project.projectDir) {
                 include("*Dockerfile", "entrypoint.sh", "heapdump-rename.sh")
             }
@@ -200,8 +199,16 @@ configurations {
 }
 
 dependencies {
-    demoExtension api("io.openremote.extension:openremote-demo-setup-extension:${project.version}")
+    demoExtension ("io.openremote.extension:openremote-demo-setup-extension:${project.version}")
 }
+
+sourceSets {
+    main {
+        // Makes it visible to IntelliJ's module dependencies on Gradle sync
+        runtimeClasspath += configurations.demoExtension
+    }
+}
+
 
 tasks.named("run", JavaExec) {
     def setupType = System.getenv("OR_SETUP_TYPE")
