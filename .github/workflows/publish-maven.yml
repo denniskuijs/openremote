@@ -35,22 +35,22 @@ jobs:
           name: or-ui-component-build
           path: ui/component
 
-      - name: Publish to Maven Central Sonatype
-        env:
-          # Gradle automatically converts ORG_GRADLE_PROJECT_x into -Px
-          ORG_GRADLE_PROJECT_signingKey: ${{ secrets.MAVEN_SIGNING_KEY }}
-          ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.MAVEN_SIGNING_PASSWORD }}
-          ORG_GRADLE_PROJECT_publishUsername: ${{ secrets.MAVEN_USERNAME }}
-          ORG_GRADLE_PROJECT_publishPassword: ${{ secrets.MAVEN_PASSWORD }}
-        run: ./gradlew publishToSonatype --no-parallel
-      - name: Close and Verify Staging Repository
-        # This will poll the Sonatype API and wait until all validation rules pass.
-        run: ./gradlew findSonatypeStagingRepository closeSonatypeStagingRepository
-        env:
-          ORG_GRADLE_PROJECT_publishUsername: ${{ secrets.MAVEN_USERNAME }}
-          ORG_GRADLE_PROJECT_publishPassword: ${{ secrets.MAVEN_PASSWORD }}
-      - name: Release to Maven Central Sonatype
-        env:
-          ORG_GRADLE_PROJECT_publishUsername: ${{ secrets.MAVEN_USERNAME }}
-          ORG_GRADLE_PROJECT_publishPassword: ${{ secrets.MAVEN_PASSWORD }}
-        run: ./gradlew findSonatypeStagingRepository closeAndReleaseSonatypeStagingRepository
+#      - name: Publish to Maven Central Sonatype
+#        env:
+#          # Gradle automatically converts ORG_GRADLE_PROJECT_x into -Px
+#          ORG_GRADLE_PROJECT_signingKey: ${{ secrets.MAVEN_SIGNING_KEY }}
+#          ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.MAVEN_SIGNING_PASSWORD }}
+#          ORG_GRADLE_PROJECT_publishUsername: ${{ secrets.MAVEN_USERNAME }}
+#          ORG_GRADLE_PROJECT_publishPassword: ${{ secrets.MAVEN_PASSWORD }}
+#        run: ./gradlew publishToSonatype --no-parallel
+#      - name: Close and Verify Staging Repository
+#        # This will poll the Sonatype API and wait until all validation rules pass.
+#        run: ./gradlew findSonatypeStagingRepository closeSonatypeStagingRepository
+#        env:
+#          ORG_GRADLE_PROJECT_publishUsername: ${{ secrets.MAVEN_USERNAME }}
+#          ORG_GRADLE_PROJECT_publishPassword: ${{ secrets.MAVEN_PASSWORD }}
+#      - name: Release to Maven Central Sonatype
+#        env:
+#          ORG_GRADLE_PROJECT_publishUsername: ${{ secrets.MAVEN_USERNAME }}
+#          ORG_GRADLE_PROJECT_publishPassword: ${{ secrets.MAVEN_PASSWORD }}
+#        run: ./gradlew findSonatypeStagingRepository closeAndReleaseSonatypeStagingRepository

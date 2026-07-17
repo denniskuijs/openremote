@@ -36,9 +36,9 @@ jobs:
 
       - run: yarn --immutable
 
-      - name: Publish to NPM
-        run: |
-          echo 'npmRegistries:' >> .yarnrc.yml
-          echo '  "https://registry.yarnpkg.com":' >> .yarnrc.yml
-          echo "    npmAuthToken: ${{ secrets.NPM_AUTH_TOKEN }}" >> .yarnrc.yml
-          yarn workspaces foreach --all --no-private --topological npm publish --tag ${{ inputs.tag }}
+#      - name: Publish to NPM
+#        run: |
+#          echo 'npmRegistries:' >> .yarnrc.yml
+#          echo '  "https://registry.yarnpkg.com":' >> .yarnrc.yml
+#          echo "    npmAuthToken: ${{ secrets.NPM_AUTH_TOKEN }}" >> .yarnrc.yml
+#          yarn workspaces foreach --all --no-private --topological npm publish --tag ${{ inputs.tag }}
