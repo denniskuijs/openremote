@@ -116,7 +116,7 @@ jobs:
           context: manager/build/install/manager
           platforms: linux/amd64,linux/aarch64
           load: false
-          outputs: type=docker,dest=/tmp/or_manager.tar
+          outputs: type=oci,dest=/tmp/or_manager.tar
           #push: ${{ steps.meta.outputs.should_push == 'true' }}
           tags: ${{ steps.meta.outputs.formatted_tags }}
           build-args: |
