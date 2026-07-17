@@ -84,10 +84,12 @@ runs:
                 if isinstance(deploys, dict):
                     deploys = deploys["release"] if isRelease else deploys["snapshot"]
             elif eventName == "push":
+                deploys = eventConfig.get('deploy')
                 if 'distribute' in eventConfig:
                     dockerPublishTags = eventConfig['distribute'].get('docker')
                     npmPublishTag = eventConfig['distribute'].get('npm')
             elif eventName == "release":
+                deploys = eventConfig.get('deploy')
                 if 'distribute' in eventConfig:
                     dockerPublishTags = eventConfig['distribute'].get('docker')
                     npmPublishTag = eventConfig['distribute'].get('npm')
