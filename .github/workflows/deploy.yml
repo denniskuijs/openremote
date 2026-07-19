@@ -20,7 +20,7 @@ on:
       OR_HOSTNAME:
         description: 'Host to deploy to (e.g. demo.openremote.app)'
       OR_ADMIN_PASSWORD:
-        description: 'Admin password override'
+        description: 'Admin password override.'
 
   workflow_call:
     inputs:
