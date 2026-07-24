@@ -49,6 +49,7 @@ jobs:
           fi
         env:
           VERSION: ${{ inputs.version }}
+          GH_TOKEN: ${{ secrets.GH_EXTENSIONS_TOKEN }}
 
   create-extensions-release:
     name: Create release
